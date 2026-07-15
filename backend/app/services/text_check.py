@@ -116,7 +116,7 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
 
     if lang.startswith("fr"):
         advice = {
-            "high": "Risque eleve. Ne transférez pas. Verifiez une source officielle camerounaise.",
+            "high": "Risque eleve. Ne transferrez pas. Verifiez une source officielle camerounaise.",
             "medium": "Risque moyen. Demandez une preuve et consultez une source officielle.",
             "low": "Risque bas apparent, mais restez vigilant avant de partager.",
         }[_band(score)]
@@ -125,14 +125,6 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
             "high": "High risk. Do not forward. Verify with an official Cameroonian source.",
             "medium": "Medium risk. Ask for proof and check an official source.",
             "low": "Apparently low risk, but stay careful before sharing.",
-        }[_band(score)]
-
-    # Keep FR advice ASCII-safe for editors that mangle accents
-    if lang.startswith("fr"):
-        advice = {
-            "high": "Risque eleve. Ne transferrez pas. Verifiez une source officielle camerounaise.",
-            "medium": "Risque moyen. Demandez une preuve et consultez une source officielle.",
-            "low": "Risque bas apparent, mais restez vigilant avant de partager.",
         }[_band(score)]
 
     return TextCheckResult(
