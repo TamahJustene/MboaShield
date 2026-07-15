@@ -60,7 +60,7 @@ def check_image_bytes(data: bytes, filename: str = "", lang: str = "en") -> Medi
         # EXIF absence can be a weak signal for generative images
         exif = img.getexif()
         if not exif or len(exif) == 0:
-            score += 12
+            score += 20
             reasons.append("No camera EXIF metadata (weak synthetic-media signal)")
         else:
             meta["exif_tags"] = len(exif)
@@ -70,8 +70,8 @@ def check_image_bytes(data: bytes, filename: str = "", lang: str = "en") -> Medi
         stat = ImageStat.Stat(img)
         mean_var = sum(stat.var) / max(len(stat.var), 1)
         meta["mean_variance"] = round(mean_var, 2)
-        if mean_var < 400:
-            score += 18
+        if mean_var < 1200:
+            score += 28
             reasons.append("Unusually smooth colour variance (possible over-processed / synthetic)")
         elif mean_var > 9000:
             score += 8
