@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MboaShield  Demo</title>
+  <title>MboaShield - Demo</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <header class="top">
     <div>
-      <p class="eyebrow">Made in Cameroon · SIN 2026</p>
+      <p class="eyebrow">Made in Cameroon - SIN 2026</p>
       <h1>MboaShield</h1>
-      <p class="tagline">Sovereign AI shield against deepfakes, disinformation &amp; identity theft</p>
+      <p class="tagline">Sovereign AI shield against deepfakes, disinformation and identity theft</p>
     </div>
     <div class="meta">
       <button id="langToggle" type="button" class="ghost">FR</button>
-      <p class="founder">Founder: Justene Nkwagoh Tamah</p>
+      <p class="founder">Solo founder: Justene Nkwagoh Tamah</p>
     </div>
   </header>
 
@@ -27,9 +27,9 @@
   <main class="grid">
     <section class="panel">
       <h2 data-i18n="textTitle">1. Check a WhatsApp rumour</h2>
-      <textarea id="claimText" rows="5" placeholder="Paste a viral message"></textarea>
+      <textarea id="claimText" rows="5" placeholder="Paste a viral message..."></textarea>
       <button type="button" id="checkText" class="primary">Analyse text</button>
-      <pre id="textOut" class="out"></pre>
+      <div id="textOut" class="out"></div>
     </section>
 
     <section class="panel">
@@ -37,14 +37,19 @@
       <input id="impName" type="text" placeholder="Display name" />
       <input id="impHandle" type="text" placeholder="@handle" />
       <button type="button" id="checkImp" class="primary">Analyse account</button>
-      <pre id="impOut" class="out"></pre>
+      <div id="impOut" class="out"></div>
     </section>
 
     <section class="panel">
       <h2 data-i18n="mediaTitle">3. Check an image</h2>
+      <div class="sample-row">
+        <button type="button" class="ghost sample" data-sample="/static/samples/synthetic_smooth_face.jpg">Sample: smooth face</button>
+        <button type="button" class="ghost sample" data-sample="/static/samples/tiny_sticker.jpg">Sample: tiny sticker</button>
+        <button type="button" class="ghost sample" data-sample="/static/samples/noisy_recompressed.jpg">Sample: noisy</button>
+      </div>
       <input id="mediaFile" type="file" accept="image/*" />
       <button type="button" id="checkMedia" class="primary">Analyse image</button>
-      <pre id="mediaOut" class="out"></pre>
+      <div id="mediaOut" class="out"></div>
     </section>
 
     <section class="panel">
@@ -58,7 +63,7 @@
   </main>
 
   <footer>
-    <p>MboaShield Tech · Solo founder Justene Nkwagoh Tamah · tamahjustene45@gmail.com</p>
+    <p>MboaShield Tech - Justene Nkwagoh Tamah - tamahjustene45@gmail.com - github.com/TamahJustene/MboaShield</p>
   </footer>
 
   <script src="/static/app.js"></script>

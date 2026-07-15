@@ -50,15 +50,14 @@ h1 {
   color: var(--accent);
 }
 
-.tagline, .muted, .founder, footer {
-  color: var(--muted);
-}
+.tagline, .muted, .founder, footer { color: var(--muted); }
 
 .demo-bar {
   display: flex;
   gap: 1rem;
   align-items: center;
   margin: 1rem auto 1.25rem;
+  flex-wrap: wrap;
 }
 
 .grid {
@@ -95,16 +94,21 @@ button {
   cursor: pointer;
 }
 
-button.primary {
-  background: var(--accent);
-  color: white;
-}
-
+button.primary { background: var(--accent); color: white; }
 button.ghost {
   background: transparent;
   border: 1px solid var(--line);
   color: var(--accent);
 }
+
+.sample-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.sample-row .ghost { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
 
 .out {
   min-height: 7rem;
@@ -113,9 +117,21 @@ button.ghost {
   border-radius: 10px;
   padding: 0.8rem;
   overflow: auto;
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   white-space: pre-wrap;
 }
+
+.out .band {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.55rem;
+}
+.out .band.high { background: var(--high); color: #fff; }
+.out .band.medium { background: var(--mid); color: #fff; }
+.out .band.low { background: var(--low); color: #fff; }
 
 .cert {
   margin-top: 0.75rem;
@@ -124,7 +140,6 @@ button.ghost {
   padding: 1rem;
   background: #f2faf5;
 }
-
 .cert.hidden { display: none; }
 
 .lesson {

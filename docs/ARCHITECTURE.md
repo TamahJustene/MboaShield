@@ -2,16 +2,17 @@
 
 ```
 Browser UI (frontend/)
-        ?
-        ?
+        |
+        v
 FastAPI (backend/app/main.py)
-        ?
-        ??? services/text_check.py      ? rumour / claim risk
-        ??? services/impersonation.py   ? institutional registry match
-        ??? services/media_check.py     ? image heuristics (ML-ready)
-        ??? services/ambassadors.py     ? lessons + certificate
+        |
+        +-- services/text_check.py      -> rumour / claim risk
+        +-- services/impersonation.py   -> institutional registry match
+        +-- services/media_check.py     -> image heuristics (ML-ready)
+        +-- services/ambassadors.py     -> lessons + certificate
 
 Static data (data/*.json)
+Demo samples (frontend/static/samples/)
 ```
 
 ## Design choices
