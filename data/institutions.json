@@ -1,0 +1,42 @@
+[
+  {
+    "id": "minpostel",
+    "name": "Ministry of Posts and Telecommunications",
+    "short_name": "MINPOSTEL",
+    "handles": ["@minpostel", "@minpostel_cm", "minpostel officiel"],
+    "verified": true,
+    "url": "https://www.minpostel.gov.cm"
+  },
+  {
+    "id": "mincom",
+    "name": "Ministry of Communication",
+    "short_name": "MINCOM",
+    "handles": ["@mincom", "@mincom_cm", "mincom officiel"],
+    "verified": true,
+    "url": "https://www.mincom.gov.cm"
+  },
+  {
+    "id": "prc",
+    "name": "Presidency of the Republic of Cameroon",
+    "short_name": "PRC",
+    "handles": ["@prc_cameroon", "presidence cameroun", "presidency cameroon"],
+    "verified": true,
+    "url": "https://www.prc.cm"
+  },
+  {
+    "id": "crtv",
+    "name": "CRTV",
+    "short_name": "CRTV",
+    "handles": ["@crtv", "crtv officiel"],
+    "verified": true,
+    "url": "https://www.crtv.cm"
+  },
+  {
+    "id": "beac",
+    "name": "Bank of Central African States",
+    "short_name": "BEAC",
+    "handles": ["@beac", "beac officiel"],
+    "verified": true,
+    "url": "https://www.beac.int"
+  }
+]

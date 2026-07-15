@@ -1,0 +1,145 @@
+:root {
+  --bg: #f4f7f5;
+  --ink: #12201a;
+  --muted: #52655b;
+  --panel: #ffffff;
+  --line: #d5e0d9;
+  --accent: #0b3d2e;
+  --accent-2: #1a6b4a;
+  --high: #8b1e1e;
+  --mid: #8a5a00;
+  --low: #136b3b;
+  --font: "Segoe UI", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, #dff0e6 0, transparent 40%),
+    linear-gradient(180deg, #eef5f0, var(--bg));
+  min-height: 100vh;
+}
+
+.top, .demo-bar, main, footer {
+  width: min(1100px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0 0.5rem;
+  align-items: flex-start;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: var(--accent-2);
+  margin: 0 0 0.35rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--accent);
+}
+
+.tagline, .muted, .founder, footer {
+  color: var(--muted);
+}
+
+.demo-bar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem auto 1.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding-bottom: 2rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+h2 { margin-top: 0; font-size: 1.05rem; }
+
+textarea, input, select {
+  width: 100%;
+  margin: 0.35rem 0 0.65rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font: inherit;
+  background: #fbfcfb;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+button.primary {
+  background: var(--accent);
+  color: white;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--accent);
+}
+
+.out {
+  min-height: 7rem;
+  background: #0f1c17;
+  color: #d7f0e3;
+  border-radius: 10px;
+  padding: 0.8rem;
+  overflow: auto;
+  font-size: 0.82rem;
+  white-space: pre-wrap;
+}
+
+.cert {
+  margin-top: 0.75rem;
+  border: 2px dashed var(--accent-2);
+  border-radius: 12px;
+  padding: 1rem;
+  background: #f2faf5;
+}
+
+.cert.hidden { display: none; }
+
+.lesson {
+  border-left: 3px solid var(--accent-2);
+  padding-left: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+
+footer {
+  text-align: center;
+  padding-bottom: 2rem;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 800px) {
+  .grid { grid-template-columns: 1fr; }
+  .top { flex-direction: column; }
+}

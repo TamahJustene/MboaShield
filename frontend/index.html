@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MboaShield  Demo</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="eyebrow">Made in Cameroon · SIN 2026</p>
+      <h1>MboaShield</h1>
+      <p class="tagline">Sovereign AI shield against deepfakes, disinformation &amp; identity theft</p>
+    </div>
+    <div class="meta">
+      <button id="langToggle" type="button" class="ghost">FR</button>
+      <p class="founder">Founder: Justene Nkwagoh Tamah</p>
+    </div>
+  </header>
+
+  <section class="demo-bar">
+    <button type="button" id="runDemo" class="primary">Run 90s pitch demo</button>
+    <p id="demoStatus" class="muted"></p>
+  </section>
+
+  <main class="grid">
+    <section class="panel">
+      <h2 data-i18n="textTitle">1. Check a WhatsApp rumour</h2>
+      <textarea id="claimText" rows="5" placeholder="Paste a viral message"></textarea>
+      <button type="button" id="checkText" class="primary">Analyse text</button>
+      <pre id="textOut" class="out"></pre>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="impTitle">2. Check account impersonation</h2>
+      <input id="impName" type="text" placeholder="Display name" />
+      <input id="impHandle" type="text" placeholder="@handle" />
+      <button type="button" id="checkImp" class="primary">Analyse account</button>
+      <pre id="impOut" class="out"></pre>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="mediaTitle">3. Check an image</h2>
+      <input id="mediaFile" type="file" accept="image/*" />
+      <button type="button" id="checkMedia" class="primary">Analyse image</button>
+      <pre id="mediaOut" class="out"></pre>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="ambTitle">4. Mboa Ambassadors</h2>
+      <div id="lessons"></div>
+      <input id="learnerName" type="text" placeholder="Your name" value="Justene Nkwagoh Tamah" />
+      <select id="lessonSelect"></select>
+      <button type="button" id="completeLesson" class="primary">Get certificate</button>
+      <div id="cert" class="cert hidden"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>MboaShield Tech · Solo founder Justene Nkwagoh Tamah · tamahjustene45@gmail.com</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

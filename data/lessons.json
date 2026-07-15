@@ -1,0 +1,35 @@
+[
+  {
+    "id": "lesson-1",
+    "title_en": "What is digital patriotism?",
+    "title_fr": "Qu'est-ce que le patriotisme numerique ?",
+    "minutes": 4,
+    "points": [
+      "Prefer and promote Made-in-Cameroon digital tools when they are trustworthy.",
+      "Protect the reputation of institutions and fellow citizens online.",
+      "Refuse to forward unverified viral claims."
+    ]
+  },
+  {
+    "id": "lesson-2",
+    "title_en": "Spotting AI excesses (deepfakes and voice clones)",
+    "title_fr": "Reperer les derives de l'IA (deepfakes et voix clonees)",
+    "minutes": 5,
+    "points": [
+      "Check lips, lighting, blinks and odd artefacts on faces.",
+      "Voice clones often lack natural pauses or sound too clean.",
+      "Always verify with an official source before acting on money or panic messages."
+    ]
+  },
+  {
+    "id": "lesson-3",
+    "title_en": "How to verify a WhatsApp rumour",
+    "title_fr": "Comment verifier une rumeur WhatsApp",
+    "minutes": 4,
+    "points": [
+      "Pause before forwarding.",
+      "Ask: who benefits if this spreads?",
+      "Use MboaShield (or an official channel) to check risk."
+    ]
+  }
+]
