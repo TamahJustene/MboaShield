@@ -10,21 +10,22 @@ from pathlib import Path
 from ..config import DATA_DIR
 
 HIGH_RISK_PATTERNS = [
-    r"envoie\s*(de\s*)?l[']?argent",
+    r"envoie\s*(de\s*)?l[' ]?argent",
     r"send\s*money",
     r"transfert\s*urgent",
     r"urgent\s*transfer",
-    r"num[e]ro\s*orang[eo]|mtn\s*momo",
-    r"compte\s*bloqu[e]",
+    r"\bmomo\b|mtn\s*momo|orange\s*money",
+    r"compte\s*bloqu",
     r"account\s*blocked",
-    r"gagn[e]\s*(un\s*)?(million|voiture|iphone)",
+    r"gagn[eé]?\s*(un\s*)?(million|voiture|iphone)",
     r"you\s*won\s*(a\s*)?(million|car|iphone)",
     r"ministre\s*annonce",
     r"minister\s*announces",
-    r"couvre[- ]feu\s*(national|g[e]n[e]ral)",
+    r"couvre[- ]feu",
     r"nationwide\s*curfew",
     r"fermeture\s*des?\s*banques",
     r"banks?\s*(are\s*)?closed",
+    r"\burgent\b",
 ]
 
 UNCERTAINTY_PATTERNS = [
