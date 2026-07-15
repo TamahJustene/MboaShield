@@ -1,11 +1,10 @@
-"""Text / rumour risk scoring (heuristic v0  ML-pluggable)."""
+"""Text / rumour risk scoring (heuristic v0 - ML-pluggable)."""
 
 from __future__ import annotations
 
 import json
 import re
 from dataclasses import dataclass
-from pathlib import Path
 
 from ..config import DATA_DIR
 
@@ -26,22 +25,6 @@ HIGH_RISK_PATTERNS = [
     r"fermeture\s*des?\s*banques",
     r"banks?\s*(are\s*)?closed",
     r"\burgent\b",
-]?argent",
-    r"send\s*money",
-    r"transfert\s*urgent",
-    r"urgent\s*transfer",
-    r"\bmomo\b|mtn\s*momo|orange\s*money",
-    r"compte\s*bloqu",
-    r"account\s*blocked",
-    r"gagn[e?]?\s*(un\s*)?(million|voiture|iphone)",
-    r"you\s*won\s*(a\s*)?(million|car|iphone)",
-    r"ministre\s*annonce",
-    r"minister\s*announces",
-    r"couvre[- ]feu",
-    r"nationwide\s*curfew",
-    r"fermeture\s*des?\s*banques",
-    r"banks?\s*(are\s*)?closed",
-    r"\burgent\b",
 ]
 
 UNCERTAINTY_PATTERNS = [
@@ -49,7 +32,7 @@ UNCERTAINTY_PATTERNS = [
     r"ils?\s*disent",
     r"people\s*say",
     r"forwarded\s*many\s*times",
-    r"transf[e]r[e]\s*plein\s*de\s*fois",
+    r"transfer[e]?\s*plein\s*de\s*fois",
     r"share\s*before\s*it'?s\s*deleted",
     r"partage\s*avant\s*suppression",
 ]
@@ -115,9 +98,7 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
         score += 6
         reasons.append("Long claim without any source link")
 
-    if re.search(r"[A-Z]{6,}", raw) and sum(
-        1 for c in raw if c.isupper()
-    ) > len(raw) * 0.35:
+    if re.search(r"[A-Z]{6,}", raw) and sum(1 for c in raw if c.isupper()) > len(raw) * 0.35:
         score += 10
         reasons.append("Heavy shout-casing often used in panic forwards")
 
@@ -126,7 +107,6 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
         reasons.append("No strong rumour markers; still verify before forwarding")
 
     sources = _load_sources()
-    # simple topic overlap
     suggested = []
     for src in sources:
         if any(t in lowered for t in src.get("topics", [])):
@@ -136,7 +116,7 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
 
     if lang.startswith("fr"):
         advice = {
-            "high": "Risque lev. Ne transfrez pas. Vrifiez une source officielle camerounaise.",
+            "high": "Risque eleve. Ne transférez pas. Verifiez une source officielle camerounaise.",
             "medium": "Risque moyen. Demandez une preuve et consultez une source officielle.",
             "low": "Risque bas apparent, mais restez vigilant avant de partager.",
         }[_band(score)]
@@ -145,6 +125,14 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
             "high": "High risk. Do not forward. Verify with an official Cameroonian source.",
             "medium": "Medium risk. Ask for proof and check an official source.",
             "low": "Apparently low risk, but stay careful before sharing.",
+        }[_band(score)]
+
+    # Keep FR advice ASCII-safe for editors that mangle accents
+    if lang.startswith("fr"):
+        advice = {
+            "high": "Risque eleve. Ne transferrez pas. Verifiez une source officielle camerounaise.",
+            "medium": "Risque moyen. Demandez une preuve et consultez une source officielle.",
+            "low": "Risque bas apparent, mais restez vigilant avant de partager.",
         }[_band(score)]
 
     return TextCheckResult(
