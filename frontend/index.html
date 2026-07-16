@@ -24,8 +24,22 @@
 
   <section class="hero-card">
     <p class="founder">Solo founder: <strong>Justene Nkwagoh Tamah</strong></p>
-    <button type="button" id="runDemo" class="btn-primary btn-large">Run 90s pitch demo</button>
+    <button type="button" id="runDemo" class="btn-primary btn-large">Run Grand Jury demo (90s)</button>
+    <p class="hero-note">One guided citizen journey: rumour, fake identity, cloned voice, synthetic image, then civic recovery.</p>
+    <div id="demoProgress" class="demo-progress hidden" aria-hidden="true">
+      <div class="demo-progress-track">
+        <div id="demoProgressBar" class="demo-progress-bar"></div>
+      </div>
+      <p id="demoProgressLabel" class="demo-progress-label">0 / 5 scenarios</p>
+    </div>
     <p id="demoStatus" class="demo-status" aria-live="polite"></p>
+    <ol class="demo-checklist" id="demoChecklist">
+      <li data-step="1">Citizen panic is detected</li>
+      <li data-step="2">Institution impersonation is exposed</li>
+      <li data-step="3">Voice-clone risk is flagged</li>
+      <li data-step="4">Synthetic media is explained</li>
+      <li data-step="5">Digital patriotism ends the story</li>
+    </ol>
   </section>
 
   <nav class="section-nav" aria-label="Demo sections">
@@ -82,6 +96,44 @@
       <div id="cert" class="cert hidden"></div>
     </section>
   </main>
+
+  <section class="demo-summary" aria-live="polite">
+    <h2>Judge summary</h2>
+    <p id="summaryLead" class="summary-lead">Run the 90s demo to generate a final protection summary for the judges.</p>
+    <div id="summaryCards" class="summary-cards"></div>
+  </section>
+
+  <section id="juryFinale" class="jury-finale hidden" aria-live="polite">
+    <div class="jury-finale-inner">
+      <p class="eyebrow">Grand Jury mode complete</p>
+      <h2>MboaShield protected one citizen across 5 AI threats</h2>
+      <p class="jury-lead">In under 90 seconds, the platform demonstrated detection, explanation, and civic recovery — not just a score.</p>
+      <div class="impact-grid">
+        <article class="impact-card">
+          <strong id="impactThreats">5</strong>
+          <span>threat layers tested live</span>
+        </article>
+        <article class="impact-card">
+          <strong>17</strong>
+          <span>institutions in registry</span>
+        </article>
+        <article class="impact-card">
+          <strong>4</strong>
+          <span>multimodal AI modules</span>
+        </article>
+        <article class="impact-card">
+          <strong>50K</strong>
+          <span>Ambassadors Year 1 target</span>
+        </article>
+      </div>
+      <blockquote class="jury-close">"MboaShield is not adjacent to the 2026 theme — MboaShield IS the theme."</blockquote>
+      <p class="jury-founder">Justene Nkwagoh Tamah · MboaShield Tech · Made in Cameroon</p>
+      <div class="jury-actions">
+        <a href="/static/pitch.html" class="btn-primary jury-btn">Open pitch deck</a>
+        <button type="button" id="replayDemo" class="btn-ghost jury-btn">Run demo again</button>
+      </div>
+    </div>
+  </section>
 
   <footer class="app-footer">
     <p>MboaShield Tech · tamahjustene45@gmail.com</p>
