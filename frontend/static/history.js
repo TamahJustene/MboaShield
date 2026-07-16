@@ -75,6 +75,16 @@ function renderCheckDetail(check) {
       <span class="report-label">Escalate</span>
       <p class="report-copy"><a href="/static/reports.html?check=${escapeHtml(check.id)}">Report this check as an incident</a></p>
     </section>
+    ${
+      result.ai_analysis
+        ? `<section class="report-section ai-block">
+            <span class="report-label">AI analysis</span>
+            <p class="report-copy"><strong>${escapeHtml(result.ai_analysis.narrative || "")}</strong></p>
+            <p class="report-copy muted">Confidence ${escapeHtml(result.ai_analysis.confidence ?? "-")}/100</p>
+            ${listHtml(result.ai_analysis.threat_categories || [])}
+          </section>`
+        : ""
+    }
   `;
 }
 

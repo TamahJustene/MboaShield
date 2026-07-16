@@ -99,6 +99,12 @@ class InstitutionsOut(BaseModel):
     count: int
 
 
+class CaseAnalyzeIn(BaseModel):
+    text: str = ""
+    name: str = ""
+    handle: str = ""
+    lang: str = "en"
+
 ReportType = Literal[
     "disinformation",
     "impersonation",

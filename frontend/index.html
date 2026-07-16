@@ -48,6 +48,7 @@
     <button type="button" class="nav-chip" data-target="panel-audio">3 Audio</button>
     <button type="button" class="nav-chip" data-target="panel-media">4 Image</button>
     <button type="button" class="nav-chip" data-target="panel-amb">5 Civic</button>
+    <button type="button" class="nav-chip" data-target="panel-ai">AI Case</button>
   </nav>
 
   <main class="panels">
@@ -94,6 +95,16 @@
       <select id="lessonSelect"></select>
       <button type="button" id="completeLesson" class="btn-primary">Get certificate</button>
       <div id="cert" class="cert hidden"></div>
+    </section>
+
+    <section id="panel-ai" class="panel">
+      <h2>AI case analysis</h2>
+      <p class="muted">Combine rumour text and fake-account context into one AI trust assessment.</p>
+      <textarea id="caseText" rows="3" placeholder="Paste a suspicious WhatsApp claim..."></textarea>
+      <input id="caseName" type="text" placeholder="Display name (optional)" />
+      <input id="caseHandle" type="text" placeholder="@handle (optional)" />
+      <button type="button" id="runCaseAnalyze" class="btn-primary">Run AI case analysis</button>
+      <div id="caseOut" class="out" role="status"></div>
     </section>
   </main>
 

@@ -23,6 +23,7 @@ from .repositories import (
     update_incident_status,
 )
 from .schemas import (
+    CaseAnalyzeIn,
     CertificateOut,
     CompleteIn,
     ImpersonationIn,
@@ -40,7 +41,9 @@ from .schemas import (
     UserOut,
 )
 from .seed import seed_institutions_if_needed
-from .services import ambassadors, audio_check, impersonation, media_check, source_verify, text_check
+from .services import ambassadors, impersonation, source_verify, text_check
+from .services.ai_analysis import analyze_case, enrich_result
+from .services.model_adapters import analyze_audio_with_fallback, analyze_image_with_fallback
 
 FRONTEND = ROOT / "frontend"
 
@@ -76,6 +79,11 @@ def health():
         "product": "MboaShield",
         "db_path": str(DB_PATH),
         "institutions_count": len(institutions),
+        "ai_engine": "mboashield-trust-engine",
+        "ai_engine_version": "0.4.0",
+        "nlp_engine": "mboashield-text-nlp-v1",
+        "media_adapter": "mboashield-media-adapter-v1",
+        "audio_adapter": "mboashield-audio-adapter-v1",
     }
 
 
@@ -166,6 +174,7 @@ def api_check_text(
     resolved_user_id = resolve_user_id(x_mboashield_user_id)
     result = text_check.check_text(body.text, body.lang).as_dict()
     result["source_verification"] = source_verify.verify_claim(body.text, body.lang).as_dict()
+    result = enrich_result(result, modality="text", lang=body.lang)
     result["check_id"] = save_verification_check(
         check_type="text",
         result=result,
@@ -183,6 +192,7 @@ def api_check_impersonation(
 ):
     resolved_user_id = resolve_user_id(x_mboashield_user_id)
     result = impersonation.check_impersonation(body.name, body.handle, body.lang).as_dict()
+    result = enrich_result(result, modality="impersonation", lang=body.lang)
     result["check_id"] = save_verification_check(
         check_type="impersonation",
         result=result,
@@ -206,7 +216,8 @@ async def api_check_media(
         raise HTTPException(status_code=400, detail="Empty file")
     if len(data) > 8_000_000:
         raise HTTPException(status_code=400, detail="File too large (max 8MB)")
-    result = media_check.check_image_bytes(data, file.filename or "", lang).as_dict()
+    result = analyze_image_with_fallback(data, file.filename or "", lang)
+    result = enrich_result(result, modality="media", lang=lang)
     result["check_id"] = save_verification_check(
         check_type="media",
         result=result,
@@ -229,7 +240,8 @@ async def api_check_audio(
         raise HTTPException(status_code=400, detail="Empty file")
     if len(data) > 12_000_000:
         raise HTTPException(status_code=400, detail="File too large (max 12MB)")
-    result = audio_check.check_audio_bytes(data, file.filename or "", lang).as_dict()
+    result = analyze_audio_with_fallback(data, file.filename or "", lang)
+    result = enrich_result(result, modality="audio", lang=lang)
     result["check_id"] = save_verification_check(
         check_type="audio",
         result=result,
@@ -238,6 +250,49 @@ async def api_check_audio(
         user_id=resolved_user_id,
     )
     return result
+
+
+@app.post("/api/v1/analyze")
+def api_analyze_case(
+    body: CaseAnalyzeIn,
+    x_mboashield_user_id: str | None = Header(default=None),
+):
+    """Multi-signal AI case analysis for text and/or impersonation context."""
+    if not body.text.strip() and not body.name.strip() and not body.handle.strip():
+        raise HTTPException(status_code=400, detail="Provide text and/or account identity fields")
+
+    resolved_user_id = resolve_user_id(x_mboashield_user_id)
+    case = analyze_case(text=body.text, name=body.name, handle=body.handle, lang=body.lang)
+
+    # Persist the strongest module result for history, preferring text when present.
+    check_id = None
+    for module in case.get("modules", []):
+        modality = module["modality"]
+        result = module["result"]
+        if modality == "text":
+            check_id = save_verification_check(
+                check_type="text",
+                result=result,
+                lang=body.lang,
+                input_text=body.text,
+                user_id=resolved_user_id,
+            )
+            result["check_id"] = check_id
+        elif modality == "impersonation":
+            saved = save_verification_check(
+                check_type="impersonation",
+                result=result,
+                lang=body.lang,
+                input_text=body.name,
+                input_handle=body.handle,
+                user_id=resolved_user_id,
+            )
+            result["check_id"] = saved
+            if check_id is None:
+                check_id = saved
+
+    case["case_check_id"] = check_id
+    return case
 
 
 @app.get("/api/v1/checks/recent", response_model=RecentChecksOut)

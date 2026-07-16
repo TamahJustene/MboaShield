@@ -221,6 +221,31 @@ function renderReport(targetId, data, extra = "") {
     }
     ${verifyBlock}
     ${
+      data.ai_analysis
+        ? `<section class="report-section ai-block">
+            <span class="report-label">AI analysis</span>
+            <p class="report-copy"><strong>${escapeHtml(data.ai_analysis.narrative || "")}</strong></p>
+            <p class="report-copy muted">Confidence ${escapeHtml(data.ai_analysis.confidence ?? "-")}/100 · Engine ${escapeHtml(data.ai_analysis.engine_version || "")}</p>
+            ${
+              (data.ai_analysis.threat_categories || []).length
+                ? `<p class="report-copy"><strong>Threats:</strong> ${escapeHtml((data.ai_analysis.threat_categories || []).join(", "))}</p>`
+                : ""
+            }
+            ${
+              data.nlp
+                ? `<p class="report-copy muted">NLP engine ${escapeHtml(data.nlp.engine_version || "")} · probability ${escapeHtml(data.nlp.probability ?? "-")}</p>`
+                : ""
+            }
+            ${
+              data.backend
+                ? `<p class="report-copy muted">Detector backend: ${escapeHtml(data.backend)}${data.engine ? ` · ${escapeHtml(data.engine)}` : ""}</p>`
+                : ""
+            }
+            ${listHtml(data.ai_analysis.next_actions || [])}
+          </section>`
+        : ""
+    }
+    ${
       extra
         ? `<section class="report-section summary-note">${extra}</section>`
         : ""
@@ -426,6 +451,54 @@ document.querySelectorAll(".nav-chip").forEach((chip) => {
     activatePanel(chip.getAttribute("data-target"));
   });
 });
+
+document.getElementById("runCaseAnalyze").onclick = async () => {
+  const text = document.getElementById("caseText").value;
+  const name = document.getElementById("caseName").value;
+  const handle = document.getElementById("caseHandle").value;
+  showLoading("caseOut", "Running multi-signal AI case analysis...");
+  const res = await fetch("/api/v1/analyze", {
+    method: "POST",
+    headers: userHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ text, name, handle, lang }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    document.getElementById("caseOut").className = "out";
+    document.getElementById("caseOut").innerHTML = `<p class="report-copy">${escapeHtml(data.detail || "Analysis failed")}</p>`;
+    return;
+  }
+
+  const overall = data.overall || {};
+  const modules = data.modules || [];
+  document.getElementById("caseOut").className = "out is-ready";
+  document.getElementById("caseOut").innerHTML = `
+    <span class="band ${escapeHtml(overall.risk_band || "low")}">${escapeHtml(String(overall.risk_band || "low").toUpperCase())} · ${escapeHtml(overall.risk_score ?? "-")}/100</span>
+    <h3 class="report-title">AI case assessment</h3>
+    <p class="proof">${escapeHtml(overall.narrative || "")}</p>
+    <section class="report-section">
+      <span class="report-label">Confidence</span>
+      <p class="report-copy">${escapeHtml(overall.confidence ?? "-")}/100 · ${escapeHtml(overall.engine || "")} ${escapeHtml(overall.engine_version || "")}</p>
+    </section>
+    <section class="report-section">
+      <span class="report-label">Threat categories</span>
+      ${listHtml(overall.threat_categories || [])}
+    </section>
+    <section class="report-section">
+      <span class="report-label">Next actions</span>
+      ${listHtml(overall.next_actions || [])}
+    </section>
+    <section class="report-section">
+      <span class="report-label">Modules analysed</span>
+      ${listHtml(modules.map((m) => `${m.modality}: ${m.result?.risk_band || "-"} (${m.result?.risk_score ?? "-"}/100)`))}
+    </section>
+    ${
+      data.case_check_id
+        ? `<section class="report-section summary-note"><a href="/static/history.html?check=${escapeHtml(data.case_check_id)}">View stored case check #${escapeHtml(data.case_check_id)}</a></section>`
+        : ""
+    }
+  `;
+};
 
 document.getElementById("completeLesson").onclick = async () => {
   const res = await fetch("/api/v1/ambassadors/complete", {

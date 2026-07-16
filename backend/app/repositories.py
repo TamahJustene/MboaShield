@@ -30,6 +30,24 @@ def _extract_signals(result: dict) -> list[dict[str, Any]]:
             }
         )
 
+    analysis = result.get("ai_analysis") or {}
+    for threat in analysis.get("threat_categories", []):
+        signals.append(
+            {
+                "signal_type": "threat_category",
+                "signal_label": str(threat),
+                "signal_score": analysis.get("confidence"),
+            }
+        )
+    if analysis.get("confidence") is not None:
+        signals.append(
+            {
+                "signal_type": "ai_confidence",
+                "signal_label": f"AI confidence {analysis.get('confidence')}/100",
+                "signal_score": analysis.get("confidence"),
+            }
+        )
+
     return signals[:20]
 
 

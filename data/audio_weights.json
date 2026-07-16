@@ -1,0 +1,14 @@
+{
+  "name": "mboashield-audio-adapter-v1",
+  "version": "1.0.0",
+  "bias": 0.16,
+  "weights": {
+    "short_duration": 0.16,
+    "flat_dynamics": 0.22,
+    "low_dynamics": 0.12,
+    "tiny_file": 0.1,
+    "filename_clone": 0.14,
+    "high_sample_rate": 0.08,
+    "unknown_format": 0.08
+  }
+}

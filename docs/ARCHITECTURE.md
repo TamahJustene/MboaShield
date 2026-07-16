@@ -143,5 +143,9 @@ The product should move through three storage stages:
 - First persistent SQLite layer in `backend/app/db.py`
 - Automatic recording of verification checks
 - Automatic recording of lesson certificates
+- Unified AI trust engine in `backend/app/services/ai_analysis.py`
+- Multi-signal case analysis endpoint `POST /api/v1/analyze`
+- Lightweight NLP text model path in `backend/app/services/nlp_text.py`
+- Model-ready media/audio adapters with heuristic fallback in `backend/app/services/model_adapters.py`
 
 This is the first step away from a throwaway demo and toward a real product backbone.

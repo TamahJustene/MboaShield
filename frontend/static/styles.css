@@ -397,6 +397,11 @@ button {
   font-size: 0.82rem;
 }
 
+.ai-block {
+  border-top: 1px dashed #b8d4c4;
+  padding-top: 0.75rem;
+}
+
 .report-section + .report-section {
   margin-top: 0.8rem;
 }

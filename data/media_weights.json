@@ -1,0 +1,14 @@
+{
+  "name": "mboashield-media-adapter-v1",
+  "version": "1.0.0",
+  "bias": 0.18,
+  "weights": {
+    "small_resolution": 0.14,
+    "odd_aspect": 0.1,
+    "no_exif": 0.18,
+    "smooth_variance": 0.24,
+    "noisy_variance": 0.08,
+    "filename_synthetic": 0.12,
+    "byte_density": 0.06
+  }
+}

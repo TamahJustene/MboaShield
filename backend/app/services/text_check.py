@@ -1,4 +1,4 @@
-"""Text / rumour risk scoring (heuristic v0 - ML-pluggable)."""
+"""Text / rumour risk scoring with NLP model path + heuristic blend."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import re
 from dataclasses import dataclass
 
 from ..config import DATA_DIR
+from .nlp_text import score_text_nlp
 
 HIGH_RISK_PATTERNS = [
     r"envoie\s*(de\s*)?l[' ]?argent",
@@ -45,15 +46,23 @@ class TextCheckResult:
     reasons: list[str]
     suggested_sources: list[dict]
     advice: str
+    nlp: dict | None = None
+    engine: str = "text-hybrid-v1"
+    backend: str = "nlp+heuristic"
 
     def as_dict(self) -> dict:
-        return {
+        payload = {
             "risk_score": self.risk_score,
             "risk_band": self.risk_band,
             "reasons": self.reasons,
             "suggested_sources": self.suggested_sources,
             "advice": self.advice,
+            "engine": self.engine,
+            "backend": self.backend,
         }
+        if self.nlp:
+            payload["nlp"] = self.nlp
+        return payload
 
 
 def _load_sources() -> list[dict]:
@@ -69,18 +78,8 @@ def _band(score: int) -> str:
     return "low"
 
 
-def check_text(text: str, lang: str = "en") -> TextCheckResult:
-    raw = (text or "").strip()
-    if not raw:
-        return TextCheckResult(
-            risk_score=0,
-            risk_band="low",
-            reasons=["Empty text"],
-            suggested_sources=[],
-            advice="Paste a WhatsApp message or rumour to analyse.",
-        )
-
-    lowered = raw.lower()
+def _heuristic_score(text: str) -> tuple[int, list[str]]:
+    lowered = text.lower()
     score = 10
     reasons: list[str] = []
 
@@ -94,18 +93,44 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
             score += 8
             reasons.append(f"Matched rumour-style phrasing: /{pattern}/")
 
-    if len(raw) > 40 and not re.search(r"https?://|www\.", lowered):
+    if len(text) > 40 and not re.search(r"https?://|www\.", lowered):
         score += 6
         reasons.append("Long claim without any source link")
 
-    if re.search(r"[A-Z]{6,}", raw) and sum(1 for c in raw if c.isupper()) > len(raw) * 0.35:
+    if re.search(r"[A-Z]{6,}", text) and sum(1 for c in text if c.isupper()) > len(text) * 0.35:
         score += 10
         reasons.append("Heavy shout-casing often used in panic forwards")
 
-    score = max(0, min(100, score))
+    return max(0, min(100, score)), reasons
+
+
+def check_text(text: str, lang: str = "en") -> TextCheckResult:
+    raw = (text or "").strip()
+    if not raw:
+        return TextCheckResult(
+            risk_score=0,
+            risk_band="low",
+            reasons=["Empty text"],
+            suggested_sources=[],
+            advice="Paste a WhatsApp message or rumour to analyse.",
+            backend="empty",
+        )
+
+    heuristic_score, heuristic_reasons = _heuristic_score(raw)
+    nlp = score_text_nlp(raw)
+    nlp_score = int(nlp.get("risk_score", 0))
+
+    # Prefer agreement: blend NLP model with pattern heuristics.
+    blended = int(round(nlp_score * 0.55 + heuristic_score * 0.45))
+    if abs(nlp_score - heuristic_score) >= 25:
+        blended = int(round(max(nlp_score, heuristic_score) * 0.7 + min(nlp_score, heuristic_score) * 0.3))
+    score = max(0, min(100, blended))
+
+    reasons = list(dict.fromkeys((nlp.get("reasons") or [])[:4] + heuristic_reasons))[:8]
     if not reasons:
         reasons.append("No strong rumour markers; still verify before forwarding")
 
+    lowered = raw.lower()
     sources = _load_sources()
     suggested = []
     for src in sources:
@@ -130,7 +155,10 @@ def check_text(text: str, lang: str = "en") -> TextCheckResult:
     return TextCheckResult(
         risk_score=score,
         risk_band=_band(score),
-        reasons=reasons[:8],
+        reasons=reasons,
         suggested_sources=suggested[:3],
         advice=advice,
+        nlp=nlp,
+        engine="text-hybrid-v1",
+        backend="nlp+heuristic",
     )

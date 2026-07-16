@@ -1,0 +1,26 @@
+{
+  "name": "mboashield-text-nlp-v1",
+  "version": "1.0.0",
+  "bias": 0.12,
+  "weights": {
+    "urgency": 0.18,
+    "money": 0.22,
+    "authority": 0.16,
+    "rumour": 0.14,
+    "prize": 0.15,
+    "threat": 0.12,
+    "no_link": 0.08,
+    "shouting": 0.1,
+    "length_norm": 0.05,
+    "fr_markers": 0.04,
+    "en_markers": 0.03
+  },
+  "lexicons": {
+    "urgency": ["urgent", "immediat", "vite", "asap", "maintenant", "now", "avant suppression", "before deleted"],
+    "money": ["momo", "orange money", "argent", "money", "transfert", "transfer", "fcfa", "paiement", "payment", "compte bloqu", "account blocked"],
+    "authority": ["ministre", "minister", "minpostel", "gouvernement", "government", "officiel", "official", "presidence", "police"],
+    "rumour": ["on dit", "ils disent", "people say", "forwarded many times", "partage", "share before", "transferre plein"],
+    "prize": ["gagne", "you won", "lottery", "million", "iphone", "voiture", "gratuit", "free money"],
+    "threat": ["couvre-feu", "curfew", "fermeture", "banques ferm", "banks closed", "crise", "attaque"]
+  }
+}
