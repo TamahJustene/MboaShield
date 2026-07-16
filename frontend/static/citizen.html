@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Citizen Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Citizen protection</p>
+      <h1>Citizen dashboard</h1>
+      <p class="tagline">Your checks, incident reports, and Ambassador certificates</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-profile">
+    <h2>Profile</h2>
+    <form id="citizenProfileForm" class="profile-form">
+      <label class="report-label" for="citizenName">Display name</label>
+      <input id="citizenName" type="text" placeholder="Your name" required />
+      <label class="report-label" for="citizenEmail">Email (optional)</label>
+      <input id="citizenEmail" type="email" placeholder="you@example.com" />
+      <button type="submit" class="btn-primary">Save profile</button>
+      <p id="citizenProfileStatus" class="demo-status muted" aria-live="polite"></p>
+    </form>
+    <p id="citizenIdentity" class="summary-lead">No profile linked yet.</p>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>My verification checks</h2>
+      <p id="checksLead" class="summary-lead">Link a profile to see your activity.</p>
+      <div id="checksList" class="history-list"></div>
+    </section>
+    <section class="history-panel">
+      <h2>My incident reports</h2>
+      <p id="incidentsLead" class="summary-lead">Reports you submitted will appear here.</p>
+      <div id="incidentsList" class="history-list"></div>
+    </section>
+  </div>
+
+  <section class="history-panel history-certificates">
+    <h2>My certificates</h2>
+    <div id="certificatesList" class="history-list"></div>
+  </section>
+
+  <footer class="app-footer">
+    <p>MboaShield Tech - tamahjustene45@gmail.com</p>
+    <p>
+      <a href="/">Home</a> -
+      <a href="/static/history.html">History</a> -
+      <a href="/static/reports.html">Report incident</a> -
+      <a href="/static/analyst.html">Analyst console</a>
+    </p>
+  </footer>
+  <script src="/static/citizen.js"></script>
+</body>
+</html>

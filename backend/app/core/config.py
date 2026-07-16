@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "0.5.0"
+    version: str = "0.6.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
 
     database_url: str = Field(default="", alias="DATABASE_URL")

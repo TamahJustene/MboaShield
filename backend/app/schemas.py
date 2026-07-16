@@ -137,18 +137,49 @@ ReportType = Literal[
     "scam",
     "other",
 ]
-ReportStatus = Literal["open", "reviewing", "resolved", "dismissed"]
+ReportStatus = Literal[
+    "open",
+    "ai_analysis",
+    "analyst_review",
+    "reviewing",
+    "institution_review",
+    "decision",
+    "public_advisory",
+    "resolved",
+    "archived",
+    "dismissed",
+]
 
 
 class IncidentReportIn(BaseModel):
     report_type: ReportType
     description: str = Field(..., min_length=8)
     verification_check_id: int | None = None
+    region: str | None = None
+    priority: str = "normal"
+    institution_id: str | None = None
 
 
 class IncidentStatusIn(BaseModel):
     status: ReportStatus
     reviewer_note: str | None = None
+    decision_summary: str | None = None
+    public_advisory: str | None = None
+    assigned_to_user_id: int | None = None
+    institution_id: str | None = None
+    region: str | None = None
+    priority: str | None = None
+
+
+class IncidentTransitionIn(BaseModel):
+    to_status: ReportStatus
+    note: str | None = None
+    decision_summary: str | None = None
+    public_advisory: str | None = None
+    assigned_to_user_id: int | None = None
+    institution_id: str | None = None
+    region: str | None = None
+    priority: str | None = None
 
 
 class IncidentReportOut(BaseModel):
@@ -159,6 +190,14 @@ class IncidentReportOut(BaseModel):
     description: str
     status: str
     reviewer_note: str | None = None
+    priority: str = "normal"
+    region: str | None = None
+    assigned_to_user_id: int | None = None
+    institution_id: str | None = None
+    decision_summary: str | None = None
+    public_advisory: str | None = None
+    ai_summary: dict[str, Any] | None = None
+    next_actions: list[str] = Field(default_factory=list)
     created_at: str
     updated_at: str
 
@@ -166,3 +205,38 @@ class IncidentReportOut(BaseModel):
 class IncidentReportsOut(BaseModel):
     reports: list[IncidentReportOut]
     count: int
+
+
+class IncidentEventOut(BaseModel):
+    id: int
+    incident_id: int
+    from_status: str | None = None
+    to_status: str
+    actor_user_id: int | None = None
+    actor_role: str | None = None
+    note: str | None = None
+    details: dict[str, Any] = Field(default_factory=dict)
+    created_at: str
+
+
+class IncidentTimelineOut(BaseModel):
+    incident_id: int
+    events: list[IncidentEventOut]
+    count: int
+
+
+class InstitutionIn(BaseModel):
+    id: str = Field(..., min_length=2)
+    name: str = Field(..., min_length=2)
+    short_name: str = Field(..., min_length=2)
+    url: str | None = None
+    verified: bool = True
+    handles: list[str] = Field(default_factory=list)
+
+
+class InstitutionUpdateIn(BaseModel):
+    name: str | None = None
+    short_name: str | None = None
+    url: str | None = None
+    verified: bool | None = None
+    handles: list[str] | None = None

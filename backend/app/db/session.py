@@ -63,21 +63,32 @@ def init_db() -> None:
     get_settings.cache_clear()
     engine = get_engine(force_refresh=True)
     Base.metadata.create_all(bind=engine)
-    # Soft migrations for existing SQLite files created before Phase 1 columns.
     if str(engine.url).startswith("sqlite"):
         with engine.begin() as conn:
-            cols = {row[1] for row in conn.execute(text("PRAGMA table_info(users)")).fetchall()}
-            alters = []
-            if "password_hash" not in cols:
-                alters.append("ALTER TABLE users ADD COLUMN password_hash VARCHAR(255)")
-            if "failed_login_count" not in cols:
-                alters.append("ALTER TABLE users ADD COLUMN failed_login_count INTEGER DEFAULT 0")
-            if "locked_until" not in cols:
-                alters.append("ALTER TABLE users ADD COLUMN locked_until VARCHAR(64)")
-            if "is_active" not in cols:
-                alters.append("ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1")
-            for stmt in alters:
-                conn.execute(text(stmt))
+            user_cols = {row[1] for row in conn.execute(text("PRAGMA table_info(users)")).fetchall()}
+            for stmt in [
+                ("password_hash", "ALTER TABLE users ADD COLUMN password_hash VARCHAR(255)"),
+                ("failed_login_count", "ALTER TABLE users ADD COLUMN failed_login_count INTEGER DEFAULT 0"),
+                ("locked_until", "ALTER TABLE users ADD COLUMN locked_until VARCHAR(64)"),
+                ("is_active", "ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1"),
+            ]:
+                if stmt[0] not in user_cols:
+                    conn.execute(text(stmt[1]))
+
+            incident_cols = {
+                row[1] for row in conn.execute(text("PRAGMA table_info(incident_reports)")).fetchall()
+            }
+            for col, ddl in [
+                ("priority", "ALTER TABLE incident_reports ADD COLUMN priority VARCHAR(32) DEFAULT 'normal'"),
+                ("region", "ALTER TABLE incident_reports ADD COLUMN region VARCHAR(128)"),
+                ("assigned_to_user_id", "ALTER TABLE incident_reports ADD COLUMN assigned_to_user_id INTEGER"),
+                ("institution_id", "ALTER TABLE incident_reports ADD COLUMN institution_id VARCHAR(64)"),
+                ("decision_summary", "ALTER TABLE incident_reports ADD COLUMN decision_summary TEXT"),
+                ("public_advisory", "ALTER TABLE incident_reports ADD COLUMN public_advisory TEXT"),
+                ("ai_summary_json", "ALTER TABLE incident_reports ADD COLUMN ai_summary_json TEXT"),
+            ]:
+                if col not in incident_cols:
+                    conn.execute(text(ddl))
 
 
 def reset_engine() -> None:

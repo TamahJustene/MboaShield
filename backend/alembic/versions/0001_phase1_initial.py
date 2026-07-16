@@ -1,4 +1,4 @@
-"""Phase 1 initial schema — users, checks, incidents, audit, refresh tokens.
+"""Phase 1 initial schema Â— users, checks, incidents, audit, refresh tokens.
 
 Revision ID: 0001_phase1
 Revises:

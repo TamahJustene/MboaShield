@@ -15,6 +15,7 @@ from sqlalchemy import select
 from .core.security import hash_password, verify_password
 from .db.models import (
     AuditLog,
+    IncidentEvent,
     IncidentReport,
     Institution,
     LessonCertificate,
@@ -24,6 +25,7 @@ from .db.models import (
     VerificationSignal,
 )
 from .db.session import session_scope
+from .services.incident_workflow import ALLOWED_STATUSES, assert_transition, next_actions
 
 
 def now_iso() -> str:
@@ -39,7 +41,7 @@ ALLOWED_REPORT_TYPES = {
     "other",
 }
 
-ALLOWED_REPORT_STATUSES = {"open", "reviewing", "resolved", "dismissed"}
+ALLOWED_REPORT_STATUSES = ALLOWED_STATUSES
 
 
 def _extract_signals(result: dict) -> list[dict[str, Any]]:
@@ -407,6 +409,12 @@ def get_valid_refresh_token(raw_token: str) -> dict | None:
 
 
 def _row_to_incident(row: IncidentReport) -> dict:
+    ai_summary = None
+    if row.ai_summary_json:
+        try:
+            ai_summary = json.loads(row.ai_summary_json)
+        except json.JSONDecodeError:
+            ai_summary = {"raw": row.ai_summary_json}
     return {
         "id": row.id,
         "verification_check_id": row.verification_check_id,
@@ -415,8 +423,57 @@ def _row_to_incident(row: IncidentReport) -> dict:
         "description": row.description,
         "status": row.status,
         "reviewer_note": row.reviewer_note,
+        "priority": getattr(row, "priority", None) or "normal",
+        "region": getattr(row, "region", None),
+        "assigned_to_user_id": getattr(row, "assigned_to_user_id", None),
+        "institution_id": getattr(row, "institution_id", None),
+        "decision_summary": getattr(row, "decision_summary", None),
+        "public_advisory": getattr(row, "public_advisory", None),
+        "ai_summary": ai_summary,
+        "next_actions": next_actions(row.status),
         "created_at": row.created_at,
         "updated_at": row.updated_at,
+    }
+
+
+def _append_incident_event(
+    session,
+    *,
+    incident_id: int,
+    from_status: str | None,
+    to_status: str,
+    actor_user_id: int | None = None,
+    actor_role: str | None = None,
+    note: str | None = None,
+    details: dict | None = None,
+) -> None:
+    session.add(
+        IncidentEvent(
+            incident_id=incident_id,
+            from_status=from_status,
+            to_status=to_status,
+            actor_user_id=actor_user_id,
+            actor_role=actor_role,
+            note=note,
+            details_json=json.dumps(details or {}, ensure_ascii=True),
+            created_at=now_iso(),
+        )
+    )
+
+
+def _ai_summary_from_check(check: dict | None) -> dict | None:
+    if not check:
+        return None
+    result = check.get("result") or {}
+    analysis = result.get("ai_analysis") or {}
+    return {
+        "check_id": check.get("id"),
+        "risk_score": check.get("risk_score") or result.get("risk_score"),
+        "risk_band": check.get("risk_band") or result.get("risk_band"),
+        "confidence": analysis.get("confidence"),
+        "threat_categories": analysis.get("threat_categories") or [],
+        "narrative": analysis.get("narrative"),
+        "engine": analysis.get("engine"),
     }
 
 
@@ -426,6 +483,10 @@ def create_incident_report(
     description: str,
     verification_check_id: int | None = None,
     user_id: int | None = None,
+    region: str | None = None,
+    priority: str = "normal",
+    institution_id: str | None = None,
+    auto_ai: bool = True,
 ) -> dict:
     report_type = (report_type or "").strip().lower()
     description = (description or "").strip()
@@ -433,24 +494,56 @@ def create_incident_report(
         raise ValueError(f"Invalid report_type. Allowed: {', '.join(sorted(ALLOWED_REPORT_TYPES))}")
     if len(description) < 8:
         raise ValueError("description must be at least 8 characters")
-    if verification_check_id is not None and not get_verification_check(verification_check_id):
-        raise ValueError("verification_check_id not found")
+    check = None
+    if verification_check_id is not None:
+        check = get_verification_check(verification_check_id)
+        if not check:
+            raise ValueError("verification_check_id not found")
     if user_id is not None and not get_user(user_id):
         raise ValueError("user_id not found")
+    if institution_id is not None and not get_institution(institution_id):
+        raise ValueError("institution_id not found")
 
     stamp = now_iso()
+    ai_summary = _ai_summary_from_check(check) if auto_ai else None
+    initial_status = "ai_analysis" if (auto_ai and ai_summary) else "open"
+
     with session_scope() as session:
         row = IncidentReport(
             verification_check_id=verification_check_id,
             user_id=user_id,
             report_type=report_type,
             description=description,
-            status="open",
+            status=initial_status,
             reviewer_note=None,
+            priority=(priority or "normal").strip().lower() or "normal",
+            region=(region or "").strip() or None,
+            institution_id=institution_id,
+            ai_summary_json=json.dumps(ai_summary, ensure_ascii=True) if ai_summary else None,
             created_at=stamp,
             updated_at=stamp,
         )
         session.add(row)
+        session.flush()
+        _append_incident_event(
+            session,
+            incident_id=row.id,
+            from_status=None,
+            to_status="open",
+            actor_user_id=user_id,
+            actor_role="citizen",
+            note="Citizen report submitted",
+        )
+        if initial_status == "ai_analysis":
+            _append_incident_event(
+                session,
+                incident_id=row.id,
+                from_status="open",
+                to_status="ai_analysis",
+                actor_role="system",
+                note="Automatic AI analysis attached from linked verification check",
+                details=ai_summary or {},
+            )
         session.flush()
         return _row_to_incident(row)
 
@@ -463,19 +556,29 @@ def get_incident_report(report_id: int) -> dict | None:
         return _row_to_incident(row)
 
 
-def list_incident_reports(limit: int = 20, status: str | None = None) -> list[dict]:
+def list_incident_reports(
+    limit: int = 20,
+    status: str | None = None,
+    user_id: int | None = None,
+    statuses: list[str] | None = None,
+) -> list[dict]:
     safe_limit = max(1, min(limit, 100))
     with session_scope() as session:
         stmt = select(IncidentReport).order_by(IncidentReport.id.desc()).limit(safe_limit)
+        filters = []
         if status:
             if status not in ALLOWED_REPORT_STATUSES:
                 raise ValueError(f"Invalid status. Allowed: {', '.join(sorted(ALLOWED_REPORT_STATUSES))}")
-            stmt = (
-                select(IncidentReport)
-                .where(IncidentReport.status == status)
-                .order_by(IncidentReport.id.desc())
-                .limit(safe_limit)
-            )
+            filters.append(IncidentReport.status == status)
+        if statuses:
+            for item in statuses:
+                if item not in ALLOWED_REPORT_STATUSES:
+                    raise ValueError(f"Invalid status. Allowed: {', '.join(sorted(ALLOWED_REPORT_STATUSES))}")
+            filters.append(IncidentReport.status.in_(statuses))
+        if user_id is not None:
+            filters.append(IncidentReport.user_id == user_id)
+        if filters:
+            stmt = select(IncidentReport).where(*filters).order_by(IncidentReport.id.desc()).limit(safe_limit)
         rows = session.scalars(stmt).all()
         return [_row_to_incident(row) for row in rows]
 
@@ -485,20 +588,140 @@ def update_incident_status(
     *,
     status: str,
     reviewer_note: str | None = None,
+    actor_user_id: int | None = None,
+    actor_role: str | None = None,
+    decision_summary: str | None = None,
+    public_advisory: str | None = None,
+    assigned_to_user_id: int | None = None,
+    institution_id: str | None = None,
+    region: str | None = None,
+    priority: str | None = None,
 ) -> dict | None:
-    status = (status or "").strip().lower()
-    if status not in ALLOWED_REPORT_STATUSES:
-        raise ValueError(f"Invalid status. Allowed: {', '.join(sorted(ALLOWED_REPORT_STATUSES))}")
     with session_scope() as session:
         row = session.get(IncidentReport, report_id)
         if not row:
             return None
-        row.status = status
+        _, persist_status = assert_transition(row.status, status)
+        from_status = row.status
+        row.status = persist_status
         if reviewer_note is not None:
             row.reviewer_note = reviewer_note
+        if decision_summary is not None:
+            row.decision_summary = decision_summary
+        if public_advisory is not None:
+            row.public_advisory = public_advisory
+        if assigned_to_user_id is not None:
+            row.assigned_to_user_id = assigned_to_user_id
+        if institution_id is not None:
+            row.institution_id = institution_id
+        if region is not None:
+            row.region = region
+        if priority is not None:
+            row.priority = priority
         row.updated_at = now_iso()
+        _append_incident_event(
+            session,
+            incident_id=row.id,
+            from_status=from_status,
+            to_status=persist_status,
+            actor_user_id=actor_user_id,
+            actor_role=actor_role,
+            note=reviewer_note,
+            details={
+                "decision_summary": decision_summary,
+                "public_advisory": public_advisory,
+                "institution_id": institution_id,
+            },
+        )
         session.flush()
         return _row_to_incident(row)
+
+
+def list_incident_events(incident_id: int) -> list[dict]:
+    with session_scope() as session:
+        if not session.get(IncidentReport, incident_id):
+            return []
+        rows = session.scalars(
+            select(IncidentEvent)
+            .where(IncidentEvent.incident_id == incident_id)
+            .order_by(IncidentEvent.id.asc())
+        ).all()
+        return [
+            {
+                "id": row.id,
+                "incident_id": row.incident_id,
+                "from_status": row.from_status,
+                "to_status": row.to_status,
+                "actor_user_id": row.actor_user_id,
+                "actor_role": row.actor_role,
+                "note": row.note,
+                "details": json.loads(row.details_json or "{}"),
+                "created_at": row.created_at,
+            }
+            for row in rows
+        ]
+
+
+def incident_status_counts() -> dict[str, int]:
+    with session_scope() as session:
+        rows = session.scalars(select(IncidentReport)).all()
+        counts: dict[str, int] = {}
+        for row in rows:
+            counts[row.status] = counts.get(row.status, 0) + 1
+        return counts
+
+
+def list_verification_checks_for_user(user_id: int, limit: int = 20) -> list[dict]:
+    safe_limit = max(1, min(limit, 100))
+    with session_scope() as session:
+        checks = session.scalars(
+            select(VerificationCheck)
+            .where(VerificationCheck.user_id == user_id)
+            .order_by(VerificationCheck.id.desc())
+            .limit(safe_limit)
+        ).all()
+        items = []
+        for check in checks:
+            items.append(_row_to_check(check, []))
+        return items
+
+
+def upsert_institution(
+    *,
+    institution_id: str,
+    name: str,
+    short_name: str,
+    url: str | None = None,
+    verified: bool = True,
+    handles: list[str] | None = None,
+) -> dict:
+    institution_id = (institution_id or "").strip().lower()
+    name = (name or "").strip()
+    short_name = (short_name or "").strip()
+    if not institution_id or not name or not short_name:
+        raise ValueError("id, name, and short_name are required")
+    handles = handles or []
+    with session_scope() as session:
+        row = session.get(Institution, institution_id)
+        if row:
+            row.name = name
+            row.short_name = short_name
+            row.website_url = url or ""
+            row.verified = 1 if verified else 0
+            row.handles_json = json.dumps(handles, ensure_ascii=True)
+        else:
+            row = Institution(
+                id=institution_id,
+                name=name,
+                short_name=short_name,
+                website_url=url or "",
+                verified=1 if verified else 0,
+                handles_json=json.dumps(handles, ensure_ascii=True),
+                created_at=now_iso(),
+            )
+            session.add(row)
+        session.flush()
+        return _row_to_institution(row)
 
 
 def write_audit_log(

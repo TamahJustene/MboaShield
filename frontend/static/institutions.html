@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b3d2e" />
-  <title>MboaShield — Institution Registry</title>
+  <title>MboaShield - Institution Registry</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
@@ -15,9 +15,30 @@
       <p class="tagline">Official Cameroon bodies used for impersonation detection</p>
     </div>
     <div class="header-actions">
-      <a href="/" class="btn-ghost history-link">Back to app</a>
+      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
     </div>
   </header>
+
+  <section class="history-panel history-certificates">
+    <h2>Registry administration</h2>
+    <p class="summary-lead">Add or update verified institutions used by the impersonation engine.</p>
+    <form id="institutionAdminForm" class="profile-form">
+      <label class="report-label" for="instId">Institution ID</label>
+      <input id="instId" type="text" placeholder="e.g. minpostel" required />
+      <label class="report-label" for="instName">Official name</label>
+      <input id="instName" type="text" required />
+      <label class="report-label" for="instShort">Short name</label>
+      <input id="instShort" type="text" required />
+      <label class="report-label" for="instUrl">Website URL</label>
+      <input id="instUrl" type="url" placeholder="https://" />
+      <label class="report-label" for="instHandles">Handles (comma-separated)</label>
+      <input id="instHandles" type="text" placeholder="@minpostel, @minpostel_cm" />
+      <label class="report-label"><input id="instVerified" type="checkbox" checked /> Verified</label>
+      <button type="submit" class="btn-primary">Save institution</button>
+      <p id="institutionAdminStatus" class="demo-status muted" aria-live="polite"></p>
+    </form>
+  </section>
 
   <section class="history-panel history-certificates">
     <p id="registryLead" class="summary-lead">Loading verified institutions...</p>
@@ -25,8 +46,13 @@
   </section>
 
   <footer class="app-footer">
-    <p>MboaShield Tech · tamahjustene45@gmail.com</p>
-    <p><a href="/">Home</a> · <a href="/static/history.html">Activity history</a></p>
+    <p>MboaShield Tech - tamahjustene45@gmail.com</p>
+    <p>
+      <a href="/">Home</a> -
+      <a href="/static/history.html">Activity history</a> -
+      <a href="/static/analyst.html">Analyst console</a> -
+      <a href="/static/citizen.html">Citizen dashboard</a>
+    </p>
   </footer>
 
   <script src="/static/institutions.js"></script>

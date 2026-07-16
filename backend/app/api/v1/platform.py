@@ -88,6 +88,9 @@ def api_create_incident(body: IncidentReportIn, user_id: LegacyUserId):
             description=body.description,
             verification_check_id=body.verification_check_id,
             user_id=user_id,
+            region=body.region,
+            priority=body.priority,
+            institution_id=body.institution_id,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -122,6 +125,14 @@ def api_update_incident(
             report_id,
             status=body.status,
             reviewer_note=body.reviewer_note,
+            actor_user_id=_actor["id"] if _actor else None,
+            actor_role=_actor["role"] if _actor else None,
+            decision_summary=body.decision_summary,
+            public_advisory=body.public_advisory,
+            assigned_to_user_id=body.assigned_to_user_id,
+            institution_id=body.institution_id,
+            region=body.region,
+            priority=body.priority,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

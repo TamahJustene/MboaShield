@@ -44,9 +44,13 @@
   <section class="history-toolbar">
     <div class="chip-row" id="statusFilters" aria-label="Filter by status">
       <button type="button" class="btn-ghost filter-chip active" data-status="">All</button>
-      <button type="button" class="btn-ghost filter-chip" data-status="open">Open</button>
-      <button type="button" class="btn-ghost filter-chip" data-status="reviewing">Reviewing</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="open">Citizen</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="ai_analysis">AI</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="analyst_review">Analyst</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="institution_review">Institution</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="public_advisory">Advisory</button>
       <button type="button" class="btn-ghost filter-chip" data-status="resolved">Resolved</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="archived">Archived</button>
       <button type="button" class="btn-ghost filter-chip" data-status="dismissed">Dismissed</button>
     </div>
     <button type="button" id="refreshReports" class="btn-ghost">Refresh</button>
@@ -71,6 +75,8 @@
     <p>
       <a href="/">Home</a> -
       <a href="/static/history.html">Activity history</a> -
+      <a href="/static/analyst.html">Analyst console</a> -
+      <a href="/static/citizen.html">Citizen dashboard</a> -
       <a href="/static/institutions.html">Institution registry</a>
     </p>
   </footer>

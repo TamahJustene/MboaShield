@@ -64,7 +64,7 @@ def create_app() -> FastAPI:
             "auth_enforce": settings.auth_enforce,
             "institutions_count": len(institutions),
             "ai_engine": "mboashield-trust-engine",
-            "ai_engine_version": "0.5.0",
+            "ai_engine_version": "0.6.0",
             "nlp_engine": "mboashield-text-nlp-v1",
             "media_adapter": "mboashield-media-adapter-v1",
             "audio_adapter": "mboashield-audio-adapter-v1",

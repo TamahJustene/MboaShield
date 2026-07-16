@@ -3,8 +3,10 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from .auth import router as auth_router
+from .government import router as government_router
 from .platform import router as platform_router
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth_router)
 router.include_router(platform_router)
+router.include_router(government_router)

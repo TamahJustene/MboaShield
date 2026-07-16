@@ -2,6 +2,32 @@
 
 All notable changes to MboaShield are documented here.
 
+## [0.6.0] - 2026-07-16
+
+### Phase 2 — Government workflows
+
+#### Added
+- National incident workflow states with validated transitions
+- Immutable `incident_events` timeline for every status change
+- Auto AI-analysis stage when a report links a verification check
+- Transition API: `POST /api/v1/incidents/{id}/transition`
+- Timeline API: `GET /api/v1/incidents/{id}/timeline`
+- Workflow blueprint: `GET /api/v1/workflow/states`
+- Analyst queue + summary APIs and console UI (`/static/analyst.html`)
+- Citizen dashboard API + UI (`/static/citizen.html`)
+- Institution create/update admin APIs and registry admin UI
+- Alembic migration `0002_phase2`
+
+#### Changed
+- Incident model extended with priority, region, assignment, institution, decision, advisory, AI summary
+- Reports UI supports full workflow filters and timeline
+- Version bumped to 0.6.0
+
+#### Preserved
+- Legacy statuses `open`, `reviewing`, `resolved`, `dismissed`
+- Existing `/api/v1/incidents` create/list/get/patch contracts
+- All Phase 1 auth/security and detection APIs
+
 ## [0.5.0] - 2026-07-16
 
 ### Phase 1 — Government platform foundation
