@@ -2,39 +2,32 @@ from __future__ import annotations
 
 import json
 
+from sqlalchemy import func, select
+
 from .config import DATA_DIR
-from .db import get_conn, now_iso
+from .db.models import Institution
+from .db.session import session_scope
+from .repositories import now_iso
 
 
 def seed_institutions_if_needed() -> int:
-    with get_conn() as conn:
-        count = conn.execute("SELECT COUNT(*) AS c FROM institutions").fetchone()["c"]
+    with session_scope() as session:
+        count = session.scalar(select(func.count()).select_from(Institution)) or 0
         if count:
             return 0
 
         raw = json.loads((DATA_DIR / "institutions.json").read_text(encoding="utf-8"))
+        stamp = now_iso()
         for item in raw:
-            conn.execute(
-                """
-                INSERT INTO institutions (
-                    id,
-                    name,
-                    short_name,
-                    website_url,
-                    verified,
-                    handles_json,
-                    created_at
+            session.add(
+                Institution(
+                    id=item["id"],
+                    name=item["name"],
+                    short_name=item["short_name"],
+                    website_url=item.get("url", ""),
+                    verified=1 if item.get("verified", True) else 0,
+                    handles_json=json.dumps(item.get("handles", []), ensure_ascii=True),
+                    created_at=stamp,
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    item["id"],
-                    item["name"],
-                    item["short_name"],
-                    item.get("url", ""),
-                    1 if item.get("verified", True) else 0,
-                    json.dumps(item.get("handles", []), ensure_ascii=True),
-                    now_iso(),
-                ),
             )
         return len(raw)

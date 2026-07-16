@@ -1,7 +1,11 @@
-import os
-from pathlib import Path
+"""Compatibility shim.
 
-ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = ROOT / "data"
-VERSION = "0.4.0"
-DB_PATH = Path(os.getenv("MBOASHIELD_DB_PATH", ROOT / "storage" / "mboashield.db"))
+Legacy imports (`from backend.app.config import ROOT, VERSION, DATA_DIR, DB_PATH`)
+continue to work while settings live in `core.config`.
+"""
+
+from __future__ import annotations
+
+from .core.config import DATA_DIR, DB_PATH, ROOT, VERSION, get_settings
+
+__all__ = ["ROOT", "DATA_DIR", "DB_PATH", "VERSION", "get_settings"]

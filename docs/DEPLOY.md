@@ -6,7 +6,7 @@ Use these for your **ictinnovationweek.cm** form demo link.
 
 ---
 
-## Step 0 ó Push code (done if you see this on GitHub)
+## Step 0 ù Push code (done if you see this on GitHub)
 
 ```bash
 cd mboashield
@@ -17,7 +17,7 @@ Repo: https://github.com/TamahJustene/MboaShield
 
 ---
 
-## Option A ó Render (recommended, full app)
+## Option A ù Render (recommended, full app)
 
 Render runs the whole FastAPI server in Docker. This is your **primary competition URL**.
 
@@ -26,8 +26,8 @@ Render runs the whole FastAPI server in Docker. This is your **primary competiti
 1. Open https://dashboard.render.com and sign in with **GitHub**
 2. Click **New +** ? **Blueprint**
 3. Connect repository: **TamahJustene/MboaShield**
-4. Render reads `render.yaml` automatically ó click **Apply**
-5. Wait 3ñ8 minutes for the first build (free tier can be slow)
+4. Render reads `render.yaml` automatically ù click **Apply**
+5. Wait 3ù8 minutes for the first build (free tier can be slow)
 6. Copy your URL, e.g. `https://mboashield.onrender.com`
 
 ### Verify
@@ -40,7 +40,7 @@ Open in browser:
 
 ### Free tier notes
 
-- Service **sleeps after ~15 min** of no traffic ó first visit may take 30ñ60s to wake up
+- Service **sleeps after ~15 min** of no traffic ù first visit may take 30ù60s to wake up
 - Before the pitch, open the URL once to wake it, or click **Run 5-scenario pitch demo**
 - Region is set to **Frankfurt** (closest EU region to Cameroon)
 
@@ -56,19 +56,19 @@ https://YOUR-URL.onrender.com
 
 ---
 
-## Option B ó Vercel (frontend + API proxy to Render)
+## Option B ù Vercel (frontend + API proxy to Render)
 
 Vercel serves the UI globally; API calls are proxied to your Render backend.
 
-**Deploy Render first** ó Vercel needs a live Render URL in `vercel.json`.
+**Deploy Render first** ù Vercel needs a live Render URL in `vercel.json`.
 
 ### Deploy (first time)
 
 1. Open https://vercel.com and sign in with **GitHub**
-2. Click **Add NewÖ** ? **Project**
+2. Click **Add Newù** ? **Project**
 3. Import **TamahJustene/MboaShield**
 4. Framework Preset: **Other** (no build step)
-5. Root Directory: leave as **.** (repo root ó `vercel.json` sets `outputDirectory`)
+5. Root Directory: leave as **.** (repo root ù `vercel.json` sets `outputDirectory`)
 6. Click **Deploy**
 7. Copy URL, e.g. `https://mboashield.vercel.app`
 
@@ -76,7 +76,7 @@ Vercel serves the UI globally; API calls are proxied to your Render backend.
 
 - `https://YOUR-URL.vercel.app` ? demo UI
 - `https://YOUR-URL.vercel.app/health` ? proxied to Render
-- Run **5-scenario pitch demo** ó confirms API proxy works
+- Run **5-scenario pitch demo** ù confirms API proxy works
 
 ### Limitations
 
@@ -86,18 +86,18 @@ Vercel serves the UI globally; API calls are proxied to your Render backend.
 
 ---
 
-## Option C ó Instant tunnel (testing only)
+## Option C ù Instant tunnel (testing only)
 
 ```bash
 cd mboashield
 ./scripts/public_tunnel.sh
 ```
 
-Copy the `https://....trycloudflare.com` URL. URL changes every run ó not for final submission.
+Copy the `https://....trycloudflare.com` URL. URL changes every run ù not for final submission.
 
 ---
 
-## Option D ó Local backup (pitch day)
+## Option D ù Local backup (pitch day)
 
 ```bash
 ./scripts/run_demo.sh
@@ -123,8 +123,42 @@ Record a 90s backup video on your phone.
 
 ```
 GET /health
-? {"status":"ok","version":"0.2.0","founder":"Justene Nkwagoh Tamah","product":"MboaShield"}
+? {"status":"ok","version":"0.5.0","database":"sqlite|postgresql","auth_enforce":false,...}
 ```
+
+---
+
+## Production-like local stack (Phase 1)
+
+```bash
+cd mboashield
+cp .env.example .env   # set JWT_SECRET
+docker compose up --build
+# API: http://127.0.0.1:8000
+# Postgres: localhost:5432 (user/pass/db: mboashield)
+```
+
+SQLite remains the default for `./scripts/run_demo.sh` when `DATABASE_URL` is unset.
+
+### Important env vars
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | PostgreSQL URL (`postgresql+psycopg://...`) |
+| `MBOASHIELD_DB_PATH` | SQLite file path when not using Postgres |
+| `JWT_SECRET` | Required strong secret in production |
+| `AUTH_ENFORCE` | `true` to require JWT + RBAC on gated routes |
+| `CORS_ORIGINS` | Comma-separated origins |
+| `RATE_LIMIT_PER_MINUTE` | Per-client path rate limit |
+
+### Migrations
+
+```bash
+# With DATABASE_URL set:
+alembic upgrade head
+```
+
+On first boot the app also runs `create_all` so demo environments stay zero-friction.
 
 ---
 
@@ -132,5 +166,5 @@ GET /health
 
 1. Update `FORM_ANSWERS.md` with your live Render URL
 2. Update `vercel.json` with the same Render hostname if using Vercel
-3. Test the 5-scenario demo on mobile data (not just Wi?Fi)
-4. Submit before **22 Jul 2026 15:30**
+3. Test the 5-scenario demo on mobile data (not just Wi-Fi)
+4. For government deployments: attach managed Postgres, set `JWT_SECRET`, set `AUTH_ENFORCE=true`

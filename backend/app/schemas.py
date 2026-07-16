@@ -82,6 +82,30 @@ class UserOut(BaseModel):
     email: str | None = None
     role: str
     created_at: str
+    is_active: bool = True
+
+
+class AuthRegisterIn(BaseModel):
+    display_name: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=3)
+    password: str = Field(..., min_length=8)
+
+
+class AuthLoginIn(BaseModel):
+    email: str = Field(..., min_length=3)
+    password: str = Field(..., min_length=1)
+
+
+class TokenRefreshIn(BaseModel):
+    refresh_token: str = Field(..., min_length=10)
+
+
+class TokenOut(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+    expires_in_minutes: int
+    user: UserOut
 
 
 class InstitutionOut(BaseModel):
