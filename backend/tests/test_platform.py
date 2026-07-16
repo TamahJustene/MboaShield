@@ -61,4 +61,4 @@ def test_health_reports_phase1_foundation(client):
     assert payload["status"] == "ok"
     assert payload["database"] == "sqlite"
     assert payload["auth_enforce"] is False
-    assert payload["version"] == "0.8.0"
+    assert payload["version"] == "0.9.0"

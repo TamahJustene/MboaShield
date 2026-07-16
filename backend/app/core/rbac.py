@@ -45,6 +45,7 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "institutions:manage",
         "audit:read",
         "users:manage",
+        "partners:manage",
         "system:admin",
     },
 }

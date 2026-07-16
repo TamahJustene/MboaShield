@@ -71,6 +71,10 @@ def init_db() -> None:
                 ("failed_login_count", "ALTER TABLE users ADD COLUMN failed_login_count INTEGER DEFAULT 0"),
                 ("locked_until", "ALTER TABLE users ADD COLUMN locked_until VARCHAR(64)"),
                 ("is_active", "ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1"),
+                ("mfa_enabled", "ALTER TABLE users ADD COLUMN mfa_enabled BOOLEAN DEFAULT 0"),
+                ("mfa_secret", "ALTER TABLE users ADD COLUMN mfa_secret VARCHAR(255)"),
+                ("oidc_subject", "ALTER TABLE users ADD COLUMN oidc_subject VARCHAR(255)"),
+                ("oidc_provider", "ALTER TABLE users ADD COLUMN oidc_provider VARCHAR(64)"),
             ]:
                 if stmt[0] not in user_cols:
                     conn.execute(text(stmt[1]))

@@ -11,6 +11,7 @@ from .api import api_router
 from .core.config import ROOT, VERSION, get_settings
 from .core.errors import AppError, app_error_handler, http_exception_handler
 from .core.middleware import RateLimitMiddleware, RequestContextMiddleware
+from .core.security import oidc_providers, production_security_warnings
 from .db.session import init_db
 from .repositories import list_institutions
 from .seed import seed_institutions_if_needed
@@ -64,9 +65,16 @@ def create_app() -> FastAPI:
             "auth_enforce": settings.auth_enforce,
             "institutions_count": len(institutions),
             "ai_engine": "mboashield-trust-engine",
-            "ai_engine_version": "0.8.0",
+            "ai_engine_version": "0.9.0",
             "intelligence_engines": 10,
             "analytics": "national-v1",
+            "identity": {
+                "mfa_ready": True,
+                "oidc_ready": bool(settings.oidc_issuer and settings.oidc_client_id),
+                "oidc_providers": len(oidc_providers()),
+                "partner_api_keys": True,
+                "security_warnings": production_security_warnings(),
+            },
             "nlp_engine": "mboashield-text-nlp-v1",
             "media_adapter": "mboashield-media-adapter-v1",
             "audio_adapter": "mboashield-audio-adapter-v1",

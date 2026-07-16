@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Identity and Partners</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Hardened identity</p>
+      <h1>Identity and partners</h1>
+      <p class="tagline">JWT login, MFA enrollment, OIDC readiness, and partner API keys</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/national.html" class="btn-ghost history-link">National</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-certificates">
+    <h2>Security status</h2>
+    <div id="securityStatus" class="report-copy muted">Loading...</div>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Login</h2>
+      <form id="loginForm" class="profile-form">
+        <label class="report-label" for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" required />
+        <label class="report-label" for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" required />
+        <button type="submit" class="btn-primary">Sign in</button>
+        <p id="loginStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <form id="mfaForm" class="profile-form hidden">
+        <label class="report-label" for="mfaCode">MFA code</label>
+        <input id="mfaCode" type="text" inputmode="numeric" maxlength="10" required />
+        <button type="submit" class="btn-primary">Verify MFA</button>
+        <p id="mfaStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="history-panel">
+      <h2>MFA enrollment</h2>
+      <p class="summary-lead">Requires a signed-in access token stored from login.</p>
+      <button type="button" id="setupMfa" class="btn-ghost">Generate MFA secret</button>
+      <pre id="mfaSetupOut" class="out history-detail empty-detail"></pre>
+      <form id="enableMfaForm" class="profile-form">
+        <label class="report-label" for="enableMfaCode">Confirm authenticator code</label>
+        <input id="enableMfaCode" type="text" inputmode="numeric" maxlength="10" required />
+        <button type="submit" class="btn-primary">Enable MFA</button>
+        <p id="enableMfaStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+
+  <section class="history-panel history-certificates">
+    <h2>Partner API keys</h2>
+    <form id="apiKeyForm" class="profile-form">
+      <label class="report-label" for="keyName">Key name</label>
+      <input id="keyName" type="text" value="CERT Integration" required />
+      <label class="report-label" for="keyOrg">Partner organization</label>
+      <input id="keyOrg" type="text" value="National CERT" required />
+      <label class="report-label" for="keyScopes">Scopes (comma-separated)</label>
+      <input id="keyScopes" type="text" value="checks:create, institutions:read, analytics:read" />
+      <button type="submit" class="btn-primary">Create API key</button>
+      <p id="apiKeyStatus" class="demo-status muted" aria-live="polite"></p>
+    </form>
+    <div id="apiKeyList" class="history-list"></div>
+  </section>
+
+  <footer class="app-footer">
+    <p>MboaShield Tech - tamahjustene45@gmail.com</p>
+    <p>
+      <a href="/">Home</a> -
+      <a href="/static/analyst.html">Analyst</a> -
+      <a href="/static/national.html">National dashboard</a>
+    </p>
+  </footer>
+  <script src="/static/identity.js"></script>
+</body>
+</html>

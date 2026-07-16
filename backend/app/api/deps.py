@@ -1,4 +1,4 @@
-"""API dependency helpers - auth, identity, RBAC."""
+"""API dependency helpers - auth, identity, RBAC, partner API keys."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from ..core.config import get_settings
 from ..core.rbac import has_permission
-from ..core.security import safe_decode_token
-from ..repositories import get_user
+from ..core.security import safe_decode_token, scopes_grant_permission
+from ..repositories import authenticate_api_key, get_user
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -43,7 +43,25 @@ def get_optional_bearer_user(
     user = get_user(user_id)
     if not user or not user.get("is_active", True):
         return None
+    user = dict(user)
+    user["auth_type"] = "jwt"
     return user
+
+
+def get_optional_api_key_actor(x_api_key: str | None = Header(default=None, alias="X-API-Key")) -> dict | None:
+    if not x_api_key:
+        return None
+    return authenticate_api_key(x_api_key)
+
+
+def get_optional_actor(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)] = None,
+    x_api_key: str | None = Header(default=None, alias="X-API-Key"),
+) -> dict | None:
+    user = get_optional_bearer_user(credentials)
+    if user:
+        return user
+    return get_optional_api_key_actor(x_api_key)
 
 
 def get_current_user(
@@ -61,18 +79,25 @@ def require_permission(permission: str):
     def _dependency(
         request: Request,
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)] = None,
+        x_api_key: str | None = Header(default=None, alias="X-API-Key"),
     ) -> dict | None:
         settings = get_settings()
-        if not settings.auth_enforce:
-            return get_optional_bearer_user(credentials)
+        actor = get_optional_bearer_user(credentials) or get_optional_api_key_actor(x_api_key)
 
-        user = get_optional_bearer_user(credentials)
-        if not user:
+        if not settings.auth_enforce:
+            return actor
+
+        if not actor:
             raise HTTPException(status_code=401, detail="Authentication required")
-        if not has_permission(user["role"], permission):
+
+        if actor.get("auth_type") == "api_key":
+            if not scopes_grant_permission(actor.get("scopes") or [], permission):
+                raise HTTPException(status_code=403, detail=f"API key missing scope/permission: {permission}")
+        elif not has_permission(actor["role"], permission):
             raise HTTPException(status_code=403, detail=f"Missing permission: {permission}")
-        request.state.actor = user
-        return user
+
+        request.state.actor = actor
+        return actor
 
     return _dependency
 

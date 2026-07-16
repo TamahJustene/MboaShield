@@ -26,6 +26,10 @@ class User(Base):
     failed_login_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     locked_until: Mapped[str | None] = mapped_column(String(64), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    mfa_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    mfa_secret: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    oidc_subject: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    oidc_provider: Mapped[str | None] = mapped_column(String(64), nullable=True)
     created_at: Mapped[str] = mapped_column(String(64), nullable=False)
 
 
@@ -158,4 +162,21 @@ class RefreshToken(Base):
     token_hash: Mapped[str] = mapped_column(String(128), nullable=False)
     expires_at: Mapped[str] = mapped_column(String(64), nullable=False)
     revoked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class PartnerApiKey(Base):
+    __tablename__ = "partner_api_keys"
+    __table_args__ = (UniqueConstraint("key_hash", name="uq_partner_api_key_hash"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    partner_org: Mapped[str] = mapped_column(String(255), nullable=False)
+    key_prefix: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    key_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    scopes_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    revoked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    expires_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    last_used_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
     created_at: Mapped[str] = mapped_column(String(64), nullable=False)

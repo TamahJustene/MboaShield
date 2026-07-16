@@ -1,41 +1,35 @@
 # MboaShield Architecture
 
-## Current state (v0.8.0 - Phase 4 analytics)
+## Current state (v0.9.0 - Phase 5 identity)
 
 ```text
-National Trust Dashboard (frontend/static/national.html)
+Identity UI / Partner systems
         |
+        +-- JWT bearer
+        +-- MFA challenge (TOTP)
+        +-- X-API-Key (partner scopes)
+        +-- OIDC authorize/callback scaffolds
         v
-api/v1/analytics.py
-        |
-services/analytics.py
-  threat trends
-  deepfake trends
-  institution attacks
-  regional heat map
-  incident timeline
-  response time
-  AI feedback feedback
-  citizen participation
-        |
-SQLAlchemy models
-  verification_checks
-  incident_reports / incident_events
-  analysis_feedback
-  users / certificates
+api/v1/auth.py
+api/v1/partners.py
+core/security.py
+partner_api_keys + users.mfa_* tables
 ```
 
-## Analytics honesty
+## Identity controls
 
-AI accuracy uses analyst feedback labels when available.
-Disposition ratios (resolved vs dismissed) are operational proxies only.
+- Password login with lockout + strength checks
+- Optional TOTP MFA with challenge token
+- OIDC provider configuration via env
+- Partner API keys hashed at rest, scoped permissions
+- Production warnings for weak JWT/CORS/AUTH_ENFORCE settings
 
-## Prior layers still active
+## Prior layers
 
-- Phase 1: auth/RBAC/audit + SQLAlchemy/Postgres
-- Phase 2: national incident workflow + operator consoles
-- Phase 3: modular intelligence engines + trust fusion
+- Phase 1 chassis, Phase 2 workflows, Phase 3 engines, Phase 4 analytics
 
-## Next
+## Next hardening opportunities
 
-Phase 5: OAuth2/OIDC, MFA readiness, partner API keys
+- Complete OIDC code exchange against a live IdP
+- WebAuthn / hardware keys
+- Evidence vault and partner webhook delivery

@@ -51,4 +51,4 @@ def test_health_exposes_ai_engine(client):
     payload = response.json()
     assert response.status_code == 200
     assert payload["ai_engine"] == "mboashield-trust-engine"
-    assert payload["ai_engine_version"] == "0.8.0"
+    assert payload["ai_engine_version"] == "0.9.0"

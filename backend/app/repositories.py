@@ -12,13 +12,14 @@ from typing import Any
 
 from sqlalchemy import select
 
-from .core.security import hash_password, verify_password
+from .core.security import generate_api_key, hash_api_key, hash_password, verify_password
 from .db.models import (
     AuditLog,
     IncidentEvent,
     IncidentReport,
     Institution,
     LessonCertificate,
+    PartnerApiKey,
     RefreshToken,
     User,
     VerificationCheck,
@@ -284,6 +285,8 @@ def _user_to_dict(row: User) -> dict:
         "role": row.role,
         "created_at": row.created_at,
         "is_active": bool(row.is_active),
+        "mfa_enabled": bool(getattr(row, "mfa_enabled", False)),
+        "oidc_provider": getattr(row, "oidc_provider", None),
     }
 
 
@@ -306,6 +309,8 @@ def create_user(
             failed_login_count=0,
             locked_until=None,
             is_active=True,
+            mfa_enabled=False,
+            mfa_secret=None,
             created_at=now_iso(),
         )
         session.add(row)
@@ -406,6 +411,146 @@ def get_valid_refresh_token(raw_token: str) -> dict | None:
         except ValueError:
             return None
         return {"id": row.id, "user_id": row.user_id, "expires_at": row.expires_at}
+
+
+def get_user_mfa_secret(user_id: int) -> str | None:
+    with session_scope() as session:
+        row = session.get(User, user_id)
+        if not row:
+            return None
+        return row.mfa_secret
+
+
+def begin_mfa_setup(user_id: int, secret: str) -> dict:
+    with session_scope() as session:
+        row = session.get(User, user_id)
+        if not row:
+            raise ValueError("User not found")
+        row.mfa_secret = secret
+        row.mfa_enabled = False
+        session.flush()
+        return _user_to_dict(row)
+
+
+def enable_mfa(user_id: int) -> dict:
+    with session_scope() as session:
+        row = session.get(User, user_id)
+        if not row or not row.mfa_secret:
+            raise ValueError("MFA secret not initialized")
+        row.mfa_enabled = True
+        session.flush()
+        return _user_to_dict(row)
+
+
+def disable_mfa(user_id: int) -> dict:
+    with session_scope() as session:
+        row = session.get(User, user_id)
+        if not row:
+            raise ValueError("User not found")
+        row.mfa_enabled = False
+        row.mfa_secret = None
+        session.flush()
+        return _user_to_dict(row)
+
+
+def create_partner_api_key(
+    *,
+    name: str,
+    partner_org: str,
+    scopes: list[str],
+    created_by_user_id: int | None = None,
+    expires_at: str | None = None,
+) -> dict:
+    name = (name or "").strip()
+    partner_org = (partner_org or "").strip()
+    if not name or not partner_org:
+        raise ValueError("name and partner_org are required")
+    if not scopes:
+        raise ValueError("at least one scope is required")
+    raw, prefix, digest = generate_api_key()
+    with session_scope() as session:
+        row = PartnerApiKey(
+            name=name,
+            partner_org=partner_org,
+            key_prefix=prefix,
+            key_hash=digest,
+            scopes_json=json.dumps(scopes, ensure_ascii=True),
+            created_by_user_id=created_by_user_id,
+            revoked=False,
+            expires_at=expires_at,
+            last_used_at=None,
+            created_at=now_iso(),
+        )
+        session.add(row)
+        session.flush()
+        payload = _api_key_to_dict(row)
+        payload["api_key"] = raw
+        return payload
+
+
+def _api_key_to_dict(row: PartnerApiKey) -> dict:
+    return {
+        "id": row.id,
+        "name": row.name,
+        "partner_org": row.partner_org,
+        "key_prefix": row.key_prefix,
+        "scopes": json.loads(row.scopes_json or "[]"),
+        "created_by_user_id": row.created_by_user_id,
+        "revoked": bool(row.revoked),
+        "expires_at": row.expires_at,
+        "last_used_at": row.last_used_at,
+        "created_at": row.created_at,
+    }
+
+
+def list_partner_api_keys(include_revoked: bool = False) -> list[dict]:
+    with session_scope() as session:
+        rows = session.scalars(select(PartnerApiKey).order_by(PartnerApiKey.id.desc())).all()
+        items = []
+        for row in rows:
+            if row.revoked and not include_revoked:
+                continue
+            items.append(_api_key_to_dict(row))
+        return items
+
+
+def revoke_partner_api_key(key_id: int) -> dict | None:
+    with session_scope() as session:
+        row = session.get(PartnerApiKey, key_id)
+        if not row:
+            return None
+        row.revoked = True
+        session.flush()
+        return _api_key_to_dict(row)
+
+
+def authenticate_api_key(raw_key: str) -> dict | None:
+    if not raw_key or not raw_key.startswith("msb_"):
+        return None
+    digest = hash_api_key(raw_key)
+    with session_scope() as session:
+        row = session.scalar(select(PartnerApiKey).where(PartnerApiKey.key_hash == digest))
+        if not row or row.revoked:
+            return None
+        if row.expires_at:
+            try:
+                expires = datetime.fromisoformat(row.expires_at)
+                if expires.tzinfo is None:
+                    expires = expires.replace(tzinfo=timezone.utc)
+                if expires < datetime.now(timezone.utc):
+                    return None
+            except ValueError:
+                return None
+        row.last_used_at = now_iso()
+        return {
+            "id": row.id,
+            "name": row.name,
+            "partner_org": row.partner_org,
+            "scopes": json.loads(row.scopes_json or "[]"),
+            "role": "partner",
+            "is_active": True,
+            "auth_type": "api_key",
+        }
 
 
 def _row_to_incident(row: IncidentReport) -> dict:

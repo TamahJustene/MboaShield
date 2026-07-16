@@ -148,6 +148,8 @@ SQLite remains the default for `./scripts/run_demo.sh` when `DATABASE_URL` is un
 | `MBOASHIELD_DB_PATH` | SQLite file path when not using Postgres |
 | `JWT_SECRET` | Required strong secret in production |
 | `AUTH_ENFORCE` | `true` to require JWT + RBAC on gated routes |
+| `MFA_REQUIRED_ROLES` | Roles recommended for MFA (default `admin`) |
+| `OIDC_ISSUER` / `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` | OpenID Connect provider config |
 | `CORS_ORIGINS` | Comma-separated origins |
 | `RATE_LIMIT_PER_MINUTE` | Per-client path rate limit |
 

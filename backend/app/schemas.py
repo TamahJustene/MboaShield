@@ -83,6 +83,7 @@ class UserOut(BaseModel):
     role: str
     created_at: str
     is_active: bool = True
+    mfa_enabled: bool = False
 
 
 class AuthRegisterIn(BaseModel):
@@ -106,6 +107,53 @@ class TokenOut(BaseModel):
     token_type: str = "bearer"
     expires_in_minutes: int
     user: UserOut
+
+
+class AuthSessionOut(BaseModel):
+    mfa_required: bool = False
+    mfa_token: str | None = None
+    access_token: str | None = None
+    refresh_token: str | None = None
+    token_type: str = "bearer"
+    expires_in_minutes: int | None = None
+    user: UserOut | None = None
+
+
+class MfaCodeIn(BaseModel):
+    code: str = Field(..., min_length=6, max_length=10)
+    mfa_token: str | None = None
+
+
+class MfaSetupOut(BaseModel):
+    secret: str
+    otpauth_uri: str
+    mfa_enabled: bool = False
+
+
+class OidcCallbackIn(BaseModel):
+    code: str = ""
+    state: str = ""
+
+
+class PartnerApiKeyIn(BaseModel):
+    name: str = Field(..., min_length=2)
+    partner_org: str = Field(..., min_length=2)
+    scopes: list[str] = Field(default_factory=lambda: ["checks:create", "institutions:read"])
+    expires_at: str | None = None
+
+
+class PartnerApiKeyOut(BaseModel):
+    id: int
+    name: str
+    partner_org: str
+    key_prefix: str
+    scopes: list[str]
+    created_by_user_id: int | None = None
+    revoked: bool = False
+    expires_at: str | None = None
+    last_used_at: str | None = None
+    created_at: str
+    api_key: str | None = None
 
 
 class InstitutionOut(BaseModel):
