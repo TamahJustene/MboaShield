@@ -163,5 +163,5 @@ def test_rss_ingest_with_mocked_fetch(client, monkeypatch):
 def test_health_reports_phase8_version(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "1.4.0"
+    assert health["version"] == "1.5.0"
     assert health["intel"] is True

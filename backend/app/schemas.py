@@ -482,3 +482,21 @@ class InstitutionApiKeyIn(BaseModel):
     expires_at: str | None = None
 
 
+class AnnouncementCreateIn(BaseModel):
+    institution_id: str = Field(..., min_length=2)
+    title: str = Field(..., min_length=3)
+    body: str = Field(..., min_length=10)
+    locale: str = "fr"
+
+
+class AnnouncementUpdateIn(BaseModel):
+    title: str | None = Field(default=None, min_length=3)
+    body: str | None = Field(default=None, min_length=10)
+    locale: str | None = None
+
+
+class AnnouncementPublishIn(BaseModel):
+    title: str | None = Field(default=None, min_length=3)
+    body: str | None = Field(default=None, min_length=10)
+
+

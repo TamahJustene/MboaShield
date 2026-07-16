@@ -29,6 +29,7 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "intel:read",
         "evidence:read",
         "evidence:write",
+        "announcements:read",
     },
     Role.INSTITUTION_ADMIN: {
         "checks:create",
@@ -39,6 +40,8 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "institutions:manage",
         "intel:read",
         "evidence:read",
+        "announcements:read",
+        "announcements:publish",
     },
     Role.ADMIN: {
         "checks:create",
@@ -56,6 +59,8 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "evidence:read",
         "evidence:write",
         "evidence:manage",
+        "announcements:read",
+        "announcements:publish",
         "system:admin",
     },
 }

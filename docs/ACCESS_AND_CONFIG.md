@@ -125,6 +125,8 @@ See `.env.example` for the full list. Critical:
 | `VAULT_ENABLED` / `VAULT_STORAGE` / `VAULT_MAX_BYTES` | Evidence vault |
 | `VAULT_RETENTION_DAYS` / `VAULT_SIGNING_KEY` | Retention + export HMAC |
 | `INSTITUTION_PORTAL_ENABLED` | Institution admin portal |
+| `VERIFIED_COMMS_ENABLED` / `ANNOUNCEMENT_SIGNING_KEY` | Signed announcements |
+| `PUBLIC_BASE_URL` | Absolute verify URLs in QR payloads |
 
 ---
 

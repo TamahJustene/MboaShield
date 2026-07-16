@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Verify Announcement</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Public verification</p>
+      <h1>Verify official announcement</h1>
+      <p class="tagline">Scan a QR code or enter an announcement ID</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/announcements.html" class="btn-ghost history-link">Publisher</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-certificates">
+    <form id="verifyForm" class="profile-form">
+      <label class="report-label" for="announcementId">Announcement ID</label>
+      <input id="announcementId" type="text" placeholder="ann_..." required />
+      <label class="report-label" for="versionNo">Version (optional)</label>
+      <input id="versionNo" type="number" min="1" />
+      <button type="submit" class="btn-primary">Verify</button>
+    </form>
+    <div id="verifyResult" class="out history-detail empty-detail">
+      <p class="report-copy">Results appear here.</p>
+    </div>
+  </section>
+
+  <footer class="app-footer">
+    <p>Permanent URL pattern: <code>/verify/a/{announcement_id}</code></p>
+  </footer>
+  <script src="/static/verify-announcement.js"></script>
+</body>
+</html>

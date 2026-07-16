@@ -99,5 +99,5 @@ def test_retention_dry_run_and_purge(client):
 def test_health_reports_phase9_version(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "1.4.0"
+    assert health["version"] == "1.5.0"
     assert health["vault"] is True

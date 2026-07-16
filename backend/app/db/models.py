@@ -515,3 +515,42 @@ class EvidenceExport(Base):
     storage_key: Mapped[str] = mapped_column(String(1024), nullable=False)
     created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class GovernmentAnnouncement(Base):
+    __tablename__ = "government_announcements"
+    __table_args__ = (UniqueConstraint("announcement_id", name="uq_government_announcement_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    announcement_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    institution_id: Mapped[str] = mapped_column(String(64), ForeignKey("institutions.id"), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(512), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="draft", index=True)
+    current_version: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    locale: Mapped[str] = mapped_column(String(16), nullable=False, default="fr")
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    published_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    published_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class AnnouncementVersion(Base):
+    __tablename__ = "announcement_versions"
+    __table_args__ = (
+        UniqueConstraint("announcement_id", "version_number", name="uq_announcement_version"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    announcement_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    version_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    title: Mapped[str] = mapped_column(String(512), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    signature: Mapped[str] = mapped_column(String(128), nullable=False)
+    signing_kid: Mapped[str] = mapped_column(String(64), nullable=False)
+    published_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    published_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+

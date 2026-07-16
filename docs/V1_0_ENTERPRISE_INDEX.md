@@ -1,9 +1,9 @@
 # MboaShield v1.0 Enterprise Program — Index
 
-**Status:** Phase 10 (Institution Portal) COMPLETE — v1.4.0  
-**Application code:** Phases 6-10 shipped; Phase 11+ gated until started  
+**Status:** Phase 11 (Verified Communications) COMPLETE — v1.5.0  
+**Application code:** Phases 6-11 shipped; Phase 12+ gated until started  
 **Baseline product before Phase 6:** v0.9.0 (Phases 1-5)  
-**Current product:** v1.4.0  
+**Current product:** v1.5.0  
 **Target:** National Digital Trust Platform suitable for multi-country government deployment  
 
 **Non-negotiables:** Never rebuild; never break `/api/v1/*`; never mock/TODO; one phase at a time; production-ready only.
@@ -26,7 +26,7 @@
 
 ## Decision gate
 
-Phases 6-10 complete (v1.4.0). Implementation of Phase 11 may begin only when explicitly started.
+Phases 6-11 complete (v1.5.0). Implementation of Phase 12 may begin only when explicitly started.
 
 ---
 

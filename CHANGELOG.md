@@ -2,6 +2,21 @@
 
 All notable changes to MboaShield are documented here.
 
+## [1.5.0] - 2026-07-16
+
+### Phase 11 - Verified Government Communications
+
+#### Added
+- Digitally signed government announcements with version history
+- Public permanent verification at `/verify/a/{announcement_id}`
+- QR verify payload and JSON/markdown authenticity certificates
+- Publisher and public verify UIs
+- Alembic migration `0010_phase11`
+- Feature flag: `VERIFIED_COMMS_ENABLED`
+
+#### Changed
+- Product version bumped to 1.5.0
+
 ## [1.4.0] - 2026-07-16
 
 ### Phase 10 - Institution Administration Platform

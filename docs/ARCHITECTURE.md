@@ -1,6 +1,6 @@
 # MboaShield Architecture
 
-**Version:** 1.4.0 (Phase 10 institution portal)  
+**Version:** 1.5.0 (Phase 11 verified communications)  
 **Access / env adjustment:** [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md)  
 **Product status:** [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md)
 
@@ -53,6 +53,7 @@ Object storage: local FS (demo) or S3 (gov)
 | Intel | `intel.py`, `services/intel/`, `intel_store` | Compliant sources, correlate, reports |
 | Vault | `evidence.py`, `services/vault/`, `vault_store` | Hash, custody, export, retention |
 | Institution portal | `institution_portal.py`, `institution_store` | Domains, members, branding, `msi_` keys |
+| Verified comms | `announcements.py`, `public_verify.py`, `announcement_store` | Signed announcements + `/verify/a/*` |
 
 ---
 
@@ -60,9 +61,9 @@ Object storage: local FS (demo) or S3 (gov)
 
 Auth (MFA, OIDC, SAML, LDAP, sessions, devices, password), admin users, OAuth clients/token,
 partners, intelligence, analytics, platform checks/incidents, government workflow,
-NTOC/cases, intel, evidence vault, institution portal.
+NTOC/cases, intel, evidence vault, institution portal, verified announcements.
 
-Root: `GET /health`, `GET /`, OpenAPI `/docs`.
+Root: `GET /health`, `GET /verify/a/{id}`, OpenAPI `/docs`.
 
 ---
 
@@ -75,7 +76,7 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 5. Intelligence engines
 
-8 active + 2 scaffolded (video, document). Product version 1.4.0; AI engine package version remains 0.9.0 until Phase 12.
+8 active + 2 scaffolded (video, document). Product version 1.5.0; AI engine package version remains 0.9.0 until Phase 12.
 
 ---
 
@@ -94,11 +95,10 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 7. Data & deploy
 
-SQLite default; Postgres via `DATABASE_URL`; Alembic 0001-0009; Render Docker demo; CI pytest.
-Vault objects under `storage/vault` (or `VAULT_LOCAL_PATH` / S3).
+SQLite default; Postgres via `DATABASE_URL`; Alembic 0001-0010; Render Docker demo; CI pytest.
 
 ---
 
 ## 8. Next
 
-Phase 11 — Verified Government Communications ([`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md)).
+Phase 12 — Advanced AI Platform ([`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md)).

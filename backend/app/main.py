@@ -8,6 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from .api import api_router
+from .api.public_verify import router as public_verify_router
 from .core.config import ROOT, VERSION, get_settings
 from .core.errors import AppError, app_error_handler, http_exception_handler
 from .core.middleware import RateLimitMiddleware, RequestContextMiddleware
@@ -76,6 +77,7 @@ def create_app() -> FastAPI:
             "intel": settings.intel_enabled,
             "vault": settings.vault_enabled,
             "institution_portal": settings.institution_portal_enabled,
+            "verified_comms": settings.verified_comms_enabled,
             "identity": {
                 "mfa_ready": True,
                 "oidc_ready": bool(
@@ -100,6 +102,7 @@ def create_app() -> FastAPI:
         }
 
     application.include_router(api_router)
+    application.include_router(public_verify_router)
 
     @application.get("/")
     def index():

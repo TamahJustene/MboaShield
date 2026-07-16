@@ -115,5 +115,5 @@ def test_institution_portal_domains_memberships_branding_keys(client):
 def test_health_reports_phase10_version(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "1.4.0"
+    assert health["version"] == "1.5.0"
     assert health["institution_portal"] is True

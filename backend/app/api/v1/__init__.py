@@ -4,6 +4,7 @@ from fastapi import APIRouter
 
 from .admin_users import router as admin_users_router
 from .analytics import router as analytics_router
+from .announcements import router as announcements_router
 from .auth import router as auth_router
 from .cases import router as cases_router
 from .evidence import router as evidence_router
@@ -30,3 +31,4 @@ router.include_router(ntoc_router)
 router.include_router(intel_router)
 router.include_router(evidence_router)
 router.include_router(institution_portal_router)
+router.include_router(announcements_router)

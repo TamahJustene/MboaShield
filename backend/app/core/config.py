@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "1.4.0"
+    version: str = "1.5.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
     deployment_profile: str = Field(default="demo", alias="DEPLOYMENT_PROFILE")
     tenant_id: str = Field(default="cm", alias="TENANT_ID")
@@ -61,6 +61,12 @@ class Settings(BaseSettings):
 
     # Institution portal / Phase 10
     institution_portal_enabled: bool = Field(default=True, alias="INSTITUTION_PORTAL_ENABLED")
+
+    # Verified government communications / Phase 11
+    verified_comms_enabled: bool = Field(default=True, alias="VERIFIED_COMMS_ENABLED")
+    announcement_signing_key: str = Field(default="", alias="ANNOUNCEMENT_SIGNING_KEY")
+    announcement_signing_kid: str = Field(default="mboashield-announce-v1", alias="ANNOUNCEMENT_SIGNING_KID")
+    public_base_url: str = Field(default="", alias="PUBLIC_BASE_URL")
 
     # Password policy
     password_min_length: int = Field(default=8, alias="PASSWORD_MIN_LENGTH")
