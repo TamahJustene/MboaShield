@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b3d2e" />
-  <title>MboaShield - Identity and Partners</title>
+  <title>MboaShield - Enterprise Identity</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <p class="eyebrow">Hardened identity</p>
-      <h1>Identity and partners</h1>
-      <p class="tagline">JWT login, MFA enrollment, OIDC readiness, and partner API keys</p>
+      <p class="eyebrow">Phase 6 identity</p>
+      <h1>Enterprise identity</h1>
+      <p class="tagline">SSO, MFA, sessions, devices, admin users, and partner credentials</p>
     </div>
     <div class="header-actions">
       <a href="/static/national.html" class="btn-ghost history-link">National</a>
@@ -39,9 +39,14 @@
       <form id="mfaForm" class="profile-form hidden">
         <label class="report-label" for="mfaCode">MFA code</label>
         <input id="mfaCode" type="text" inputmode="numeric" maxlength="10" required />
+        <label class="report-label"><input id="trustDevice" type="checkbox" /> Trust this device</label>
         <button type="submit" class="btn-primary">Verify MFA</button>
         <p id="mfaStatus" class="demo-status muted" aria-live="polite"></p>
       </form>
+      <div class="profile-form">
+        <button type="button" id="startOidc" class="btn-ghost">Start OIDC SSO</button>
+        <p id="ssoStatus" class="demo-status muted" aria-live="polite"></p>
+      </div>
     </section>
     <section class="history-panel">
       <h2>MFA enrollment</h2>
@@ -54,6 +59,61 @@
         <button type="submit" class="btn-primary">Enable MFA</button>
         <p id="enableMfaStatus" class="demo-status muted" aria-live="polite"></p>
       </form>
+    </section>
+  </div>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Sessions</h2>
+      <button type="button" id="loadSessions" class="btn-ghost">Refresh sessions</button>
+      <button type="button" id="revokeAllSessions" class="btn-ghost">Revoke all</button>
+      <div id="sessionList" class="history-list"></div>
+    </section>
+    <section class="history-panel">
+      <h2>Trusted devices</h2>
+      <button type="button" id="loadDevices" class="btn-ghost">Refresh devices</button>
+      <div id="deviceList" class="history-list"></div>
+    </section>
+  </div>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Password recovery</h2>
+      <form id="forgotForm" class="profile-form">
+        <label class="report-label" for="forgotEmail">Account email</label>
+        <input id="forgotEmail" type="email" required />
+        <button type="submit" class="btn-primary">Request reset</button>
+        <p id="forgotStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <form id="resetForm" class="profile-form">
+        <label class="report-label" for="resetToken">Reset token</label>
+        <input id="resetToken" type="text" required />
+        <label class="report-label" for="resetPassword">New password</label>
+        <input id="resetPassword" type="password" required />
+        <button type="submit" class="btn-primary">Reset password</button>
+        <p id="resetStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="history-panel">
+      <h2>Admin users</h2>
+      <p class="summary-lead">Requires users:manage when AUTH_ENFORCE=true (promote an admin in DB first).</p>
+      <form id="adminUserForm" class="profile-form">
+        <label class="report-label" for="adminName">Display name</label>
+        <input id="adminName" type="text" required />
+        <label class="report-label" for="adminEmail">Email</label>
+        <input id="adminEmail" type="email" required />
+        <label class="report-label" for="adminRole">Role</label>
+        <select id="adminRole">
+          <option value="citizen">citizen</option>
+          <option value="analyst">analyst</option>
+          <option value="institution_admin">institution_admin</option>
+          <option value="admin">admin</option>
+        </select>
+        <button type="submit" class="btn-primary">Invite / create user</button>
+        <p id="adminUserStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <button type="button" id="loadUsers" class="btn-ghost">Refresh users</button>
+      <div id="userList" class="history-list"></div>
     </section>
   </div>
 
@@ -70,6 +130,18 @@
       <p id="apiKeyStatus" class="demo-status muted" aria-live="polite"></p>
     </form>
     <div id="apiKeyList" class="history-list"></div>
+  </section>
+
+  <section class="history-panel history-certificates">
+    <h2>OAuth2 client credentials</h2>
+    <form id="oauthClientForm" class="profile-form">
+      <label class="report-label" for="oauthName">Client name</label>
+      <input id="oauthName" type="text" value="Bank Connector" required />
+      <label class="report-label" for="oauthOrg">Organization</label>
+      <input id="oauthOrg" type="text" value="National Bank" required />
+      <button type="submit" class="btn-primary">Create OAuth client</button>
+      <p id="oauthStatus" class="demo-status muted" aria-live="polite"></p>
+    </form>
   </section>
 
   <footer class="app-footer">

@@ -74,6 +74,16 @@ def api_transition_incident(
         details={"to_status": body.to_status},
         ip_address=request.client.host if request.client else None,
     )
+    try:
+        from ...services.notifications import notify_incident_transition
+
+        notify_incident_transition(
+            incident_id=report_id,
+            to_status=body.to_status,
+            actor_user_id=actor["id"] if actor else None,
+        )
+    except Exception:
+        pass
     return report
 
 

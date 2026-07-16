@@ -38,9 +38,12 @@ PYTHONPATH=. uvicorn backend.app.main:app --reload --port 8000
 | Doc | Purpose |
 |---|---|
 | [`docs/PRODUCT_STATUS.md`](docs/PRODUCT_STATUS.md) | **Current full product brief — start here for next tasks** |
+| [`docs/ACCESS_AND_CONFIG.md`](docs/ACCESS_AND_CONFIG.md) | **Who can access what + how to adjust roles/env** |
+| [`docs/V1_0_ENTERPRISE_INDEX.md`](docs/V1_0_ENTERPRISE_INDEX.md) | **v1.0 enterprise review, design, threat model, roadmap** |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Layers, APIs, engines, workflow |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Public demo URL (Render / tunnel) |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Sprint plan to pitch day |
 | [`docs/GOALS.md`](docs/GOALS.md) | North-star score targets |
-| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Public demo URL (Render / tunnel) |
 | [`docs/PITCH_DECK.md`](docs/PITCH_DECK.md) | 8-slide pitch script |
 | [`docs/JURY_QA.md`](docs/JURY_QA.md) | Q&A cheat sheet |
 | [`docs/AI_BRIEF.md`](docs/AI_BRIEF.md) | Pass to any AI agent |

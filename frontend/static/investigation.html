@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Investigation Workspace</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">NTOC investigation</p>
+      <h1>Investigation workspace</h1>
+      <p class="tagline">Cases, notes, assignments, timeline, and linked evidence (read-only)</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
+      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Create / open case</h2>
+      <form id="createCaseForm" class="profile-form">
+        <label class="report-label" for="caseTitle">Title</label>
+        <input id="caseTitle" type="text" required />
+        <label class="report-label" for="caseSummary">Summary</label>
+        <input id="caseSummary" type="text" />
+        <label class="report-label" for="caseIncidentId">Incident ID (optional)</label>
+        <input id="caseIncidentId" type="number" min="1" />
+        <label class="report-label" for="casePriority">Priority</label>
+        <select id="casePriority">
+          <option value="normal">normal</option>
+          <option value="high">high</option>
+          <option value="critical">critical</option>
+          <option value="low">low</option>
+        </select>
+        <label class="report-label" for="caseRegion">Region</label>
+        <input id="caseRegion" type="text" placeholder="Centre" />
+        <button type="submit" class="btn-primary">Create case</button>
+        <p id="createCaseStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <button type="button" id="refreshCases" class="btn-ghost">Refresh case list</button>
+      <div id="caseSearchList" class="history-list"></div>
+    </section>
+    <section class="history-panel">
+      <h2>Workspace</h2>
+      <div id="workspace" class="out history-detail empty-detail">
+        <p class="report-copy">Create or select a case to investigate.</p>
+      </div>
+      <form id="noteForm" class="profile-form hidden">
+        <label class="report-label" for="noteBody">Add note</label>
+        <input id="noteBody" type="text" required />
+        <button type="submit" class="btn-primary">Save note</button>
+      </form>
+      <form id="assignForm" class="profile-form hidden">
+        <label class="report-label" for="assigneeId">Assign to user ID</label>
+        <input id="assigneeId" type="number" min="1" required />
+        <button type="submit" class="btn-ghost">Assign</button>
+        <p id="assignStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+
+  <footer class="app-footer">
+    <p>Evidence vault write-path arrives in Phase 9. This workspace shows linked checks/incidents only.</p>
+  </footer>
+  <script src="/static/investigation.js"></script>
+</body>
+</html>

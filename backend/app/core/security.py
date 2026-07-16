@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import hashlib
-import re
 import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
-from urllib.parse import urlencode
 
 import pyotp
 from jose import JWTError, jwt
@@ -42,24 +40,23 @@ def verify_password(plain: str, hashed: str | None) -> bool:
 
 
 def validate_password_strength(password: str) -> None:
-    if len(password) < 8:
-        raise ValueError("Password must be at least 8 characters")
-    if not re.search(r"[A-Za-z]", password):
-        raise ValueError("Password must include a letter")
-    if not re.search(r"[0-9]", password):
-        raise ValueError("Password must include a number")
+    from ..services.identity_federation import validate_password_policy
+
+    validate_password_policy(password)
 
 
 def production_security_warnings() -> list[str]:
     settings = get_settings()
     warnings: list[str] = []
-    if settings.environment.lower() in {"prod", "production"}:
+    if settings.environment.lower() in {"prod", "production"} or settings.is_government_profile():
         if settings.jwt_secret == DEFAULT_JWT_SECRET:
             warnings.append("JWT_SECRET is using the insecure default value")
         if not settings.auth_enforce:
-            warnings.append("AUTH_ENFORCE is false in a production environment")
+            warnings.append("AUTH_ENFORCE is false in a government/production profile")
         if settings.cors_origins.strip() == "*":
             warnings.append("CORS_ORIGINS allows all origins in production")
+        if settings.saml_enabled and settings.saml_allow_unsigned:
+            warnings.append("SAML_ALLOW_UNSIGNED is enabled")
     return warnings
 
 
@@ -148,7 +145,7 @@ def scopes_grant_permission(scopes: list[str], permission: str) -> bool:
 def oidc_providers() -> list[dict[str, Any]]:
     settings = get_settings()
     providers = []
-    if settings.oidc_issuer and settings.oidc_client_id:
+    if settings.oidc_enabled and settings.oidc_issuer and settings.oidc_client_id:
         providers.append(
             {
                 "id": settings.oidc_provider_id,
@@ -165,18 +162,7 @@ def oidc_providers() -> list[dict[str, Any]]:
     return providers
 
 
-def build_oidc_authorize_url(*, state: str, redirect_uri: str) -> str:
-    settings = get_settings()
-    if not settings.oidc_issuer or not settings.oidc_client_id:
-        raise ValueError("OIDC provider is not configured")
-    base = settings.oidc_issuer.rstrip("/") + "/authorize"
-    query = urlencode(
-        {
-            "response_type": "code",
-            "client_id": settings.oidc_client_id,
-            "redirect_uri": redirect_uri,
-            "scope": settings.oidc_scopes,
-            "state": state,
-        }
-    )
-    return f"{base}?{query}"
+def build_oidc_authorize_url(*, state: str, redirect_uri: str, nonce: str = "") -> str:
+    from ..services.identity_federation import build_oidc_authorize_url as _build
+
+    return _build(state=state, redirect_uri=redirect_uri, nonce=nonce or secrets.token_urlsafe(12))

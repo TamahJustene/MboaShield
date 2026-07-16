@@ -75,6 +75,10 @@ def init_db() -> None:
                 ("mfa_secret", "ALTER TABLE users ADD COLUMN mfa_secret VARCHAR(255)"),
                 ("oidc_subject", "ALTER TABLE users ADD COLUMN oidc_subject VARCHAR(255)"),
                 ("oidc_provider", "ALTER TABLE users ADD COLUMN oidc_provider VARCHAR(64)"),
+                ("auth_provider", "ALTER TABLE users ADD COLUMN auth_provider VARCHAR(32) DEFAULT 'local'"),
+                ("must_reset_password", "ALTER TABLE users ADD COLUMN must_reset_password BOOLEAN DEFAULT 0"),
+                ("invited_by_user_id", "ALTER TABLE users ADD COLUMN invited_by_user_id INTEGER"),
+                ("last_login_at", "ALTER TABLE users ADD COLUMN last_login_at VARCHAR(64)"),
             ]:
                 if stmt[0] not in user_cols:
                     conn.execute(text(stmt[1]))

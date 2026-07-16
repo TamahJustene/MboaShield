@@ -36,6 +36,18 @@ def get_optional_bearer_user(
     payload = safe_decode_token(credentials.credentials)
     if not payload or payload.get("type") != "access":
         return None
+    if payload.get("auth_type") == "client_credentials" or str(payload.get("sub", "")).startswith("oauth:"):
+        return {
+            "id": None,
+            "display_name": payload.get("name") or payload.get("sub"),
+            "email": None,
+            "role": "partner",
+            "auth_type": "client_credentials",
+            "scopes": payload.get("scopes") or [],
+            "partner_org": payload.get("partner_org"),
+            "is_active": True,
+            "mfa_enabled": False,
+        }
     try:
         user_id = int(payload["sub"])
     except (KeyError, TypeError, ValueError):
@@ -45,6 +57,7 @@ def get_optional_bearer_user(
         return None
     user = dict(user)
     user["auth_type"] = "jwt"
+    user["token_jti"] = payload.get("jti")
     return user
 
 
@@ -93,6 +106,9 @@ def require_permission(permission: str):
         if actor.get("auth_type") == "api_key":
             if not scopes_grant_permission(actor.get("scopes") or [], permission):
                 raise HTTPException(status_code=403, detail=f"API key missing scope/permission: {permission}")
+        elif actor.get("auth_type") == "client_credentials":
+            if not scopes_grant_permission(actor.get("scopes") or [], permission):
+                raise HTTPException(status_code=403, detail=f"OAuth client missing scope/permission: {permission}")
         elif not has_permission(actor["role"], permission):
             raise HTTPException(status_code=403, detail=f"Missing permission: {permission}")
 

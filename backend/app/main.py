@@ -13,8 +13,10 @@ from .core.errors import AppError, app_error_handler, http_exception_handler
 from .core.middleware import RateLimitMiddleware, RequestContextMiddleware
 from .core.security import oidc_providers, production_security_warnings
 from .db.session import init_db
+from .identity_store import ensure_default_tenant
 from .repositories import list_institutions
 from .seed import seed_institutions_if_needed
+from .services.ai_analysis import ENGINE_VERSION as AI_ENGINE_VERSION
 
 FRONTEND = ROOT / "frontend"
 
@@ -49,6 +51,7 @@ def create_app() -> FastAPI:
 
     init_db()
     seed_institutions_if_needed()
+    ensure_default_tenant()
 
     @application.get("/health")
     def health():
@@ -65,14 +68,27 @@ def create_app() -> FastAPI:
             "auth_enforce": settings.auth_enforce,
             "institutions_count": len(institutions),
             "ai_engine": "mboashield-trust-engine",
-            "ai_engine_version": "0.9.0",
+            "ai_engine_version": AI_ENGINE_VERSION,
             "intelligence_engines": 10,
             "analytics": "national-v1",
+            "deployment_profile": settings.deployment_profile,
+            "ntoc": settings.ntoc_enabled,
             "identity": {
                 "mfa_ready": True,
-                "oidc_ready": bool(settings.oidc_issuer and settings.oidc_client_id),
+                "oidc_ready": bool(
+                    settings.oidc_enabled
+                    and settings.oidc_issuer
+                    and settings.oidc_client_id
+                    and settings.oidc_client_secret
+                ),
                 "oidc_providers": len(oidc_providers()),
+                "saml_ready": bool(settings.saml_enabled),
+                "ldap_ready": bool(settings.ldap_enabled and settings.ldap_server_uri),
                 "partner_api_keys": True,
+                "oauth2_client_credentials": True,
+                "sessions": True,
+                "trusted_devices": True,
+                "admin_users": True,
                 "security_warnings": production_security_warnings(),
             },
             "nlp_engine": "mboashield-text-nlp-v1",

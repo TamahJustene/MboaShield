@@ -123,8 +123,10 @@ Record a 90s backup video on your phone.
 
 ```
 GET /health
-? {"status":"ok","version":"0.5.0","database":"sqlite|postgresql","auth_enforce":false,...}
+? {"status":"ok","version":"1.0.0","database":"sqlite|postgresql","auth_enforce":false,...}
 ```
+
+Access modes, roles, and how to lock the API: [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md).
 
 ---
 
@@ -142,16 +144,22 @@ SQLite remains the default for `./scripts/run_demo.sh` when `DATABASE_URL` is un
 
 ### Important env vars
 
+Full adjustment guide: [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md).
+
 | Variable | Purpose |
 |---|---|
 | `DATABASE_URL` | PostgreSQL URL (`postgresql+psycopg://...`) |
 | `MBOASHIELD_DB_PATH` | SQLite file path when not using Postgres |
 | `JWT_SECRET` | Required strong secret in production |
-| `AUTH_ENFORCE` | `true` to require JWT + RBAC on gated routes |
-| `MFA_REQUIRED_ROLES` | Roles recommended for MFA (default `admin`) |
-| `OIDC_ISSUER` / `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` | OpenID Connect provider config |
+| `AUTH_ENFORCE` | `true` to require JWT + RBAC on gated routes (live demo uses `false`) |
+| `DEPLOYMENT_PROFILE` | `demo` or `government` (security warning profile) |
+| `MFA_ENFORCE` | Require MFA enrollment for `MFA_REQUIRED_ROLES` before login completes |
+| `MFA_REQUIRED_ROLES` | Roles recommended/required for MFA (default `admin`) |
+| `OIDC_*` / `SAML_*` / `LDAP_*` | Federation providers (see `.env.example`) |
+| `PASSWORD_RESET_RETURN_TOKEN` | Demo-only: return reset token in API body |
 | `CORS_ORIGINS` | Comma-separated origins |
 | `RATE_LIMIT_PER_MINUTE` | Per-client path rate limit |
+| `MBOASHIELD_ENV` | `production` enables security warnings in logs |
 
 ### Migrations
 

@@ -287,6 +287,9 @@ def _user_to_dict(row: User) -> dict:
         "is_active": bool(row.is_active),
         "mfa_enabled": bool(getattr(row, "mfa_enabled", False)),
         "oidc_provider": getattr(row, "oidc_provider", None),
+        "auth_provider": getattr(row, "auth_provider", None) or "local",
+        "must_reset_password": bool(getattr(row, "must_reset_password", False)),
+        "last_login_at": getattr(row, "last_login_at", None),
     }
 
 
@@ -311,6 +314,8 @@ def create_user(
             is_active=True,
             mfa_enabled=False,
             mfa_secret=None,
+            auth_provider="local",
+            must_reset_password=False,
             created_at=now_iso(),
         )
         session.add(row)

@@ -15,8 +15,11 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "0.9.0"
+    version: str = "1.1.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
+    deployment_profile: str = Field(default="demo", alias="DEPLOYMENT_PROFILE")
+    tenant_id: str = Field(default="cm", alias="TENANT_ID")
+    tenant_display_name: str = Field(default="Cameroon", alias="TENANT_DISPLAY_NAME")
 
     database_url: str = Field(default="", alias="DATABASE_URL")
     sqlite_path: str = Field(default="", alias="MBOASHIELD_DB_PATH")
@@ -31,17 +34,71 @@ class Settings(BaseSettings):
     trusted_hosts: str = Field(default="*", alias="TRUSTED_HOSTS")
     rate_limit_per_minute: int = Field(default=120, alias="RATE_LIMIT_PER_MINUTE")
 
-    # OIDC / OpenID Connect readiness
+    # NTOC / Phase 7
+    ntoc_enabled: bool = Field(default=True, alias="NTOC_ENABLED")
+    threat_elevated: int = Field(default=40, alias="THREAT_LEVEL_ELEVATED")
+    threat_high: int = Field(default=70, alias="THREAT_LEVEL_HIGH")
+    threat_critical: int = Field(default=85, alias="THREAT_LEVEL_CRITICAL")
+    notification_webhook_url: str = Field(default="", alias="NOTIFICATION_WEBHOOK_URL")
+
+    # Password policy
+    password_min_length: int = Field(default=8, alias="PASSWORD_MIN_LENGTH")
+    password_require_upper: bool = Field(default=False, alias="PASSWORD_REQUIRE_UPPER")
+    password_require_special: bool = Field(default=False, alias="PASSWORD_REQUIRE_SPECIAL")
+    password_reset_ttl_minutes: int = Field(default=30, alias="PASSWORD_RESET_TTL_MINUTES")
+    password_reset_return_token: bool = Field(default=False, alias="PASSWORD_RESET_RETURN_TOKEN")
+
+    # MFA policy
+    mfa_required_roles: str = Field(default="admin", alias="MFA_REQUIRED_ROLES")
+    mfa_enforce: bool = Field(default=False, alias="MFA_ENFORCE")
+    trusted_device_days: int = Field(default=30, alias="TRUSTED_DEVICE_DAYS")
+    trusted_device_skip_mfa: bool = Field(default=True, alias="TRUSTED_DEVICE_SKIP_MFA")
+
+    # OIDC / OpenID Connect
+    oidc_enabled: bool = Field(default=True, alias="OIDC_ENABLED")
     oidc_provider_id: str = Field(default="national-id", alias="OIDC_PROVIDER_ID")
     oidc_provider_name: str = Field(default="National Identity Provider", alias="OIDC_PROVIDER_NAME")
     oidc_issuer: str = Field(default="", alias="OIDC_ISSUER")
     oidc_client_id: str = Field(default="", alias="OIDC_CLIENT_ID")
     oidc_client_secret: str = Field(default="", alias="OIDC_CLIENT_SECRET")
     oidc_scopes: str = Field(default="openid profile email", alias="OIDC_SCOPES")
-    oidc_redirect_uri: str = Field(default="http://127.0.0.1:8000/api/v1/auth/oidc/national-id/callback", alias="OIDC_REDIRECT_URI")
+    oidc_redirect_uri: str = Field(
+        default="http://127.0.0.1:8000/api/v1/auth/oidc/national-id/callback",
+        alias="OIDC_REDIRECT_URI",
+    )
+    oidc_token_url: str = Field(default="", alias="OIDC_TOKEN_URL")
+    oidc_jwks_url: str = Field(default="", alias="OIDC_JWKS_URL")
+    oidc_userinfo_url: str = Field(default="", alias="OIDC_USERINFO_URL")
+    oidc_default_role: str = Field(default="citizen", alias="OIDC_DEFAULT_ROLE")
 
-    # MFA policy
-    mfa_required_roles: str = Field(default="admin", alias="MFA_REQUIRED_ROLES")
+    # SAML 2.0 SP
+    saml_enabled: bool = Field(default=False, alias="SAML_ENABLED")
+    saml_sp_entity_id: str = Field(default="https://mboashield.local/saml/metadata", alias="SAML_SP_ENTITY_ID")
+    saml_acs_url: str = Field(
+        default="http://127.0.0.1:8000/api/v1/auth/saml/acs",
+        alias="SAML_ACS_URL",
+    )
+    saml_idp_entity_id: str = Field(default="", alias="SAML_IDP_ENTITY_ID")
+    saml_idp_sso_url: str = Field(default="", alias="SAML_IDP_SSO_URL")
+    saml_idp_x509_cert: str = Field(default="", alias="SAML_IDP_X509_CERT")
+    saml_allow_unsigned: bool = Field(default=False, alias="SAML_ALLOW_UNSIGNED")
+    saml_default_role: str = Field(default="citizen", alias="SAML_DEFAULT_ROLE")
+
+    # LDAP / Active Directory
+    ldap_enabled: bool = Field(default=False, alias="LDAP_ENABLED")
+    ldap_server_uri: str = Field(default="", alias="LDAP_SERVER_URI")
+    ldap_use_ssl: bool = Field(default=True, alias="LDAP_USE_SSL")
+    ldap_bind_dn_template: str = Field(default="", alias="LDAP_BIND_DN_TEMPLATE")
+    ldap_user_search_base: str = Field(default="", alias="LDAP_USER_SEARCH_BASE")
+    ldap_user_filter_template: str = Field(
+        default="(|(uid={username})(sAMAccountName={username})(userPrincipalName={username}))",
+        alias="LDAP_USER_FILTER_TEMPLATE",
+    )
+    ldap_group_attr: str = Field(default="memberOf", alias="LDAP_GROUP_ATTR")
+    ldap_email_attr: str = Field(default="mail", alias="LDAP_EMAIL_ATTR")
+    ldap_name_attr: str = Field(default="displayName", alias="LDAP_NAME_ATTR")
+    ldap_group_role_map: str = Field(default="", alias="LDAP_GROUP_ROLE_MAP")
+    ldap_default_role: str = Field(default="citizen", alias="LDAP_DEFAULT_ROLE")
 
     def resolved_database_url(self) -> str:
         if self.database_url.strip():
@@ -52,6 +109,19 @@ class Settings(BaseSettings):
 
     def mfa_roles(self) -> set[str]:
         return {item.strip() for item in self.mfa_required_roles.split(",") if item.strip()}
+
+    def ldap_role_map(self) -> dict[str, str]:
+        mapping: dict[str, str] = {}
+        for part in self.ldap_group_role_map.split(","):
+            item = part.strip()
+            if not item or "=" not in item:
+                continue
+            group, role = item.split("=", 1)
+            mapping[group.strip().lower()] = role.strip()
+        return mapping
+
+    def is_government_profile(self) -> bool:
+        return self.deployment_profile.strip().lower() in {"government", "gov", "national"}
 
 
 @lru_cache

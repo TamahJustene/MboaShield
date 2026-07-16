@@ -84,6 +84,9 @@ class UserOut(BaseModel):
     created_at: str
     is_active: bool = True
     mfa_enabled: bool = False
+    auth_provider: str = "local"
+    must_reset_password: bool = False
+    last_login_at: str | None = None
 
 
 class AuthRegisterIn(BaseModel):
@@ -95,6 +98,13 @@ class AuthRegisterIn(BaseModel):
 class AuthLoginIn(BaseModel):
     email: str = Field(..., min_length=3)
     password: str = Field(..., min_length=1)
+    device_token: str | None = None
+
+
+class LdapLoginIn(BaseModel):
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+    device_token: str | None = None
 
 
 class TokenRefreshIn(BaseModel):
@@ -107,6 +117,7 @@ class TokenOut(BaseModel):
     token_type: str = "bearer"
     expires_in_minutes: int
     user: UserOut
+    session_id: str | None = None
 
 
 class AuthSessionOut(BaseModel):
@@ -117,11 +128,16 @@ class AuthSessionOut(BaseModel):
     token_type: str = "bearer"
     expires_in_minutes: int | None = None
     user: UserOut | None = None
+    session_id: str | None = None
+    device_token: str | None = None
+    device_id: int | None = None
 
 
 class MfaCodeIn(BaseModel):
     code: str = Field(..., min_length=6, max_length=10)
     mfa_token: str | None = None
+    trust_device: bool = False
+    device_name: str | None = None
 
 
 class MfaSetupOut(BaseModel):
@@ -133,6 +149,48 @@ class MfaSetupOut(BaseModel):
 class OidcCallbackIn(BaseModel):
     code: str = ""
     state: str = ""
+    device_token: str | None = None
+
+
+class PasswordForgotIn(BaseModel):
+    email: str = Field(..., min_length=3)
+
+
+class PasswordResetIn(BaseModel):
+    token: str = Field(..., min_length=10)
+    new_password: str = Field(..., min_length=8)
+
+
+class SessionRevokeIn(BaseModel):
+    session_id: str | None = None
+    revoke_all: bool = False
+    except_session_id: str | None = None
+
+
+class DeviceTrustIn(BaseModel):
+    name: str = Field(default="Trusted device", min_length=1)
+    fingerprint: str | None = None
+
+
+class AdminUserCreateIn(BaseModel):
+    display_name: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=3)
+    role: str = "citizen"
+    password: str | None = None
+    must_reset_password: bool = True
+
+
+class AdminUserUpdateIn(BaseModel):
+    display_name: str | None = None
+    role: str | None = None
+    is_active: bool | None = None
+    must_reset_password: bool | None = None
+
+
+class OAuthClientCreateIn(BaseModel):
+    name: str = Field(..., min_length=2)
+    partner_org: str = Field(..., min_length=2)
+    scopes: list[str] = Field(default_factory=lambda: ["checks:create", "institutions:read"])
 
 
 class PartnerApiKeyIn(BaseModel):
@@ -314,3 +372,35 @@ class InstitutionUpdateIn(BaseModel):
     url: str | None = None
     verified: bool | None = None
     handles: list[str] | None = None
+
+
+class CaseCreateIn(BaseModel):
+    title: str = Field(..., min_length=3)
+    summary: str | None = None
+    incident_id: int | None = None
+    verification_check_id: int | None = None
+    institution_id: str | None = None
+    region: str | None = None
+    priority: str = "normal"
+    assigned_to_user_id: int | None = None
+
+
+class CaseUpdateIn(BaseModel):
+    title: str | None = None
+    summary: str | None = None
+    status: str | None = None
+    priority: str | None = None
+    region: str | None = None
+    assigned_to_user_id: int | None = None
+    assignment_note: str | None = None
+
+
+class CaseAssignIn(BaseModel):
+    assignee_user_id: int
+    note: str | None = None
+    status: str | None = "investigating"
+
+
+class CaseNoteIn(BaseModel):
+    body: str = Field(..., min_length=2)
+

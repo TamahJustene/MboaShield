@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - National Trust Operations Center</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Phase 7 NTOC</p>
+      <h1>National Trust Operations Center</h1>
+      <p class="tagline">Live threat level, regional pressure, cases, and institution health</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/investigation.html" class="btn-ghost history-link">Investigation</a>
+      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
+      <a href="/static/national.html" class="btn-ghost history-link">Analytics</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-certificates">
+    <div class="panel-heading-row">
+      <h2>Threat level</h2>
+      <button type="button" id="refreshNtoc" class="btn-ghost">Refresh</button>
+    </div>
+    <div id="threatLevel" class="stat-strip">Loading threat level...</div>
+    <p id="ntocGenerated" class="muted"></p>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Operations queue</h2>
+      <div id="queuePanel" class="report-copy muted">Loading...</div>
+    </section>
+    <section class="history-panel">
+      <h2>Notifications</h2>
+      <div id="notificationBell" class="report-copy muted">Loading...</div>
+      <div id="notificationList" class="history-list"></div>
+    </section>
+  </div>
+
+  <section class="history-panel history-certificates">
+    <h2>Regional threat map</h2>
+    <p class="summary-lead">Offline regional intensity (no external map tiles).</p>
+    <div id="regionMap" class="heat-map"></div>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Open investigation cases</h2>
+      <div id="caseList" class="history-list"></div>
+    </section>
+    <section class="history-panel">
+      <h2>Institution health</h2>
+      <div id="healthList" class="history-list"></div>
+    </section>
+  </div>
+
+  <footer class="app-footer">
+    <p>MboaShield Tech - tamahjustene45@gmail.com</p>
+    <p>
+      <a href="/static/investigation.html">Investigation workspace</a> -
+      <a href="/static/identity.html">Identity</a>
+    </p>
+  </footer>
+  <script src="/static/ntoc.js"></script>
+</body>
+</html>
