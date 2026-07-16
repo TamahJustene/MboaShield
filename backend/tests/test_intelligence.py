@@ -58,7 +58,7 @@ def test_case_analyze_includes_engines_and_trust(client):
     payload = response.json()
     assert response.status_code == 200
     assert payload["modules"]
-    assert payload["overall"]["engine_version"] == "0.7.0"
+    assert payload["overall"]["engine_version"] == "0.8.0"
     assert "trust_score" in payload
     assert "engines" in payload
     assert payload["summary"]["explainable_trust_score"] == payload["trust_score"]["trust_score"]

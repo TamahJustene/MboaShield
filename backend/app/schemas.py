@@ -140,6 +140,21 @@ class IntelligenceAnalyzeIn(BaseModel):
     lang: str = "en"
     include_scaffolds: bool = True
 
+
+class AnalysisFeedbackIn(BaseModel):
+    verification_check_id: int
+    label: Literal["true_positive", "false_positive", "true_negative", "false_negative"]
+    note: str | None = None
+
+
+class AnalysisFeedbackOut(BaseModel):
+    id: int
+    verification_check_id: int
+    label: str
+    note: str | None = None
+    actor_user_id: int | None = None
+    created_at: str
+
 ReportType = Literal[
     "disinformation",
     "impersonation",

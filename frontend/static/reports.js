@@ -183,6 +183,7 @@ document.getElementById("incidentForm").addEventListener("submit", async (event)
   const description = document.getElementById("reportDescription").value.trim();
   const checkRaw = document.getElementById("reportCheckId").value.trim();
   const verification_check_id = checkRaw ? Number(checkRaw) : null;
+  const region = document.getElementById("reportRegion").value || null;
 
   if (description.length < 8) {
     status.textContent = "Please describe the incident in at least 8 characters.";
@@ -197,6 +198,7 @@ document.getElementById("incidentForm").addEventListener("submit", async (event)
       report_type,
       description,
       verification_check_id,
+      region,
     }),
   });
 

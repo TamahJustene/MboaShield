@@ -1,45 +1,41 @@
 # MboaShield Architecture
 
-## Current state (v0.7.0 - Phase 3 intelligence)
+## Current state (v0.8.0 - Phase 4 analytics)
 
 ```text
-Browser UI
-  home case panel shows Explainable Trust Score
-  analyst / citizen / institution consoles
+National Trust Dashboard (frontend/static/national.html)
         |
         v
-FastAPI create_app()
-  api/v1/auth.py
-  api/v1/platform.py
-  api/v1/government.py
-  api/v1/intelligence.py
+api/v1/analytics.py
         |
-  services/engines/
-    text | image | audio | video*
-    identity | document*
-    network | source | behavior | metadata
-    trust_fusion.py
-  services/ai_analysis.py   preserves ai_analysis envelope
-  detectors remain under services/*adapters and check modules
+services/analytics.py
+  threat trends
+  deepfake trends
+  institution attacks
+  regional heat map
+  incident timeline
+  response time
+  AI feedback feedback
+  citizen participation
+        |
+SQLAlchemy models
+  verification_checks
+  incident_reports / incident_events
+  analysis_feedback
+  users / certificates
 ```
 
-`*` scaffolded engines return `status=unsupported` until models are attached.
+## Analytics honesty
 
-## Explainable Trust Score
+AI accuracy uses analyst feedback labels when available.
+Disposition ratios (resolved vs dismissed) are operational proxies only.
 
-1. Run applicable engines independently
-2. Collect confidence, evidence, reasoning, risk, threats, recommendations
-3. Fuse with weighted blend favoring highest risk
-4. `trust_score = 100 - fused_risk`
-5. Always include `certainty: none` and honesty note
+## Prior layers still active
 
-## Backward compatibility
+- Phase 1: auth/RBAC/audit + SQLAlchemy/Postgres
+- Phase 2: national incident workflow + operator consoles
+- Phase 3: modular intelligence engines + trust fusion
 
-- `/api/v1/check/*` still return detector results + `ai_analysis`
-- Additive `intelligence` snapshot on single checks
-- `/api/v1/analyze` keeps `modules` + `overall`, adds `engines` + `trust_score`
+## Next
 
-## Next phases
-
-- Phase 4: national analytics dashboards
-- Phase 5: OIDC/MFA and partner APIs
+Phase 5: OAuth2/OIDC, MFA readiness, partner API keys

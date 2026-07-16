@@ -18,7 +18,7 @@ from typing import Any
 
 
 ENGINE_NAME = "mboashield-trust-engine"
-ENGINE_VERSION = "0.7.0"
+ENGINE_VERSION = "0.8.0"
 
 THREAT_TAXONOMY = {
     "disinformation": "False or unverified claims designed to spread panic or confusion",

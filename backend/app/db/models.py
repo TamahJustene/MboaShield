@@ -122,6 +122,17 @@ class IncidentEvent(Base):
     created_at: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
 
 
+class AnalysisFeedback(Base):
+    __tablename__ = "analysis_feedback"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    verification_check_id: Mapped[int] = mapped_column(ForeignKey("verification_checks.id"), nullable=False, index=True)
+    label: Mapped[str] = mapped_column(String(64), nullable=False)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    actor_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+
+
 class AuditLog(Base):
     __tablename__ = "audit_logs"
 

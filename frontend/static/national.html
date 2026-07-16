@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - National Trust Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">National Digital Trust</p>
+      <h1>National Trust Dashboard</h1>
+      <p class="tagline">Threat trends, regional pressure, response performance, and citizen participation</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-certificates">
+    <div class="panel-heading-row">
+      <h2>Overview</h2>
+      <button type="button" id="refreshNational" class="btn-ghost">Refresh</button>
+    </div>
+    <div id="nationalOverview" class="stat-strip">Loading national metrics...</div>
+    <p id="nationalGenerated" class="muted"></p>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Threat trends</h2>
+      <div id="threatTrends" class="report-copy muted">Loading...</div>
+    </section>
+    <section class="history-panel">
+      <h2>Deepfake / synthetic trends</h2>
+      <div id="deepfakeTrends" class="report-copy muted">Loading...</div>
+    </section>
+  </div>
+
+  <section class="history-panel history-certificates">
+    <h2>Regional heat map</h2>
+    <p class="summary-lead">Incident density by Cameroon region (and unspecified).</p>
+    <div id="regionHeatMap" class="heat-map"></div>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Institution attack pressure</h2>
+      <div id="institutionAttacks" class="report-copy muted">Loading...</div>
+    </section>
+    <section class="history-panel">
+      <h2>Incident timeline and response</h2>
+      <div id="incidentTimeline" class="report-copy muted">Loading...</div>
+    </section>
+  </div>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>AI accuracy signals</h2>
+      <div id="aiAccuracy" class="report-copy muted">Loading...</div>
+      <form id="feedbackForm" class="profile-form" style="margin-top:1rem">
+        <h3>Label a check (analyst feedback)</h3>
+        <label class="report-label" for="feedbackCheckId">Check ID</label>
+        <input id="feedbackCheckId" type="number" min="1" required />
+        <label class="report-label" for="feedbackLabel">Label</label>
+        <select id="feedbackLabel">
+          <option value="true_positive">True positive</option>
+          <option value="false_positive">False positive</option>
+          <option value="true_negative">True negative</option>
+          <option value="false_negative">False negative</option>
+        </select>
+        <label class="report-label" for="feedbackNote">Note</label>
+        <input id="feedbackNote" type="text" placeholder="Optional reviewer note" />
+        <button type="submit" class="btn-primary">Submit feedback</button>
+        <p id="feedbackStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="history-panel">
+      <h2>Citizen participation</h2>
+      <div id="participation" class="report-copy muted">Loading...</div>
+    </section>
+  </div>
+
+  <footer class="app-footer">
+    <p>MboaShield Tech - tamahjustene45@gmail.com</p>
+    <p>
+      <a href="/">Home</a> -
+      <a href="/static/analyst.html">Analyst console</a> -
+      <a href="/static/citizen.html">Citizen dashboard</a> -
+      <a href="/static/reports.html">Incidents</a>
+    </p>
+  </footer>
+  <script src="/static/national.js"></script>
+</body>
+</html>
