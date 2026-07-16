@@ -97,5 +97,5 @@ def test_case_lifecycle_notes_assign_evidence_and_notifications(client):
 def test_health_reports_phase7_version(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "1.1.0"
+    assert health["version"] == "1.4.0"
     assert health["ntoc"] is True

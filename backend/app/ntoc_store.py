@@ -369,30 +369,39 @@ def save_institution_health_snapshots(items: list[dict[str, Any]]) -> list[dict]
 
 
 def evidence_for_case(case_id: int) -> dict[str, Any]:
-    """Read-path evidence viewer: linked incident + verification check (no vault write)."""
+    """Evidence viewer: linked incident/check plus vault items for the case."""
     case = get_case(case_id)
     if not case:
         raise ValueError("Case not found")
     incident = get_incident_report(case["incident_id"]) if case.get("incident_id") else None
     check_id = case.get("verification_check_id") or (incident or {}).get("verification_check_id")
     check = get_verification_check(check_id) if check_id else None
+    linked = (
+        [
+            {
+                "type": "verification_check",
+                "id": check["id"],
+                "check_type": check.get("check_type"),
+                "risk_score": check.get("risk_score"),
+                "risk_band": check.get("risk_band"),
+                "created_at": check.get("created_at"),
+            }
+        ]
+        if check
+        else []
+    )
+    vault_items: list[dict[str, Any]] = []
+    try:
+        from .vault_store import list_evidence
+
+        vault_items = list_evidence(case_id=case_id, limit=50)
+    except Exception:
+        vault_items = []
     return {
         "case_id": case_id,
         "incident": incident,
         "verification_check": check,
-        "evidence_items": (
-            [
-                {
-                    "type": "verification_check",
-                    "id": check["id"],
-                    "check_type": check.get("check_type"),
-                    "risk_score": check.get("risk_score"),
-                    "risk_band": check.get("risk_band"),
-                    "created_at": check.get("created_at"),
-                }
-            ]
-            if check
-            else []
-        ),
-        "note": "Write-path evidence vault arrives in Phase 9; this is a read-only linked evidence view.",
+        "evidence_items": linked,
+        "vault_items": vault_items,
+        "note": "Linked verification checks plus Digital Evidence Vault items for this case.",
     }

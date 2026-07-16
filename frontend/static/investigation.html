@@ -12,10 +12,11 @@
     <div class="brand">
       <p class="eyebrow">NTOC investigation</p>
       <h1>Investigation workspace</h1>
-      <p class="tagline">Cases, notes, assignments, timeline, and linked evidence (read-only)</p>
+      <p class="tagline">Cases, notes, assignments, timeline, and Digital Evidence Vault</p>
     </div>
     <div class="header-actions">
       <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
+      <a href="/static/intel.html" class="btn-ghost history-link">Intel</a>
       <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
       <a href="/" class="btn-ghost history-link">Home</a>
     </div>
@@ -62,11 +63,20 @@
         <button type="submit" class="btn-ghost">Assign</button>
         <p id="assignStatus" class="demo-status muted" aria-live="polite"></p>
       </form>
+      <form id="evidenceForm" class="profile-form hidden">
+        <h3>Register vault evidence</h3>
+        <label class="report-label" for="evidenceTitle">Title</label>
+        <input id="evidenceTitle" type="text" required />
+        <label class="report-label" for="evidenceFile">File</label>
+        <input id="evidenceFile" type="file" required />
+        <button type="submit" class="btn-primary">Upload to vault</button>
+        <p id="evidenceStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
     </section>
   </div>
 
   <footer class="app-footer">
-    <p>Evidence vault write-path arrives in Phase 9. This workspace shows linked checks/incidents only.</p>
+    <p>Digital Evidence Vault: hashed storage, custody chain, signed exports, retention.</p>
   </footer>
   <script src="/static/investigation.js"></script>
 </body>

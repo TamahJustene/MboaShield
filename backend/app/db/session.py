@@ -98,6 +98,16 @@ def init_db() -> None:
                 if col not in incident_cols:
                     conn.execute(text(ddl))
 
+            institution_cols = {
+                row[1] for row in conn.execute(text("PRAGMA table_info(institutions)")).fetchall()
+            }
+            for col, ddl in [
+                ("branding_json", "ALTER TABLE institutions ADD COLUMN branding_json TEXT DEFAULT '{}'"),
+                ("contact_email", "ALTER TABLE institutions ADD COLUMN contact_email VARCHAR(255)"),
+            ]:
+                if col not in institution_cols:
+                    conn.execute(text(ddl))
+
 
 def reset_engine() -> None:
     global _engine, _SessionLocal

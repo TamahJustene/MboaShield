@@ -12,6 +12,8 @@ def client(monkeypatch, tmp_path):
     monkeypatch.setenv("AUTH_ENFORCE", "false")
     monkeypatch.setenv("RATE_LIMIT_PER_MINUTE", "10000")
     monkeypatch.setenv("JWT_SECRET", "test-secret-mboashield")
+    monkeypatch.setenv("VAULT_LOCAL_PATH", str(tmp_path / "vault"))
+    monkeypatch.setenv("VAULT_SIGNING_KEY", "test-vault-signing-key")
 
     from backend.app.core.config import get_settings
     from backend.app.db.session import reset_engine

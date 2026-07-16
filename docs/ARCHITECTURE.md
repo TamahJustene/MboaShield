@@ -1,6 +1,6 @@
 # MboaShield Architecture
 
-**Version:** 1.0.0 (Phase 6 enterprise identity)  
+**Version:** 1.4.0 (Phase 10 institution portal)  
 **Access / env adjustment:** [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md)  
 **Product status:** [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md)
 
@@ -21,18 +21,20 @@ FastAPI create_app()          backend/app/main.py
         |
         +-- middleware (CORS, rate limit, security headers)
         +-- GET /health
-        +-- /api/v1/* routers (auth, admin, oauth, ...)
+        +-- /api/v1/* routers (auth, ntoc, intel, evidence, ...)
         +-- /static/*  -> frontend/
         v
-Services + identity_store + repositories
+Services + stores + repositories
         |
         +-- engines/* + trust fusion
-        +-- incident_workflow
-        +-- analytics
+        +-- incident_workflow + ntoc
+        +-- intel connectors (compliant only)
+        +-- vault storage + signing
         +-- identity_federation (OIDC/SAML/LDAP)
         v
 SQLAlchemy (SQLite or PostgreSQL)
-Alembic migrations 0001-0005
+Alembic migrations 0001-0008
+Object storage: local FS (demo) or S3 (gov)
 ```
 
 ---
@@ -47,13 +49,18 @@ Alembic migrations 0001-0005
 | Intelligence | `api/v1/intelligence.py`, `services/engines/` | 10 engines + analyze |
 | Analytics | `api/v1/analytics.py` | National aggregates + feedback |
 | Identity | `auth.py`, `admin_users.py`, `oauth.py`, `partners.py` | Enterprise identity + partners |
+| NTOC | `cases.py`, `ntoc.py`, `ntoc_store` | Cases, threat level, notifications |
+| Intel | `intel.py`, `services/intel/`, `intel_store` | Compliant sources, correlate, reports |
+| Vault | `evidence.py`, `services/vault/`, `vault_store` | Hash, custody, export, retention |
+| Institution portal | `institution_portal.py`, `institution_store` | Domains, members, branding, `msi_` keys |
 
 ---
 
 ## 3. API surface (`/api/v1`)
 
 Auth (MFA, OIDC, SAML, LDAP, sessions, devices, password), admin users, OAuth clients/token,
-partners, intelligence, analytics, platform checks/incidents, government workflow.
+partners, intelligence, analytics, platform checks/incidents, government workflow,
+NTOC/cases, intel, evidence vault, institution portal.
 
 Root: `GET /health`, `GET /`, OpenAPI `/docs`.
 
@@ -68,7 +75,7 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 5. Intelligence engines
 
-8 active + 2 scaffolded (video, document). Product version 1.0.0; AI engine package version remains 0.9.0 until Phase 12.
+8 active + 2 scaffolded (video, document). Product version 1.4.0; AI engine package version remains 0.9.0 until Phase 12.
 
 ---
 
@@ -87,10 +94,11 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 7. Data & deploy
 
-SQLite default; Postgres via `DATABASE_URL`; Alembic 0001-0005; Render Docker demo; CI pytest.
+SQLite default; Postgres via `DATABASE_URL`; Alembic 0001-0009; Render Docker demo; CI pytest.
+Vault objects under `storage/vault` (or `VAULT_LOCAL_PATH` / S3).
 
 ---
 
 ## 8. Next
 
-Phase 7 — National Trust Operations Center ([`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md)).
+Phase 11 — Verified Government Communications ([`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md)).

@@ -73,6 +73,9 @@ def create_app() -> FastAPI:
             "analytics": "national-v1",
             "deployment_profile": settings.deployment_profile,
             "ntoc": settings.ntoc_enabled,
+            "intel": settings.intel_enabled,
+            "vault": settings.vault_enabled,
+            "institution_portal": settings.institution_portal_enabled,
             "identity": {
                 "mfa_ready": True,
                 "oidc_ready": bool(

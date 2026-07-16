@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "1.1.0"
+    version: str = "1.4.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
     deployment_profile: str = Field(default="demo", alias="DEPLOYMENT_PROFILE")
     tenant_id: str = Field(default="cm", alias="TENANT_ID")
@@ -40,6 +40,27 @@ class Settings(BaseSettings):
     threat_high: int = Field(default=70, alias="THREAT_LEVEL_HIGH")
     threat_critical: int = Field(default=85, alias="THREAT_LEVEL_CRITICAL")
     notification_webhook_url: str = Field(default="", alias="NOTIFICATION_WEBHOOK_URL")
+
+    # Threat intelligence / Phase 8 (compliant sources only)
+    intel_enabled: bool = Field(default=True, alias="INTEL_ENABLED")
+    intel_egress_allowlist: str = Field(default="*", alias="INTEL_EGRESS_ALLOWLIST")
+    intel_ingest_limit: int = Field(default=50, alias="INTEL_INGEST_LIMIT")
+
+    # Evidence vault / Phase 9
+    vault_enabled: bool = Field(default=True, alias="VAULT_ENABLED")
+    vault_storage: str = Field(default="local", alias="VAULT_STORAGE")
+    vault_local_path: str = Field(default="", alias="VAULT_LOCAL_PATH")
+    vault_max_bytes: int = Field(default=10_485_760, alias="VAULT_MAX_BYTES")
+    vault_retention_days: int = Field(default=365, alias="VAULT_RETENTION_DAYS")
+    vault_signing_key: str = Field(default="", alias="VAULT_SIGNING_KEY")
+    vault_s3_bucket: str = Field(default="", alias="VAULT_S3_BUCKET")
+    vault_s3_region: str = Field(default="us-east-1", alias="VAULT_S3_REGION")
+    vault_s3_endpoint_url: str = Field(default="", alias="VAULT_S3_ENDPOINT_URL")
+    vault_s3_access_key: str = Field(default="", alias="VAULT_S3_ACCESS_KEY")
+    vault_s3_secret_key: str = Field(default="", alias="VAULT_S3_SECRET_KEY")
+
+    # Institution portal / Phase 10
+    institution_portal_enabled: bool = Field(default=True, alias="INSTITUTION_PORTAL_ENABLED")
 
     # Password policy
     password_min_length: int = Field(default=8, alias="PASSWORD_MIN_LENGTH")
@@ -122,6 +143,12 @@ class Settings(BaseSettings):
 
     def is_government_profile(self) -> bool:
         return self.deployment_profile.strip().lower() in {"government", "gov", "national"}
+
+    def intel_allowlist_hosts(self) -> set[str] | None:
+        raw = self.intel_egress_allowlist.strip()
+        if not raw or raw == "*":
+            return None
+        return {item.strip().lower() for item in raw.split(",") if item.strip()}
 
 
 @lru_cache

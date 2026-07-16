@@ -46,6 +46,68 @@ class Institution(Base):
     website_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     verified: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     handles_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    branding_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    contact_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class InstitutionDomain(Base):
+    __tablename__ = "institution_domains"
+    __table_args__ = (UniqueConstraint("institution_id", "domain", name="uq_institution_domain"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    institution_id: Mapped[str] = mapped_column(String(64), ForeignKey("institutions.id"), nullable=False, index=True)
+    domain: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    verification_token: Mapped[str] = mapped_column(String(128), nullable=False)
+    verification_method: Mapped[str] = mapped_column(String(64), nullable=False, default="dns_txt")
+    verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    verified_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class InstitutionMembership(Base):
+    __tablename__ = "institution_memberships"
+    __table_args__ = (UniqueConstraint("institution_id", "user_id", name="uq_institution_membership"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    institution_id: Mapped[str] = mapped_column(String(64), ForeignKey("institutions.id"), nullable=False, index=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    member_role: Mapped[str] = mapped_column(String(32), nullable=False, default="member")
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="active", index=True)
+    invited_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class InstitutionOfficialAccount(Base):
+    __tablename__ = "institution_official_accounts"
+    __table_args__ = (
+        UniqueConstraint("institution_id", "platform", "handle", name="uq_institution_official_account"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    institution_id: Mapped[str] = mapped_column(String(64), ForeignKey("institutions.id"), nullable=False, index=True)
+    platform: Mapped[str] = mapped_column(String(64), nullable=False)
+    handle: Mapped[str] = mapped_column(String(255), nullable=False)
+    url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class InstitutionApiKey(Base):
+    __tablename__ = "institution_api_keys"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    institution_id: Mapped[str] = mapped_column(String(64), ForeignKey("institutions.id"), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    key_prefix: Mapped[str] = mapped_column(String(32), nullable=False)
+    key_hash: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
+    scopes_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    revoked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    expires_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    last_used_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
     created_at: Mapped[str] = mapped_column(String(64), nullable=False)
 
 
@@ -334,3 +396,122 @@ class InstitutionHealthSnapshot(Base):
     high_risk_checks: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     details_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+
+
+class IntelSource(Base):
+    __tablename__ = "intel_sources"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    source_class: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    endpoint_url: Mapped[str] = mapped_column(String(1024), nullable=False)
+    egress_host: Mapped[str] = mapped_column(String(255), nullable=False)
+    tos_reference: Mapped[str] = mapped_column(String(512), nullable=False)
+    license: Mapped[str] = mapped_column(String(255), nullable=False, default="unknown")
+    auth_type: Mapped[str] = mapped_column(String(32), nullable=False, default="none")
+    credentials_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    config_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    last_ingested_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class IntelItem(Base):
+    __tablename__ = "intel_items"
+    __table_args__ = (UniqueConstraint("source_id", "external_id", name="uq_intel_item_source_external"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    source_id: Mapped[int] = mapped_column(ForeignKey("intel_sources.id"), nullable=False, index=True)
+    external_id: Mapped[str] = mapped_column(String(512), nullable=False)
+    title: Mapped[str] = mapped_column(String(512), nullable=False)
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    published_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    content_hash: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    handles_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    urls_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    raw_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    campaign_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+
+
+class IntelCampaign(Base):
+    __tablename__ = "intel_campaigns"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="detected", index=True)
+    signal_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    shared_handles_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    shared_urls_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class IntelCorrelation(Base):
+    __tablename__ = "intel_correlations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    intel_item_id: Mapped[int] = mapped_column(ForeignKey("intel_items.id"), nullable=False, index=True)
+    incident_id: Mapped[int | None] = mapped_column(ForeignKey("incident_reports.id"), nullable=True, index=True)
+    case_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    correlation_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    details_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class EvidenceItem(Base):
+    __tablename__ = "evidence_items"
+    __table_args__ = (UniqueConstraint("evidence_id", name="uq_evidence_public_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    evidence_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    content_type: Mapped[str] = mapped_column(String(128), nullable=False, default="application/octet-stream")
+    filename: Mapped[str] = mapped_column(String(512), nullable=False)
+    size_bytes: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    sha256: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    storage_backend: Mapped[str] = mapped_column(String(32), nullable=False, default="local")
+    storage_key: Mapped[str] = mapped_column(String(1024), nullable=False)
+    case_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    incident_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    verification_check_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    custodian_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="active", index=True)
+    retention_until: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class EvidenceCustodyEvent(Base):
+    __tablename__ = "evidence_custody_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    evidence_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    event_type: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    from_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    to_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    details_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    event_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    prev_event_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+
+
+class EvidenceExport(Base):
+    __tablename__ = "evidence_exports"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    export_id: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    evidence_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    format: Mapped[str] = mapped_column(String(32), nullable=False, default="json_package")
+    package_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    signature: Mapped[str] = mapped_column(String(128), nullable=False)
+    storage_key: Mapped[str] = mapped_column(String(1024), nullable=False)
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)

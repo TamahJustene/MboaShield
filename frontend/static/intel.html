@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Threat Intelligence</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Phase 8 intel</p>
+      <h1>Threat intelligence</h1>
+      <p class="tagline">Compliant sources only: RSS, official APIs, open data, partner webhooks</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-certificates">
+    <h2>Policy</h2>
+    <div id="policyBox" class="report-copy muted">Loading allowed source classes...</div>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Register source</h2>
+      <form id="sourceForm" class="profile-form">
+        <label class="report-label" for="sourceName">Name</label>
+        <input id="sourceName" type="text" value="Gov RSS feed" required />
+        <label class="report-label" for="sourceClass">Source class</label>
+        <select id="sourceClass">
+          <option value="rss">rss</option>
+          <option value="official_api">official_api</option>
+          <option value="open_data">open_data</option>
+          <option value="partner_webhook">partner_webhook</option>
+        </select>
+        <label class="report-label" for="sourceUrl">Endpoint URL</label>
+        <input id="sourceUrl" type="url" placeholder="https://example.gov.cm/feed.xml" />
+        <label class="report-label" for="sourceTos">ToS / policy reference</label>
+        <input id="sourceTos" type="text" value="Official RSS terms" required />
+        <label class="report-label" for="sourceLicense">License</label>
+        <input id="sourceLicense" type="text" value="public-rss" />
+        <button type="submit" class="btn-primary">Create source</button>
+        <p id="sourceStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <button type="button" id="refreshSources" class="btn-ghost">Refresh sources</button>
+      <div id="sourceList" class="history-list"></div>
+    </section>
+    <section class="history-panel">
+      <h2>Items / campaigns / report</h2>
+      <button type="button" id="runCorrelate" class="btn-ghost">Run correlation</button>
+      <button type="button" id="loadReport" class="btn-ghost">National report</button>
+      <pre id="intelOut" class="out history-detail empty-detail"></pre>
+      <div id="itemList" class="history-list"></div>
+      <div id="campaignList" class="history-list"></div>
+    </section>
+  </div>
+
+  <footer class="app-footer">
+    <p>Scraping that violates platform terms is forbidden by design.</p>
+  </footer>
+  <script src="/static/intel.js"></script>
+</body>
+</html>

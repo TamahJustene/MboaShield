@@ -16,6 +16,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 DEFAULT_JWT_SECRET = "change-me-in-production-mboashield"
 API_KEY_PREFIX = "msb_"
+INSTITUTION_API_KEY_PREFIX = "msi_"
 
 SCOPE_TO_PERMISSIONS = {
     "checks:create": {"checks:create"},
@@ -131,6 +132,11 @@ def hash_api_key(raw_key: str) -> str:
 
 def generate_api_key() -> tuple[str, str, str]:
     raw = API_KEY_PREFIX + secrets.token_urlsafe(32)
+    return raw, raw[:12], hash_api_key(raw)
+
+
+def generate_institution_api_key() -> tuple[str, str, str]:
+    raw = INSTITUTION_API_KEY_PREFIX + secrets.token_urlsafe(32)
     return raw, raw[:12], hash_api_key(raw)
 
 

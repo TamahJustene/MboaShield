@@ -2,6 +2,66 @@
 
 All notable changes to MboaShield are documented here.
 
+## [1.4.0] - 2026-07-16
+
+### Phase 10 - Institution Administration Platform
+
+#### Added
+- Institution portal APIs: domains, memberships, branding, official accounts, scoped API keys, investigations, analytics
+- Domain verification workflow (DNS TXT / token confirm / HTTP file)
+- Institution API keys with `msi_` prefix (partner keys remain `msb_`)
+- Portal UI: `/static/institution-portal.html`
+- Alembic migration `0009_phase10`
+- Feature flag: `INSTITUTION_PORTAL_ENABLED`
+
+#### Changed
+- Product version bumped to 1.4.0
+- Institution model gains `branding_json` and `contact_email`
+
+#### Preserved
+- Existing registry CRUD, partner keys, NTOC, intel, vault, and detection APIs
+
+## [1.3.0] - 2026-07-16
+
+### Phase 9 - Digital Evidence Vault
+
+#### Added
+- Evidence vault with SHA-256 hashing, local FS storage (S3 adapter optional)
+- Append-only custody chain with linked event hashes
+- Custody transfer, signed JSON export packages, export verification
+- Retention dry-run and purge worker endpoint
+- Investigation workspace vault upload + listing
+- Alembic migration `0008_phase9`
+- Feature flag: `VAULT_ENABLED` (+ `VAULT_STORAGE`, size/retention/signing knobs)
+
+#### Changed
+- Product version bumped to 1.3.0
+- Case evidence view includes vault items alongside linked verification checks
+
+#### Preserved
+- Existing `/api/v1/*` detection, NTOC, intel, identity, and analytics APIs
+
+## [1.2.0] - 2026-07-16
+
+### Phase 8 - Threat Intelligence Platform (compliant sources)
+
+#### Added
+- Intel source registry with ToS/license compliance metadata
+- Connectors: RSS/Atom, official HTTP API, open data, partner webhook
+- Hard reject of scrape / ToS-bypass source classes
+- Egress allowlist (`INTEL_EGRESS_ALLOWLIST`) and ingest quotas
+- Correlation engine (shared URLs/handles) + campaign clustering
+- National threat intelligence report (JSON + markdown)
+- Alembic migration `0007_phase8`
+- Ops UI: `/static/intel.html`
+- Feature flag: `INTEL_ENABLED`
+
+#### Changed
+- Product version bumped to 1.2.0
+
+#### Preserved
+- Existing `/api/v1/*` detection, NTOC, identity, and analytics APIs
+
 ## [1.1.0] - 2026-07-16
 
 ### Phase 7 - National Trust Operations Center

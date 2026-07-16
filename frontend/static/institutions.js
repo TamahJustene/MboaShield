@@ -31,6 +31,7 @@ async function loadInstitutions() {
               : ""
           }
           <button type="button" class="btn-ghost edit-institution" data-id="${escapeHtml(inst.id)}">Edit in form</button>
+          <a class="btn-ghost" href="/static/institution-portal.html?institution_id=${escapeHtml(inst.id)}">Open portal</a>
         </article>
       `
     )

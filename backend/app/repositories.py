@@ -252,6 +252,11 @@ def list_recent_certificates(limit: int = 20) -> list[dict]:
 
 
 def _row_to_institution(row: Institution) -> dict:
+    branding_raw = getattr(row, "branding_json", None) or "{}"
+    try:
+        branding = json.loads(branding_raw)
+    except json.JSONDecodeError:
+        branding = {}
     return {
         "id": row.id,
         "name": row.name,
@@ -259,6 +264,8 @@ def _row_to_institution(row: Institution) -> dict:
         "url": row.website_url,
         "verified": bool(row.verified),
         "handles": json.loads(row.handles_json or "[]"),
+        "branding": branding if isinstance(branding, dict) else {},
+        "contact_email": getattr(row, "contact_email", None),
         "created_at": row.created_at,
     }
 
@@ -530,7 +537,13 @@ def revoke_partner_api_key(key_id: int) -> dict | None:
 
 
 def authenticate_api_key(raw_key: str) -> dict | None:
-    if not raw_key or not raw_key.startswith("msb_"):
+    if not raw_key:
+        return None
+    if raw_key.startswith("msi_"):
+        from .institution_store import authenticate_institution_api_key
+
+        return authenticate_institution_api_key(raw_key)
+    if not raw_key.startswith("msb_"):
         return None
     digest = hash_api_key(raw_key)
     with session_scope() as session:
@@ -555,6 +568,7 @@ def authenticate_api_key(raw_key: str) -> dict | None:
             "role": "partner",
             "is_active": True,
             "auth_type": "api_key",
+            "key_type": "partner",
         }
 
 
@@ -867,6 +881,7 @@ def upsert_institution(
                 website_url=url or "",
                 verified=1 if verified else 0,
                 handles_json=json.dumps(handles, ensure_ascii=True),
+                branding_json="{}",
                 created_at=now_iso(),
             )
             session.add(row)

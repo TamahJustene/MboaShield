@@ -404,3 +404,81 @@ class CaseAssignIn(BaseModel):
 class CaseNoteIn(BaseModel):
     body: str = Field(..., min_length=2)
 
+
+class IntelSourceIn(BaseModel):
+    name: str = Field(..., min_length=2)
+    source_class: str = Field(..., min_length=2)
+    endpoint_url: str = Field(default="", min_length=0)
+    tos_reference: str = Field(..., min_length=3)
+    license: str = "unknown"
+    auth_type: str = "none"
+    credentials: dict[str, Any] | None = None
+    config: dict[str, Any] | None = None
+    enabled: bool = True
+
+
+class IntelSourceUpdateIn(BaseModel):
+    enabled: bool | None = None
+
+
+class EvidenceRegisterIn(BaseModel):
+    title: str = Field(..., min_length=2)
+    filename: str = Field(..., min_length=1)
+    content_base64: str = Field(..., min_length=4)
+    content_type: str = "application/octet-stream"
+    description: str | None = None
+    case_id: int | None = None
+    incident_id: int | None = None
+    verification_check_id: int | None = None
+    retention_days: int | None = Field(default=None, ge=1, le=3650)
+
+
+class EvidenceTransferIn(BaseModel):
+    to_user_id: int = Field(..., ge=1)
+    note: str | None = None
+
+
+class EvidenceRetentionIn(BaseModel):
+    dry_run: bool = True
+
+
+class InstitutionDomainIn(BaseModel):
+    domain: str = Field(..., min_length=3)
+    verification_method: str = "dns_txt"
+
+
+class InstitutionDomainVerifyIn(BaseModel):
+    token: str | None = None
+    force: bool = False
+
+
+class InstitutionMembershipIn(BaseModel):
+    user_id: int | None = None
+    email: str | None = None
+    display_name: str | None = None
+    member_role: str = "member"
+
+
+class InstitutionMembershipUpdateIn(BaseModel):
+    member_role: str | None = None
+    status: str | None = None
+
+
+class InstitutionBrandingIn(BaseModel):
+    branding: dict[str, Any] | None = None
+    contact_email: str | None = None
+
+
+class InstitutionOfficialAccountIn(BaseModel):
+    platform: str = Field(..., min_length=1)
+    handle: str = Field(..., min_length=1)
+    url: str | None = None
+    verified: bool = True
+
+
+class InstitutionApiKeyIn(BaseModel):
+    name: str = Field(..., min_length=2)
+    scopes: list[str] | None = None
+    expires_at: str | None = None
+
+

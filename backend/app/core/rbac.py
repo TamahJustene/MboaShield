@@ -26,6 +26,9 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "ambassadors:complete",
         "institutions:read",
         "audit:read",
+        "intel:read",
+        "evidence:read",
+        "evidence:write",
     },
     Role.INSTITUTION_ADMIN: {
         "checks:create",
@@ -34,6 +37,8 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "history:read_all",
         "institutions:read",
         "institutions:manage",
+        "intel:read",
+        "evidence:read",
     },
     Role.ADMIN: {
         "checks:create",
@@ -46,6 +51,11 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "audit:read",
         "users:manage",
         "partners:manage",
+        "intel:read",
+        "intel:manage",
+        "evidence:read",
+        "evidence:write",
+        "evidence:manage",
         "system:admin",
     },
 }
