@@ -7,21 +7,29 @@ from fastapi.staticfiles import StaticFiles
 from .config import DB_PATH, ROOT, VERSION
 from .db import init_db
 from .repositories import (
+    create_incident_report,
     create_user,
     get_certificate,
+    get_incident_report,
     get_institution,
     get_user,
     get_verification_check,
+    list_incident_reports,
     list_institutions,
     list_recent_certificates,
     list_recent_verification_checks,
     save_certificate,
     save_verification_check,
+    update_incident_status,
 )
 from .schemas import (
     CertificateOut,
     CompleteIn,
     ImpersonationIn,
+    IncidentReportIn,
+    IncidentReportOut,
+    IncidentReportsOut,
+    IncidentStatusIn,
     InstitutionOut,
     InstitutionsOut,
     RecentCertificatesOut,
@@ -99,6 +107,55 @@ def api_get_institution(institution_id: str):
     if not institution:
         raise HTTPException(status_code=404, detail="Institution not found")
     return institution
+
+
+@app.post("/api/v1/incidents", response_model=IncidentReportOut)
+def api_create_incident(
+    body: IncidentReportIn,
+    x_mboashield_user_id: str | None = Header(default=None),
+):
+    resolved_user_id = resolve_user_id(x_mboashield_user_id)
+    try:
+        return create_incident_report(
+            report_type=body.report_type,
+            description=body.description,
+            verification_check_id=body.verification_check_id,
+            user_id=resolved_user_id,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/api/v1/incidents", response_model=IncidentReportsOut)
+def api_list_incidents(limit: int = 20, status: str | None = None):
+    try:
+        reports = list_incident_reports(limit=limit, status=status)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"reports": reports, "count": len(reports)}
+
+
+@app.get("/api/v1/incidents/{report_id}", response_model=IncidentReportOut)
+def api_get_incident(report_id: int):
+    report = get_incident_report(report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Incident report not found")
+    return report
+
+
+@app.patch("/api/v1/incidents/{report_id}", response_model=IncidentReportOut)
+def api_update_incident(report_id: int, body: IncidentStatusIn):
+    try:
+        report = update_incident_status(
+            report_id,
+            status=body.status,
+            reviewer_note=body.reviewer_note,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if not report:
+        raise HTTPException(status_code=404, detail="Incident report not found")
+    return report
 
 
 @app.post("/api/v1/check/text")

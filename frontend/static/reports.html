@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Incident Reports</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Citizen protection</p>
+      <h1>Incident reports</h1>
+      <p class="tagline">Flag suspicious content and track review status</p>
+    </div>
+    <div class="header-actions">
+      <a href="/" class="btn-ghost history-link">Back to app</a>
+    </div>
+  </header>
+
+  <section class="history-panel history-certificates">
+    <h2>Submit a report</h2>
+    <p class="summary-lead">Use this when a check shows risk and you want MboaShield to escalate it for review.</p>
+    <form id="incidentForm" class="profile-form">
+      <label class="report-label" for="reportType">Report type</label>
+      <select id="reportType">
+        <option value="disinformation">Disinformation</option>
+        <option value="impersonation">Impersonation</option>
+        <option value="voice_clone">Voice clone</option>
+        <option value="synthetic_media">Synthetic media</option>
+        <option value="scam">Scam</option>
+        <option value="other">Other</option>
+      </select>
+      <label class="report-label" for="reportCheckId">Linked check ID (optional)</label>
+      <input id="reportCheckId" type="number" min="1" placeholder="e.g. 12" />
+      <label class="report-label" for="reportDescription">What happened?</label>
+      <textarea id="reportDescription" rows="4" placeholder="Describe the suspicious content and where you saw it..."></textarea>
+      <button type="submit" class="btn-primary">Submit incident</button>
+      <p id="incidentFormStatus" class="demo-status muted" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="history-toolbar">
+    <div class="chip-row" id="statusFilters" aria-label="Filter by status">
+      <button type="button" class="btn-ghost filter-chip active" data-status="">All</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="open">Open</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="reviewing">Reviewing</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="resolved">Resolved</button>
+      <button type="button" class="btn-ghost filter-chip" data-status="dismissed">Dismissed</button>
+    </div>
+    <button type="button" id="refreshReports" class="btn-ghost">Refresh</button>
+  </section>
+
+  <div class="history-layout">
+    <section class="history-panel">
+      <h2>Report queue</h2>
+      <p id="reportsLead" class="summary-lead">Loading incident reports...</p>
+      <div id="reportsList" class="history-list"></div>
+    </section>
+    <section class="history-panel">
+      <h2>Report detail</h2>
+      <div id="reportDetail" class="out history-detail empty-detail">
+        <p class="report-copy">Select a report to review or update its status.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="app-footer">
+    <p>MboaShield Tech - tamahjustene45@gmail.com</p>
+    <p>
+      <a href="/">Home</a> -
+      <a href="/static/history.html">Activity history</a> -
+      <a href="/static/institutions.html">Institution registry</a>
+    </p>
+  </footer>
+
+  <script src="/static/reports.js"></script>
+</body>
+</html>

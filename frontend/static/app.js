@@ -227,7 +227,11 @@ function renderReport(targetId, data, extra = "") {
     }
     ${
       data.check_id
-        ? `<section class="report-section summary-note"><a href="/static/history.html?check=${escapeHtml(data.check_id)}">View stored check #${escapeHtml(data.check_id)}</a></section>`
+        ? `<section class="report-section summary-note">
+            <a href="/static/history.html?check=${escapeHtml(data.check_id)}">View stored check #${escapeHtml(data.check_id)}</a>
+            ·
+            <a href="/static/reports.html?check=${escapeHtml(data.check_id)}">Report incident</a>
+          </section>`
         : ""
     }
   `;

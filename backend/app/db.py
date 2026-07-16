@@ -91,6 +91,20 @@ def init_db() -> None:
                 role TEXT NOT NULL DEFAULT 'citizen',
                 created_at TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS incident_reports (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                verification_check_id INTEGER,
+                user_id INTEGER,
+                report_type TEXT NOT NULL,
+                description TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'open',
+                reviewer_note TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (verification_check_id) REFERENCES verification_checks(id),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            );
             """
         )
         try:

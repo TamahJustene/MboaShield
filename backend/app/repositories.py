@@ -375,3 +375,143 @@ def get_user(user_id: int) -> dict | None:
             "role": row["role"],
             "created_at": row["created_at"],
         }
+
+
+ALLOWED_REPORT_TYPES = {
+    "disinformation",
+    "impersonation",
+    "voice_clone",
+    "synthetic_media",
+    "scam",
+    "other",
+}
+
+ALLOWED_REPORT_STATUSES = {"open", "reviewing", "resolved", "dismissed"}
+
+
+def _row_to_incident(row) -> dict:
+    return {
+        "id": row["id"],
+        "verification_check_id": row["verification_check_id"],
+        "user_id": row["user_id"],
+        "report_type": row["report_type"],
+        "description": row["description"],
+        "status": row["status"],
+        "reviewer_note": row["reviewer_note"],
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def create_incident_report(
+    *,
+    report_type: str,
+    description: str,
+    verification_check_id: int | None = None,
+    user_id: int | None = None,
+) -> dict:
+    report_type = (report_type or "").strip().lower()
+    description = (description or "").strip()
+    if report_type not in ALLOWED_REPORT_TYPES:
+        raise ValueError(f"Invalid report_type. Allowed: {', '.join(sorted(ALLOWED_REPORT_TYPES))}")
+    if len(description) < 8:
+        raise ValueError("description must be at least 8 characters")
+
+    if verification_check_id is not None and not get_verification_check(verification_check_id):
+        raise ValueError("verification_check_id not found")
+    if user_id is not None and not get_user(user_id):
+        raise ValueError("user_id not found")
+
+    stamp = now_iso()
+    with get_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO incident_reports (
+                verification_check_id,
+                user_id,
+                report_type,
+                description,
+                status,
+                reviewer_note,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, 'open', NULL, ?, ?)
+            """,
+            (verification_check_id, user_id, report_type, description, stamp, stamp),
+        )
+        report_id = int(cur.lastrowid)
+        row = conn.execute(
+            """
+            SELECT id, verification_check_id, user_id, report_type, description,
+                   status, reviewer_note, created_at, updated_at
+            FROM incident_reports
+            WHERE id = ?
+            """,
+            (report_id,),
+        ).fetchone()
+        return _row_to_incident(row)
+
+
+def get_incident_report(report_id: int) -> dict | None:
+    with get_conn() as conn:
+        row = conn.execute(
+            """
+            SELECT id, verification_check_id, user_id, report_type, description,
+                   status, reviewer_note, created_at, updated_at
+            FROM incident_reports
+            WHERE id = ?
+            """,
+            (report_id,),
+        ).fetchone()
+        if not row:
+            return None
+        return _row_to_incident(row)
+
+
+def list_incident_reports(limit: int = 20, status: str | None = None) -> list[dict]:
+    safe_limit = max(1, min(limit, 100))
+    query = """
+        SELECT id, verification_check_id, user_id, report_type, description,
+               status, reviewer_note, created_at, updated_at
+        FROM incident_reports
+    """
+    params: list[object] = []
+    if status:
+        if status not in ALLOWED_REPORT_STATUSES:
+            raise ValueError(f"Invalid status. Allowed: {', '.join(sorted(ALLOWED_REPORT_STATUSES))}")
+        query += " WHERE status = ?"
+        params.append(status)
+    query += " ORDER BY id DESC LIMIT ?"
+    params.append(safe_limit)
+
+    with get_conn() as conn:
+        rows = conn.execute(query, params).fetchall()
+        return [_row_to_incident(row) for row in rows]
+
+
+def update_incident_status(
+    report_id: int,
+    *,
+    status: str,
+    reviewer_note: str | None = None,
+) -> dict | None:
+    status = (status or "").strip().lower()
+    if status not in ALLOWED_REPORT_STATUSES:
+        raise ValueError(f"Invalid status. Allowed: {', '.join(sorted(ALLOWED_REPORT_STATUSES))}")
+
+    existing = get_incident_report(report_id)
+    if not existing:
+        return None
+
+    note = reviewer_note if reviewer_note is not None else existing.get("reviewer_note")
+    with get_conn() as conn:
+        conn.execute(
+            """
+            UPDATE incident_reports
+            SET status = ?, reviewer_note = ?, updated_at = ?
+            WHERE id = ?
+            """,
+            (status, note, now_iso(), report_id),
+        )
+    return get_incident_report(report_id)

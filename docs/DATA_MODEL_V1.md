@@ -90,11 +90,24 @@ Why it matters:
 - separates raw result blobs from structured evidence
 
 ### `incident_reports`
-- user_id
-- verification_check_id
-- report_type
-- description
-- status
+
+Citizen escalation records linked to checks and users.
+
+Fields:
+- `id`
+- `verification_check_id`
+- `user_id`
+- `report_type`
+- `description`
+- `status` (`open`, `reviewing`, `resolved`, `dismissed`)
+- `reviewer_note`
+- `created_at`
+- `updated_at`
+
+Why it matters:
+- turns detection into protection workflow
+- prepares analyst review queues
+- supports institutional response later
 
 ### `source_registry`
 - title

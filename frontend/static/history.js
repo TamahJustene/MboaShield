@@ -71,6 +71,10 @@ function renderCheckDetail(check) {
       <span class="report-label">Reasons</span>
       ${listHtml(reasons)}
     </section>
+    <section class="report-section">
+      <span class="report-label">Escalate</span>
+      <p class="report-copy"><a href="/static/reports.html?check=${escapeHtml(check.id)}">Report this check as an incident</a></p>
+    </section>
   `;
 }
 

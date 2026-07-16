@@ -97,3 +97,42 @@ class InstitutionOut(BaseModel):
 class InstitutionsOut(BaseModel):
     institutions: list[InstitutionOut]
     count: int
+
+
+ReportType = Literal[
+    "disinformation",
+    "impersonation",
+    "voice_clone",
+    "synthetic_media",
+    "scam",
+    "other",
+]
+ReportStatus = Literal["open", "reviewing", "resolved", "dismissed"]
+
+
+class IncidentReportIn(BaseModel):
+    report_type: ReportType
+    description: str = Field(..., min_length=8)
+    verification_check_id: int | None = None
+
+
+class IncidentStatusIn(BaseModel):
+    status: ReportStatus
+    reviewer_note: str | None = None
+
+
+class IncidentReportOut(BaseModel):
+    id: int
+    verification_check_id: int | None = None
+    user_id: int | None = None
+    report_type: str
+    description: str
+    status: str
+    reviewer_note: str | None = None
+    created_at: str
+    updated_at: str
+
+
+class IncidentReportsOut(BaseModel):
+    reports: list[IncidentReportOut]
+    count: int
