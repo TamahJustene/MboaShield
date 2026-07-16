@@ -18,7 +18,7 @@ from typing import Any
 
 
 ENGINE_NAME = "mboashield-trust-engine"
-ENGINE_VERSION = "0.6.0"
+ENGINE_VERSION = "0.7.0"
 
 THREAT_TAXONOMY = {
     "disinformation": "False or unverified claims designed to spread panic or confusion",
@@ -260,6 +260,34 @@ def enrich_result(result: dict, *, modality: str, lang: str = "en") -> dict:
         next_actions=_next_actions(modality, risk_band, lang),
     )
     enriched["ai_analysis"] = analysis.as_dict()
+
+    # Phase 3 modular intelligence snapshot (additive; does not replace ai_analysis).
+    enriched["intelligence"] = {
+        "primary_engine": {
+            "engine_id": {
+                "text": "text_intelligence",
+                "impersonation": "identity_intelligence",
+                "media": "image_intelligence",
+                "audio": "audio_intelligence",
+                "case": "trust_fusion",
+            }.get(modality, "text_intelligence"),
+            "confidence": analysis.confidence,
+            "evidence": analysis.evidence,
+            "reasoning": analysis.narrative,
+            "risk_level": analysis.risk_band,
+            "risk_score": analysis.risk_score,
+            "threat_category": analysis.threat_categories,
+            "recommendations": analysis.next_actions,
+            "status": "ok",
+            "certainty": "none",
+        },
+        "trust_hint": {
+            "trust_score": _clamp(100 - risk_score),
+            "fused_risk_score": risk_score,
+            "certainty": "none",
+            "honesty_note": "Trust hint is inverse risk for this modality only, not full multi-engine fusion.",
+        },
+    }
     return enriched
 
 
@@ -272,6 +300,7 @@ def analyze_case(
 ) -> dict[str, Any]:
     """Run a multi-signal case analysis for text + optional impersonation context."""
     from . import impersonation, source_verify, text_check
+    from .engines import analyze_intelligence
 
     modules: list[dict[str, Any]] = []
     text_result = None
@@ -288,6 +317,14 @@ def analyze_case(
         imp_result = enrich_result(imp_result, modality="impersonation", lang=lang)
         modules.append({"modality": "impersonation", "result": imp_result})
 
+    intelligence = analyze_intelligence(
+        text=text,
+        name=name,
+        handle=handle,
+        lang=lang,
+        include_scaffolds=True,
+    )
+
     if not modules:
         empty = {
             "risk_score": 0,
@@ -299,6 +336,9 @@ def analyze_case(
             "case_id": None,
             "overall": enrich_result(empty, modality="case", lang=lang)["ai_analysis"],
             "modules": [],
+            "engines": intelligence["engines"],
+            "trust_score": intelligence["trust_score"],
+            "intelligence_summary": intelligence["summary"],
         }
 
     scores = [m["result"].get("risk_score", 0) for m in modules]
@@ -334,5 +374,9 @@ def analyze_case(
             "module_count": len(modules),
             "max_module_score": max(scores),
             "threat_categories": threat_set,
+            "explainable_trust_score": intelligence["trust_score"].get("trust_score"),
         },
+        "engines": intelligence["engines"],
+        "trust_score": intelligence["trust_score"],
+        "intelligence_summary": intelligence["summary"],
     }

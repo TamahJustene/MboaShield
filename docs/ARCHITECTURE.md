@@ -1,46 +1,45 @@
 # MboaShield Architecture
 
-## Current state (v0.6.0 — Phase 2 workflows)
+## Current state (v0.7.0 - Phase 3 intelligence)
 
 ```text
 Browser UI
-  home / reports / history / institutions
-  analyst console / citizen dashboard
+  home case panel shows Explainable Trust Score
+  analyst / citizen / institution consoles
         |
         v
 FastAPI create_app()
   api/v1/auth.py
-  api/v1/platform.py      detection + incidents + ambassadors
-  api/v1/government.py    workflow, analyst, citizen, institution admin
+  api/v1/platform.py
+  api/v1/government.py
+  api/v1/intelligence.py
         |
-  core/  config, security, rbac, middleware, errors
-  db/    SQLAlchemy models + session (SQLite/Postgres)
-  repositories.py
-  services/
-    detectors + ai_analysis
-    incident_workflow.py   national state machine
+  services/engines/
+    text | image | audio | video*
+    identity | document*
+    network | source | behavior | metadata
+    trust_fusion.py
+  services/ai_analysis.py   preserves ai_analysis envelope
+  detectors remain under services/*adapters and check modules
 ```
 
-## National incident pipeline
+`*` scaffolded engines return `status=unsupported` until models are attached.
 
-```text
-open -> ai_analysis -> analyst_review -> institution_review
-    -> decision -> public_advisory -> resolved -> archived
-```
+## Explainable Trust Score
 
-Legacy `reviewing` maps to `analyst_review`. `dismissed` is a terminal reject path (archivable).
+1. Run applicable engines independently
+2. Collect confidence, evidence, reasoning, risk, threats, recommendations
+3. Fuse with weighted blend favoring highest risk
+4. `trust_score = 100 - fused_risk`
+5. Always include `certainty: none` and honesty note
 
-Every transition persists:
-- updated `incident_reports` row
-- `incident_events` timeline row
-- `audit_logs` entry for sensitive actions
+## Backward compatibility
 
-## Security
-
-JWT/RBAC from Phase 1 remain in place. `AUTH_ENFORCE=false` keeps demo open; set `true` for government deployments.
+- `/api/v1/check/*` still return detector results + `ai_analysis`
+- Additive `intelligence` snapshot on single checks
+- `/api/v1/analyze` keeps `modules` + `overall`, adds `engines` + `trust_score`
 
 ## Next phases
 
-- Phase 3: modular AI engines + trust score fusion
 - Phase 4: national analytics dashboards
 - Phase 5: OIDC/MFA and partner APIs

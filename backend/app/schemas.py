@@ -129,6 +129,17 @@ class CaseAnalyzeIn(BaseModel):
     handle: str = ""
     lang: str = "en"
 
+
+class IntelligenceAnalyzeIn(BaseModel):
+    text: str = ""
+    name: str = ""
+    handle: str = ""
+    url: str = ""
+    filename: str = ""
+    mime_type: str = ""
+    lang: str = "en"
+    include_scaffolds: bool = True
+
 ReportType = Literal[
     "disinformation",
     "impersonation",

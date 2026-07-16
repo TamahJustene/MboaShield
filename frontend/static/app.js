@@ -471,22 +471,34 @@ document.getElementById("runCaseAnalyze").onclick = async () => {
 
   const overall = data.overall || {};
   const modules = data.modules || [];
+  const trust = data.trust_score || {};
+  const activeEngines = (data.engines || []).filter((engine) => engine.status === "ok");
   document.getElementById("caseOut").className = "out is-ready";
   document.getElementById("caseOut").innerHTML = `
     <span class="band ${escapeHtml(overall.risk_band || "low")}">${escapeHtml(String(overall.risk_band || "low").toUpperCase())} · ${escapeHtml(overall.risk_score ?? "-")}/100</span>
     <h3 class="report-title">AI case assessment</h3>
     <p class="proof">${escapeHtml(overall.narrative || "")}</p>
     <section class="report-section">
+      <span class="report-label">Explainable Trust Score</span>
+      <p class="report-copy"><strong>${escapeHtml(trust.trust_score ?? "-")}/100</strong> (${escapeHtml(trust.trust_band || "n/a")}) · fused risk ${escapeHtml(trust.fused_risk_score ?? "-")}/100</p>
+      <p class="muted">${escapeHtml(trust.reasoning || "")}</p>
+      <p class="muted">${escapeHtml(trust.honesty_note || "Decision support only. No certainty claim.")}</p>
+    </section>
+    <section class="report-section">
       <span class="report-label">Confidence</span>
       <p class="report-copy">${escapeHtml(overall.confidence ?? "-")}/100 · ${escapeHtml(overall.engine || "")} ${escapeHtml(overall.engine_version || "")}</p>
     </section>
     <section class="report-section">
       <span class="report-label">Threat categories</span>
-      ${listHtml(overall.threat_categories || [])}
+      ${listHtml(overall.threat_categories || trust.threat_categories || [])}
+    </section>
+    <section class="report-section">
+      <span class="report-label">Active intelligence engines</span>
+      ${listHtml(activeEngines.map((engine) => `${engine.engine_name}: ${engine.risk_level} (${engine.risk_score}/100)`))}
     </section>
     <section class="report-section">
       <span class="report-label">Next actions</span>
-      ${listHtml(overall.next_actions || [])}
+      ${listHtml(overall.next_actions || trust.recommendations || [])}
     </section>
     <section class="report-section">
       <span class="report-label">Modules analysed</span>
