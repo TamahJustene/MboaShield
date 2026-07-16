@@ -1,0 +1,13 @@
+# Render Blueprint - connect repo at https://dashboard.render.com
+# New > Blueprint > link github.com/TamahJustene/MboaShield
+services:
+  - type: web
+    name: mboashield
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONPATH
+        value: /app

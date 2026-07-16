@@ -2,78 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MboaShield - Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="description" content="MboaShield - Made in Cameroon AI shield against deepfakes, disinformation and digital identity theft" />
+  <title>MboaShield</title>
+  <link rel="manifest" href="/static/manifest.json" />
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="top">
-    <div>
-      <p class="eyebrow">Made in Cameroon - SIN 2026</p>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Made in Cameroon · SIN 2026</p>
       <h1>MboaShield</h1>
-      <p class="tagline">Sovereign AI shield against deepfakes, disinformation and identity theft</p>
+      <p class="tagline">Sovereign AI shield · deepfakes · disinformation · digital patriotism</p>
     </div>
-    <div class="meta">
-      <button id="langToggle" type="button" class="ghost">FR</button>
-      <p class="founder">Solo founder: Justene Nkwagoh Tamah</p>
+    <div class="header-actions">
+      <button id="langToggle" type="button" class="btn-ghost" aria-label="Switch language">FR</button>
     </div>
   </header>
 
-  <section class="demo-bar">
-    <button type="button" id="runDemo" class="primary">Run 90s pitch demo</button>
-    <p id="demoStatus" class="muted"></p>
+  <section class="hero-card">
+    <p class="founder">Solo founder: <strong>Justene Nkwagoh Tamah</strong></p>
+    <button type="button" id="runDemo" class="btn-primary btn-large">Run 90s pitch demo</button>
+    <p id="demoStatus" class="demo-status" aria-live="polite"></p>
   </section>
 
-  <main class="grid">
-    <section class="panel">
+  <nav class="section-nav" aria-label="Demo sections">
+    <button type="button" class="nav-chip active" data-target="panel-text">1 Text</button>
+    <button type="button" class="nav-chip" data-target="panel-imp">2 Identity</button>
+    <button type="button" class="nav-chip" data-target="panel-audio">3 Audio</button>
+    <button type="button" class="nav-chip" data-target="panel-media">4 Image</button>
+    <button type="button" class="nav-chip" data-target="panel-amb">5 Civic</button>
+  </nav>
+
+  <main class="panels">
+    <section id="panel-text" class="panel active">
       <h2 data-i18n="textTitle">1. Check a WhatsApp rumour</h2>
-      <textarea id="claimText" rows="5" placeholder="Paste a viral message..."></textarea>
-      <button type="button" id="checkText" class="primary">Analyse text</button>
-      <div id="textOut" class="out"></div>
+      <textarea id="claimText" rows="4" placeholder="Paste a viral message..."></textarea>
+      <button type="button" id="checkText" class="btn-primary">Analyse text</button>
+      <div id="textOut" class="out" role="status"></div>
     </section>
 
-    <section class="panel">
+    <section id="panel-imp" class="panel">
       <h2 data-i18n="impTitle">2. Check account impersonation</h2>
-      <input id="impName" type="text" placeholder="Display name" />
-      <input id="impHandle" type="text" placeholder="@handle" />
-      <button type="button" id="checkImp" class="primary">Analyse account</button>
-      <div id="impOut" class="out"></div>
+      <input id="impName" type="text" placeholder="Display name" autocomplete="off" />
+      <input id="impHandle" type="text" placeholder="@handle" autocomplete="off" />
+      <button type="button" id="checkImp" class="btn-primary">Analyse account</button>
+      <div id="impOut" class="out" role="status"></div>
     </section>
 
-    <section class="panel">
-      <h2 data-i18n="audioTitle">3. Check a voice note (clone risk)</h2>
-      <div class="sample-row">
-        <button type="button" class="ghost audio-sample" data-sample="/static/samples/minister_voice_clone.wav">Sample: minister voice</button>
+    <section id="panel-audio" class="panel">
+      <h2 data-i18n="audioTitle">3. Check a voice note</h2>
+      <div class="chip-row">
+        <button type="button" class="btn-ghost audio-sample" data-sample="/static/samples/minister_voice_clone.wav">Sample voice</button>
       </div>
       <input id="audioFile" type="file" accept="audio/*" />
-      <button type="button" id="checkAudio" class="primary">Analyse audio</button>
-      <div id="audioOut" class="out"></div>
+      <button type="button" id="checkAudio" class="btn-primary">Analyse audio</button>
+      <div id="audioOut" class="out" role="status"></div>
     </section>
 
-    <section class="panel">
+    <section id="panel-media" class="panel">
       <h2 data-i18n="mediaTitle">4. Check an image</h2>
-      <div class="sample-row">
-        <button type="button" class="ghost sample" data-sample="/static/samples/synthetic_smooth_face.jpg">Sample: smooth face</button>
-        <button type="button" class="ghost sample" data-sample="/static/samples/tiny_sticker.jpg">Sample: tiny sticker</button>
-        <button type="button" class="ghost sample" data-sample="/static/samples/noisy_recompressed.jpg">Sample: noisy</button>
+      <div class="chip-row">
+        <button type="button" class="btn-ghost sample" data-sample="/static/samples/synthetic_smooth_face.jpg">Smooth face</button>
+        <button type="button" class="btn-ghost sample" data-sample="/static/samples/tiny_sticker.jpg">Tiny sticker</button>
       </div>
       <input id="mediaFile" type="file" accept="image/*" />
-      <button type="button" id="checkMedia" class="primary">Analyse image</button>
-      <div id="mediaOut" class="out"></div>
+      <button type="button" id="checkMedia" class="btn-primary">Analyse image</button>
+      <div id="mediaOut" class="out" role="status"></div>
     </section>
 
-    <section class="panel">
+    <section id="panel-amb" class="panel">
       <h2 data-i18n="ambTitle">5. Mboa Ambassadors</h2>
       <div id="lessons"></div>
       <input id="learnerName" type="text" placeholder="Your name" value="Justene Nkwagoh Tamah" />
       <select id="lessonSelect"></select>
-      <button type="button" id="completeLesson" class="primary">Get certificate</button>
+      <button type="button" id="completeLesson" class="btn-primary">Get certificate</button>
       <div id="cert" class="cert hidden"></div>
     </section>
   </main>
 
-  <footer>
-    <p>MboaShield Tech - Justene Nkwagoh Tamah - tamahjustene45@gmail.com - github.com/TamahJustene/MboaShield</p>
+  <footer class="app-footer">
+    <p>MboaShield Tech · tamahjustene45@gmail.com</p>
+    <p><a href="https://github.com/TamahJustene/MboaShield" target="_blank" rel="noopener">GitHub</a> · <a href="/static/pitch.html">Pitch deck</a></p>
   </footer>
 
   <script src="/static/app.js"></script>

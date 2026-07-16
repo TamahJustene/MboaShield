@@ -157,27 +157,6 @@ document.querySelectorAll(".sample").forEach((btn) => {
   };
 });
 
-document.getElementById("completeLesson").onclick = async () => {
-  const res = await fetch("/api/v1/ambassadors/complete", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      lesson_id: document.getElementById("lessonSelect").value,
-      learner_name: document.getElementById("learnerName").value,
-    }),
-  });
-  const data = await res.json();
-  const cert = data.certificate;
-  const el = document.getElementById("cert");
-  el.classList.remove("hidden");
-  el.innerHTML = `
-    <h3>Certificate ${cert.id}</h3>
-    <p>Awarded to <strong>${cert.learner_name}</strong></p>
-    <p>${cert.lesson_title_en}</p>
-    <p class="muted">${cert.issuer} - ${cert.issued_on}</p>
-  `;
-};
-
 document.getElementById("runDemo").onclick = async () => {
   const status = document.getElementById("demoStatus");
   status.textContent = "Running scenario 1/5...";
@@ -203,6 +182,41 @@ document.getElementById("runDemo").onclick = async () => {
   }
   await document.getElementById("completeLesson").onclick();
   status.textContent = "Demo complete: text + impersonation + audio + image + certificate.";
+};
+
+document.querySelectorAll(".nav-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    const target = chip.getAttribute("data-target");
+    document.querySelectorAll(".nav-chip").forEach((c) => c.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+    chip.classList.add("active");
+    const panel = document.getElementById(target);
+    if (panel) {
+      panel.classList.add("active");
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+});
+
+document.getElementById("completeLesson").onclick = async () => {
+  const res = await fetch("/api/v1/ambassadors/complete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      lesson_id: document.getElementById("lessonSelect").value,
+      learner_name: document.getElementById("learnerName").value,
+    }),
+  });
+  const data = await res.json();
+  const cert = data.certificate;
+  const el = document.getElementById("cert");
+  el.classList.remove("hidden");
+  el.innerHTML = `
+    <h3>Certificate ${cert.id}</h3>
+    <p>Awarded to <strong>${cert.learner_name}</strong></p>
+    <p>${cert.lesson_title_en}</p>
+    <p class="muted">${cert.issuer} - ${cert.issued_on}</p>
+  `;
 };
 
 applyLang();
