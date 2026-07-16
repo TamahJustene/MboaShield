@@ -48,6 +48,14 @@ def _band(score: int) -> str:
 
 
 def _load_institutions() -> list[dict]:
+    try:
+        from ..repositories import list_institutions
+
+        items = list_institutions()
+        if items:
+            return items
+    except Exception:
+        pass
     return json.loads((DATA_DIR / "institutions.json").read_text(encoding="utf-8"))
 
 

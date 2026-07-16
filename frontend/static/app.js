@@ -21,6 +21,15 @@ let lang = "en";
 const demoSummary = [];
 let demoRunning = false;
 
+function getUserId() {
+  return localStorage.getItem("mboashield_user_id");
+}
+
+function userHeaders(extra = {}) {
+  const userId = getUserId();
+  return userId ? { ...extra, "X-MboaShield-User-Id": userId } : extra;
+}
+
 const panelMeta = {
   textOut: {
     title: "Rumour risk",
@@ -216,6 +225,11 @@ function renderReport(targetId, data, extra = "") {
         ? `<section class="report-section summary-note">${extra}</section>`
         : ""
     }
+    ${
+      data.check_id
+        ? `<section class="report-section summary-note"><a href="/static/history.html?check=${escapeHtml(data.check_id)}">View stored check #${escapeHtml(data.check_id)}</a></section>`
+        : ""
+    }
   `;
 
   demoSummary.push({
@@ -257,7 +271,7 @@ document.getElementById("checkText").onclick = async () => {
   showLoading("textOut", "Analysing rumour and checking trusted sources...");
   const res = await fetch("/api/v1/check/text", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: userHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ text, lang }),
   });
   renderReport("textOut", await res.json());
@@ -267,7 +281,7 @@ document.getElementById("checkImp").onclick = async () => {
   showLoading("impOut", "Checking identity signals against the institution registry...");
   const res = await fetch("/api/v1/check/impersonation", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: userHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       name: document.getElementById("impName").value,
       handle: document.getElementById("impHandle").value,
@@ -286,7 +300,7 @@ async function analyseAudioFile(file) {
   const fd = new FormData();
   fd.append("file", file);
   fd.append("lang", lang);
-  const res = await fetch("/api/v1/check/audio", { method: "POST", body: fd });
+  const res = await fetch("/api/v1/check/audio", { method: "POST", headers: userHeaders(), body: fd });
   renderReport("audioOut", await res.json());
 }
 
@@ -316,7 +330,7 @@ document.getElementById("checkMedia").onclick = async () => {
   const fd = new FormData();
   fd.append("file", file);
   fd.append("lang", lang);
-  const res = await fetch("/api/v1/check/media", { method: "POST", body: fd });
+  const res = await fetch("/api/v1/check/media", { method: "POST", headers: userHeaders(), body: fd });
   renderReport("mediaOut", await res.json());
 };
 
