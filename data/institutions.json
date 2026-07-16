@@ -1,42 +1,19 @@
 [
-  {
-    "id": "minpostel",
-    "name": "Ministry of Posts and Telecommunications",
-    "short_name": "MINPOSTEL",
-    "handles": ["@minpostel", "@minpostel_cm", "minpostel officiel"],
-    "verified": true,
-    "url": "https://www.minpostel.gov.cm"
-  },
-  {
-    "id": "mincom",
-    "name": "Ministry of Communication",
-    "short_name": "MINCOM",
-    "handles": ["@mincom", "@mincom_cm", "mincom officiel"],
-    "verified": true,
-    "url": "https://www.mincom.gov.cm"
-  },
-  {
-    "id": "prc",
-    "name": "Presidency of the Republic of Cameroon",
-    "short_name": "PRC",
-    "handles": ["@prc_cameroon", "presidence cameroun", "presidency cameroon"],
-    "verified": true,
-    "url": "https://www.prc.cm"
-  },
-  {
-    "id": "crtv",
-    "name": "CRTV",
-    "short_name": "CRTV",
-    "handles": ["@crtv", "crtv officiel"],
-    "verified": true,
-    "url": "https://www.crtv.cm"
-  },
-  {
-    "id": "beac",
-    "name": "Bank of Central African States",
-    "short_name": "BEAC",
-    "handles": ["@beac", "beac officiel"],
-    "verified": true,
-    "url": "https://www.beac.int"
-  }
+  {"id": "minpostel", "name": "Ministry of Posts and Telecommunications", "short_name": "MINPOSTEL", "handles": ["@minpostel", "@minpostel_cm", "minpostel officiel"], "verified": true, "url": "https://www.minpostel.gov.cm"},
+  {"id": "mincom", "name": "Ministry of Communication", "short_name": "MINCOM", "handles": ["@mincom", "@mincom_cm", "mincom officiel"], "verified": true, "url": "https://www.mincom.gov.cm"},
+  {"id": "prc", "name": "Presidency of the Republic of Cameroon", "short_name": "PRC", "handles": ["@prc_cameroon", "presidence cameroun", "presidency cameroon"], "verified": true, "url": "https://www.prc.cm"},
+  {"id": "crtv", "name": "CRTV", "short_name": "CRTV", "handles": ["@crtv", "crtv officiel"], "verified": true, "url": "https://www.crtv.cm"},
+  {"id": "beac", "name": "Bank of Central African States", "short_name": "BEAC", "handles": ["@beac", "beac officiel"], "verified": true, "url": "https://www.beac.int"},
+  {"id": "minfi", "name": "Ministry of Finance", "short_name": "MINFI", "handles": ["@minfi", "minfi cameroun", "minfi officiel"], "verified": true, "url": "https://www.minfi.gov.cm"},
+  {"id": "minjec", "name": "Ministry of Youth Affairs and Civic Education", "short_name": "MINJEC", "handles": ["@minjec", "minjec cameroun"], "verified": true, "url": "https://www.minjec.gov.cm"},
+  {"id": "cnps", "name": "National Social Insurance Fund", "short_name": "CNPS", "handles": ["@cnps", "cnps cameroun", "cnps officiel"], "verified": true, "url": "https://www.cnps.cm"},
+  {"id": "antic", "name": "National Agency for Information and Communication Technologies", "short_name": "ANTIC", "handles": ["@antic", "antic cameroun"], "verified": true, "url": "https://www.antic.cm"},
+  {"id": "arsel", "name": "Electricity Sector Regulatory Agency", "short_name": "ARSEL", "handles": ["@arsel", "arsel cameroun"], "verified": true, "url": "https://www.arsel.cm"},
+  {"id": "camtel", "name": "Camtel", "short_name": "CAMTEL", "handles": ["@camtel", "camtel officiel"], "verified": true, "url": "https://www.camtel.cm"},
+  {"id": "orange_cm", "name": "Orange Cameroon", "short_name": "ORANGE CM", "handles": ["@orangecm", "orange cameroun"], "verified": true, "url": "https://www.orange.cm"},
+  {"id": "mtn_cm", "name": "MTN Cameroon", "short_name": "MTN CM", "handles": ["@mtncameroon", "mtn cameroun"], "verified": true, "url": "https://www.mtn.cm"},
+  {"id": "senat", "name": "Senate of Cameroon", "short_name": "SENAT", "handles": ["@senatcm", "senat cameroun"], "verified": true, "url": "https://www.senat.cm"},
+  {"id": "assemblee", "name": "National Assembly of Cameroon", "short_name": "AN", "handles": ["@anacameroon", "assemblee nationale"], "verified": true, "url": "https://www.assnat.cm"},
+  {"id": "douala_city", "name": "City of Douala", "short_name": "DOUALA", "handles": ["@doualacity", "mairie douala"], "verified": true, "url": "https://www.douala-city.cm"},
+  {"id": "yaounde_city", "name": "City of Yaounde", "short_name": "YAOUNDE", "handles": ["@yaoundecity", "mairie yaounde"], "verified": true, "url": "https://www.yaounde-city.cm"}
 ]

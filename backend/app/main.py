@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .config import ROOT, VERSION
-from .services import ambassadors, impersonation, media_check, text_check
+from .services import ambassadors, audio_check, impersonation, media_check, source_verify, text_check
 
 FRONTEND = ROOT / "frontend"
 
@@ -45,7 +45,9 @@ def health():
 
 @app.post("/api/v1/check/text")
 def api_check_text(body: TextIn):
-    return text_check.check_text(body.text, body.lang).as_dict()
+    result = text_check.check_text(body.text, body.lang).as_dict()
+    result["source_verification"] = source_verify.verify_claim(body.text, body.lang).as_dict()
+    return result
 
 
 @app.post("/api/v1/check/impersonation")
@@ -64,6 +66,19 @@ async def api_check_media(
     if len(data) > 8_000_000:
         raise HTTPException(status_code=400, detail="File too large (max 8MB)")
     return media_check.check_image_bytes(data, file.filename or "", lang).as_dict()
+
+
+@app.post("/api/v1/check/audio")
+async def api_check_audio(
+    file: UploadFile = File(...),
+    lang: str = Form("en"),
+):
+    data = await file.read()
+    if not data:
+        raise HTTPException(status_code=400, detail="Empty file")
+    if len(data) > 12_000_000:
+        raise HTTPException(status_code=400, detail="File too large (max 12MB)")
+    return audio_check.check_audio_bytes(data, file.filename or "", lang).as_dict()
 
 
 @app.get("/api/v1/ambassadors/lessons")

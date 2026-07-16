@@ -27,23 +27,28 @@
 - `POST /api/v1/check/text` body `{ "text": "...", "lang": "en"|"fr" }` -> risk report
 - `POST /api/v1/check/impersonation` body `{ "name": "...", "handle": "..." }` -> match report
 - `POST /api/v1/check/media` multipart `file` -> media risk report
+- `POST /api/v1/check/audio` multipart `file` -> voice-clone risk report
 - `GET /api/v1/ambassadors/lessons` -> lessons list
 - `POST /api/v1/ambassadors/complete` body `{ "lesson_id": "...", "learner_name": "..." }` -> certificate stub
 
 ## Definition of Done for pitch MVP
 - [x] Demo runs offline on localhost with one command
-- [x] Three live scenarios < 90s: viral claim, fake ministry account, Ambassadors certificate
+- [x] Five live scenarios < 90s: viral claim, impersonation, audio, image, certificate
 - [x] Image upload returns a readable risk score + explanation
+- [x] Audio / voice-note check endpoint + UI
+- [x] Source verification on text claims
+- [x] 17 Cameroon institutions in registry
 - [x] FR + EN UI strings for core buttons
 - [x] README has exact run steps
 - [x] No secrets committed; `.env.example` only
 
 ## How to extend (priority order)
-1. Hardening demo reliability (fixtures + offline samples)
-2. Better claim verification RAG against `data/sources.json`
-3. Optional Whisper/voice clone heuristics for audio
-4. Optional WhatsApp Cloud API webhook wrapping same services
-5. Fine-tuned vision model only after pitch-critical path is rock solid
+1. Public demo URL (Render / Railway / ngrok) for form submission
+2. Screen-record backup MP4 for pitch
+3. Mobile-first UI refresh (Sprint 3)
+4. Pitch deck + marketing video
+5. WhatsApp Cloud API webhook wrapping same services
+6. Lightweight ONNX deepfake model after pitch path is stable
 
 ## Coding rules for agents
 - Touch only what is needed; no drive-by refactors

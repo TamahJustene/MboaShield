@@ -1,26 +1,10 @@
 [
-  {
-    "id": "src-sin",
-    "title": "Digital Innovation Week - official portal",
-    "url": "https://www.ictinnovationweek.cm",
-    "topics": ["innovation", "tic", "minpostel", "concours"]
-  },
-  {
-    "id": "src-minpostel",
-    "title": "MINPOSTEL - official site",
-    "url": "https://www.minpostel.gov.cm",
-    "topics": ["telecom", "cybersecurity", "digital"]
-  },
-  {
-    "id": "src-prc",
-    "title": "Presidency of the Republic of Cameroon",
-    "url": "https://www.prc.cm",
-    "topics": ["government", "official", "announcement"]
-  },
-  {
-    "id": "src-snia",
-    "title": "Cameroon National AI Strategy (SNIA) - public communication",
-    "url": "https://www.minpostel.gov.cm",
-    "topics": ["ai", "strategy", "sovereignty"]
-  }
+  {"id": "src-sin", "title": "Digital Innovation Week - official portal", "url": "https://www.ictinnovationweek.cm", "topics": ["innovation", "tic", "minpostel", "concours", "ia", "ai"]},
+  {"id": "src-minpostel", "title": "MINPOSTEL - official site", "url": "https://www.minpostel.gov.cm", "topics": ["telecom", "cybersecurity", "digital", "minpostel", "patriotisme"]},
+  {"id": "src-prc", "title": "Presidency of the Republic of Cameroon", "url": "https://www.prc.cm", "topics": ["government", "official", "announcement", "ministre", "president"]},
+  {"id": "src-snia", "title": "Cameroon National AI Strategy (SNIA)", "url": "https://www.minpostel.gov.cm", "topics": ["ai", "strategy", "sovereignty", "intelligence artificielle"]},
+  {"id": "src-antic", "title": "ANTIC - cybersecurity agency", "url": "https://www.antic.cm", "topics": ["cybersecurity", "cyber", "antic", "protection"]},
+  {"id": "src-cnps", "title": "CNPS - social insurance", "url": "https://www.cnps.cm", "topics": ["cnps", "pension", "social", "data breach"]},
+  {"id": "src-mincom", "title": "MINCOM - official communication", "url": "https://www.mincom.gov.cm", "topics": ["mincom", "communication", "official", "communique"]},
+  {"id": "src-crtv", "title": "CRTV - national broadcaster", "url": "https://www.crtv.cm", "topics": ["crtv", "media", "news", "broadcast"]}
 ]

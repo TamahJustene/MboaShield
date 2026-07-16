@@ -41,7 +41,17 @@
     </section>
 
     <section class="panel">
-      <h2 data-i18n="mediaTitle">3. Check an image</h2>
+      <h2 data-i18n="audioTitle">3. Check a voice note (clone risk)</h2>
+      <div class="sample-row">
+        <button type="button" class="ghost audio-sample" data-sample="/static/samples/minister_voice_clone.wav">Sample: minister voice</button>
+      </div>
+      <input id="audioFile" type="file" accept="audio/*" />
+      <button type="button" id="checkAudio" class="primary">Analyse audio</button>
+      <div id="audioOut" class="out"></div>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="mediaTitle">4. Check an image</h2>
       <div class="sample-row">
         <button type="button" class="ghost sample" data-sample="/static/samples/synthetic_smooth_face.jpg">Sample: smooth face</button>
         <button type="button" class="ghost sample" data-sample="/static/samples/tiny_sticker.jpg">Sample: tiny sticker</button>
@@ -53,7 +63,7 @@
     </section>
 
     <section class="panel">
-      <h2 data-i18n="ambTitle">4. Mboa Ambassadors</h2>
+      <h2 data-i18n="ambTitle">5. Mboa Ambassadors</h2>
       <div id="lessons"></div>
       <input id="learnerName" type="text" placeholder="Your name" value="Justene Nkwagoh Tamah" />
       <select id="lessonSelect"></select>
