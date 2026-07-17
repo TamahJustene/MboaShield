@@ -13,4 +13,6 @@
 
 **Enterprise program:** Phases 6-15 complete.
 
+**End-to-end tour:** [`E2E_WALKTHROUGH.md`](E2E_WALKTHROUGH.md) · live hub: `/static/hub.html`
+
 See [`PHASE_15_PLAN.md`](PHASE_15_PLAN.md) and [`CHANGELOG.md`](../CHANGELOG.md).
