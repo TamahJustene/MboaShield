@@ -3,7 +3,7 @@
 **Version:** 1.4.0  
 **Purpose:** Know who can do what, how enforcement works, and how to change it safely.
 
-Related: [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) · [`ARCHITECTURE.md`](ARCHITECTURE.md) · [`DEPLOY.md`](DEPLOY.md) · [`PHASE_10_PLAN.md`](PHASE_10_PLAN.md)
+Related: [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) � [`ARCHITECTURE.md`](ARCHITECTURE.md) � [`DEPLOY.md`](DEPLOY.md) � [`PHASE_10_PLAN.md`](PHASE_10_PLAN.md)
 
 ---
 
@@ -127,6 +127,12 @@ See `.env.example` for the full list. Critical:
 | `INSTITUTION_PORTAL_ENABLED` | Institution admin portal |
 | `VERIFIED_COMMS_ENABLED` / `ANNOUNCEMENT_SIGNING_KEY` | Signed announcements |
 | `PUBLIC_BASE_URL` | Absolute verify URLs in QR payloads |
+| `ADVANCED_AI_ENABLED` | Model registry, calibration, evaluation APIs |
+| `AI_EVAL_LATENCY_BUDGET_MS` | Golden-set eval latency ceiling (ms) |
+| `METRICS_ENABLED` | Expose Prometheus `/metrics` |
+| `WORKERS_ENABLED` | Celery async jobs (else sync fallback) |
+| `REDIS_URL` / `CELERY_BROKER_URL` / `CELERY_RESULT_BACKEND` | Worker broker + results |
+| `GOVERNANCE_ENABLED` | Consent, risk register, model cards, compliance |
 
 ---
 

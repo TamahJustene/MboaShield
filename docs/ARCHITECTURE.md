@@ -1,6 +1,6 @@
 # MboaShield Architecture
 
-**Version:** 1.5.0 (Phase 11 verified communications)  
+**Version:** 1.9.0 (Phase 15 documentation suite)  
 **Access / env adjustment:** [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md)  
 **Product status:** [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md)
 
@@ -54,6 +54,9 @@ Object storage: local FS (demo) or S3 (gov)
 | Vault | `evidence.py`, `services/vault/`, `vault_store` | Hash, custody, export, retention |
 | Institution portal | `institution_portal.py`, `institution_store` | Domains, members, branding, `msi_` keys |
 | Verified comms | `announcements.py`, `public_verify.py`, `announcement_store` | Signed announcements + `/verify/a/*` |
+| Advanced AI | `ai_platform.py`, `ai_store`, `services/ai/` | Registry, calibration, golden eval, adapters |
+| Infrastructure | `infra.py`, `workers/`, `core/metrics.py` | Metrics, Celery jobs, gov compose / Helm |
+| Governance | `governance.py`, `governance_store` | Consent, risk register, model/dataset cards |
 
 ---
 
@@ -61,9 +64,9 @@ Object storage: local FS (demo) or S3 (gov)
 
 Auth (MFA, OIDC, SAML, LDAP, sessions, devices, password), admin users, OAuth clients/token,
 partners, intelligence, analytics, platform checks/incidents, government workflow,
-NTOC/cases, intel, evidence vault, institution portal, verified announcements.
+NTOC/cases, intel, evidence vault, institution portal, verified announcements, AI platform (`/api/v1/ai-platform/*`), infra (`/api/v1/infra/*`), governance (`/api/v1/governance/*`).
 
-Root: `GET /health`, `GET /verify/a/{id}`, OpenAPI `/docs`.
+Root: `GET /health`, `GET /metrics`, `GET /verify/a/{id}`, OpenAPI `/docs`.
 
 ---
 
@@ -76,7 +79,7 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 5. Intelligence engines
 
-8 active + 2 scaffolded (video, document). Product version 1.5.0; AI engine package version remains 0.9.0 until Phase 12.
+8 active + 2 scaffolded (video, document). Product version 1.6.0; trust engine package **1.2.0** with optional calibration (`calibrated_score`); certainty remains `"none"`.
 
 ---
 
@@ -95,10 +98,10 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 7. Data & deploy
 
-SQLite default; Postgres via `DATABASE_URL`; Alembic 0001-0010; Render Docker demo; CI pytest.
+SQLite default for demo; Postgres via `DATABASE_URL` (gov compose default). Alembic 0001-0014; Render Docker demo; `docker-compose.gov.yml` for Redis/RabbitMQ/workers/observability; Helm under `deploy/helm/mboashield`; CI pytest.
 
 ---
 
 ## 8. Next
 
-Phase 12 — Advanced AI Platform ([`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md)).
+Enterprise Phases 6-15 complete. See [`manuals/README.md`](manuals/README.md) for the audit documentation suite.

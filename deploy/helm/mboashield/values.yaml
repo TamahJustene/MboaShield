@@ -1,0 +1,47 @@
+replicaCount: 2
+
+image:
+  repository: mboashield
+  tag: "1.7.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
+
+env:
+  MBOASHIELD_ENV: kubernetes
+  DEPLOYMENT_PROFILE: government
+  AUTH_ENFORCE: "true"
+  METRICS_ENABLED: "true"
+  WORKERS_ENABLED: "true"
+  ADVANCED_AI_ENABLED: "true"
+
+# Set via secrets in real clusters
+databaseUrl: ""
+redisUrl: "redis://redis:6379/0"
+celeryBrokerUrl: "redis://redis:6379/0"
+celeryResultBackend: "redis://redis:6379/1"
+jwtSecret: "change-me"
+
+worker:
+  enabled: true
+  replicaCount: 1
+
+ingress:
+  enabled: false
+  host: mboashield.example.cm

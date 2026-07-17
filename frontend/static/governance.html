@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MboaShield - Governance</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Phase 14</p>
+      <h1>Governance console</h1>
+      <p class="tagline">Risk register, model cards, consent, compliance</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/ai-lab.html" class="btn-ghost history-link">AI lab</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+  <section class="history-panel">
+    <div id="govHealth" class="out history-detail empty-detail">Loading...</div>
+    <h2>Compliance snapshot</h2>
+    <pre id="complianceOut" class="report-copy muted"></pre>
+    <h2>Risk register</h2>
+    <pre id="risksOut" class="report-copy muted"></pre>
+    <h2>Model cards</h2>
+    <pre id="cardsOut" class="report-copy muted"></pre>
+    <h2>Record consent (demo)</h2>
+    <label>Subject key <input id="subjectKey" value="demo-citizen" /></label>
+    <label>Feature
+      <select id="featureSelect">
+        <option value="analytics_share">analytics_share</option>
+        <option value="feedback_learning">feedback_learning</option>
+        <option value="partner_notify">partner_notify</option>
+      </select>
+    </label>
+    <button type="button" id="grantBtn" class="btn-primary">Grant consent</button>
+    <button type="button" id="revokeBtn" class="btn-ghost">Revoke</button>
+    <pre id="consentOut" class="report-copy muted"></pre>
+  </section>
+  <script src="/static/governance.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "dataset": "en",
+  "cases": [
+    {
+      "id": "en-scam-pressure",
+      "lang": "en",
+      "text": "URGENT send money now via MoMo before your account is blocked forever",
+      "expect_min_risk": 35,
+      "expect_max_risk": 100
+    },
+    {
+      "id": "en-benign-greeting",
+      "lang": "en",
+      "text": "Good morning team, please find the meeting agenda attached for Tuesday.",
+      "expect_min_risk": 0,
+      "expect_max_risk": 55
+    },
+    {
+      "id": "en-impersonation",
+      "lang": "en",
+      "name": "MINPOSTEL Official Verified",
+      "handle": "@minpostel_cm_urgent",
+      "text": "Official MINPOSTEL verification required immediately",
+      "expect_min_risk": 25,
+      "expect_max_risk": 100
+    }
+  ]
+}

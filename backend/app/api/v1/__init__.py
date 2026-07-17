@@ -3,12 +3,15 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from .admin_users import router as admin_users_router
+from .ai_platform import router as ai_platform_router
 from .analytics import router as analytics_router
 from .announcements import router as announcements_router
 from .auth import router as auth_router
 from .cases import router as cases_router
 from .evidence import router as evidence_router
 from .government import router as government_router
+from .governance import router as governance_router
+from .infra import router as infra_router
 from .intel import router as intel_router
 from .intelligence import router as intelligence_router
 from .institution_portal import router as institution_portal_router
@@ -32,3 +35,6 @@ router.include_router(intel_router)
 router.include_router(evidence_router)
 router.include_router(institution_portal_router)
 router.include_router(announcements_router)
+router.include_router(ai_platform_router)
+router.include_router(infra_router)
+router.include_router(governance_router)

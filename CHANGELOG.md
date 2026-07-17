@@ -2,6 +2,73 @@
 
 All notable changes to MboaShield are documented here.
 
+## [1.9.0] - 2026-07-16
+
+### Phase 15 - Documentation Suite
+
+#### Added
+- Role manuals under `docs/manuals/` (User, Administrator, Developer, Operations, Security, Deployment, Maintenance)
+- Narrative API reference, Architecture guide, and AI Governance guide
+- OpenAPI export script: `scripts/export_openapi.py` ? `docs/manuals/openapi.json` + summary
+- Links from product README and PRODUCT_STATUS
+
+#### Changed
+- Product version bumped to 1.9.0
+- Enterprise program Phases 6-15 marked complete
+
+## [1.8.0] - 2026-07-16
+
+### Phase 14 - Governance
+
+#### Added
+- Consent records for optional citizen features (`analytics_share`, `feedback_learning`, `partner_notify`)
+- Risk register linked to threat-model refs (`TM-*`)
+- Model cards and dataset cards for AI transparency
+- Responsible-AI / privacy / compliance control catalogue
+- Compliance dashboard aggregating risks, controls, and recent audit
+- APIs: `/api/v1/governance/*`
+- Admin UI: `/static/governance.html`
+- Alembic migration `0014_phase14`
+- Feature flag: `GOVERNANCE_ENABLED`
+
+#### Changed
+- Product version bumped to 1.8.0
+
+## [1.7.0] - 2026-07-16
+
+### Phase 13 - Enterprise Infrastructure
+
+#### Added
+- Prometheus metrics at `GET /metrics` with request and worker counters
+- Celery workers for intel ingest, vault retention, and AI evaluation (sync fallback when `WORKERS_ENABLED=false`)
+- Infra APIs: `/api/v1/infra/status` and `/api/v1/infra/jobs/*`
+- `docker-compose.gov.yml` with Postgres, Redis, RabbitMQ, worker, beat, Prometheus, Grafana, Loki
+- Helm chart `deploy/helm/mboashield` with HPA and worker deployment
+- Grafana dashboard as code under `deploy/grafana/`
+- Feature flags: `METRICS_ENABLED`, `WORKERS_ENABLED`, `REDIS_URL`, `CELERY_*`
+
+#### Changed
+- Product version bumped to 1.7.0
+- Demo `docker-compose.yml` unchanged (rollback-friendly)
+
+## [1.6.0] - 2026-07-16
+
+### Phase 12 - Advanced AI Platform
+
+#### Added
+- Model registry with SHA-256 checksum verification for built-in adapters
+- Runtime adapter layer (heuristic default, ONNX scaffold with fallback)
+- Feedback-driven calibration summary and optional `calibrated_score` on trust fusion
+- Golden-set evaluation harness (EN/FR) with latency budget checks
+- APIs: `/api/v1/ai-platform/*`
+- AI lab UI: `/static/ai-lab.html`
+- Alembic migration `0012_phase12`
+- Feature flag: `ADVANCED_AI_ENABLED`
+
+#### Changed
+- Trust engine package version bumped to 1.2.0
+- Product version bumped to 1.6.0
+
 ## [1.5.0] - 2026-07-16
 
 ### Phase 11 - Verified Government Communications

@@ -38,6 +38,7 @@ PYTHONPATH=. uvicorn backend.app.main:app --reload --port 8000
 | Doc | Purpose |
 |---|---|
 | [`docs/PRODUCT_STATUS.md`](docs/PRODUCT_STATUS.md) | **Current full product brief — start here for next tasks** |
+| [`docs/manuals/README.md`](docs/manuals/README.md) | **External-audit documentation suite (Phase 15)** |
 | [`docs/ACCESS_AND_CONFIG.md`](docs/ACCESS_AND_CONFIG.md) | **Who can access what + how to adjust roles/env** |
 | [`docs/V1_0_ENTERPRISE_INDEX.md`](docs/V1_0_ENTERPRISE_INDEX.md) | **v1.0 enterprise review, design, threat model, roadmap** |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Layers, APIs, engines, workflow |

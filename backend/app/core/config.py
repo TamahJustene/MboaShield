@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "1.5.0"
+    version: str = "1.9.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
     deployment_profile: str = Field(default="demo", alias="DEPLOYMENT_PROFILE")
     tenant_id: str = Field(default="cm", alias="TENANT_ID")
@@ -67,6 +67,20 @@ class Settings(BaseSettings):
     announcement_signing_key: str = Field(default="", alias="ANNOUNCEMENT_SIGNING_KEY")
     announcement_signing_kid: str = Field(default="mboashield-announce-v1", alias="ANNOUNCEMENT_SIGNING_KID")
     public_base_url: str = Field(default="", alias="PUBLIC_BASE_URL")
+
+    # Advanced AI / Phase 12
+    advanced_ai_enabled: bool = Field(default=True, alias="ADVANCED_AI_ENABLED")
+    ai_eval_latency_budget_ms: int = Field(default=2500, alias="AI_EVAL_LATENCY_BUDGET_MS")
+
+    # Enterprise infrastructure / Phase 13
+    metrics_enabled: bool = Field(default=True, alias="METRICS_ENABLED")
+    workers_enabled: bool = Field(default=False, alias="WORKERS_ENABLED")
+    redis_url: str = Field(default="redis://127.0.0.1:6379/0", alias="REDIS_URL")
+    celery_broker_url: str = Field(default="", alias="CELERY_BROKER_URL")
+    celery_result_backend: str = Field(default="", alias="CELERY_RESULT_BACKEND")
+
+    # Governance / Phase 14
+    governance_enabled: bool = Field(default=True, alias="GOVERNANCE_ENABLED")
 
     # Password policy
     password_min_length: int = Field(default=8, alias="PASSWORD_MIN_LENGTH")
@@ -155,6 +169,16 @@ class Settings(BaseSettings):
         if not raw or raw == "*":
             return None
         return {item.strip().lower() for item in raw.split(",") if item.strip()}
+
+    def resolved_celery_broker(self) -> str:
+        if self.celery_broker_url.strip():
+            return self.celery_broker_url.strip()
+        return self.redis_url.strip() or "redis://127.0.0.1:6379/0"
+
+    def resolved_celery_backend(self) -> str:
+        if self.celery_result_backend.strip():
+            return self.celery_result_backend.strip()
+        return self.redis_url.strip() or "redis://127.0.0.1:6379/1"
 
 
 @lru_cache

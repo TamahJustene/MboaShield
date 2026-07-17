@@ -17,6 +17,7 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "history:read_own",
         "ambassadors:complete",
         "institutions:read",
+        "consent:write",
     },
     Role.ANALYST: {
         "checks:create",
@@ -30,6 +31,9 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "evidence:read",
         "evidence:write",
         "announcements:read",
+        "ai:read",
+        "consent:write",
+        "governance:read",
     },
     Role.INSTITUTION_ADMIN: {
         "checks:create",
@@ -42,6 +46,8 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "evidence:read",
         "announcements:read",
         "announcements:publish",
+        "consent:write",
+        "governance:read",
     },
     Role.ADMIN: {
         "checks:create",
@@ -61,6 +67,11 @@ ROLE_PERMISSIONS: dict[Role, set[str]] = {
         "evidence:manage",
         "announcements:read",
         "announcements:publish",
+        "ai:read",
+        "ai:manage",
+        "consent:write",
+        "governance:read",
+        "governance:manage",
         "system:admin",
     },
 }

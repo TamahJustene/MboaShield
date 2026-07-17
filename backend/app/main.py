@@ -4,13 +4,16 @@ from __future__ import annotations
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from .api import api_router
 from .api.public_verify import router as public_verify_router
+from .ai_store import ensure_builtin_models
+from .governance_store import ensure_governance_seed
 from .core.config import ROOT, VERSION, get_settings
 from .core.errors import AppError, app_error_handler, http_exception_handler
+from .core.metrics import MetricsMiddleware, metrics_payload, refresh_app_info
 from .core.middleware import RateLimitMiddleware, RequestContextMiddleware
 from .core.security import oidc_providers, production_security_warnings
 from .db.session import init_db
@@ -18,6 +21,7 @@ from .identity_store import ensure_default_tenant
 from .repositories import list_institutions
 from .seed import seed_institutions_if_needed
 from .services.ai_analysis import ENGINE_VERSION as AI_ENGINE_VERSION
+from .workers.enqueue import workers_active
 
 FRONTEND = ROOT / "frontend"
 
@@ -46,6 +50,9 @@ def create_app() -> FastAPI:
     )
     application.add_middleware(RateLimitMiddleware)
     application.add_middleware(RequestContextMiddleware)
+    if settings.metrics_enabled:
+        application.add_middleware(MetricsMiddleware)
+        refresh_app_info()
 
     application.add_exception_handler(AppError, app_error_handler)
     application.add_exception_handler(HTTPException, http_exception_handler)
@@ -53,6 +60,10 @@ def create_app() -> FastAPI:
     init_db()
     seed_institutions_if_needed()
     ensure_default_tenant()
+    if settings.advanced_ai_enabled:
+        ensure_builtin_models()
+    if settings.governance_enabled:
+        ensure_governance_seed()
 
     @application.get("/health")
     def health():
@@ -78,6 +89,10 @@ def create_app() -> FastAPI:
             "vault": settings.vault_enabled,
             "institution_portal": settings.institution_portal_enabled,
             "verified_comms": settings.verified_comms_enabled,
+            "advanced_ai": settings.advanced_ai_enabled,
+            "metrics": settings.metrics_enabled,
+            "workers": workers_active(),
+            "governance": settings.governance_enabled,
             "identity": {
                 "mfa_ready": True,
                 "oidc_ready": bool(
@@ -100,6 +115,13 @@ def create_app() -> FastAPI:
             "media_adapter": "mboashield-media-adapter-v1",
             "audio_adapter": "mboashield-audio-adapter-v1",
         }
+
+    @application.get("/metrics")
+    def metrics():
+        if not settings.metrics_enabled:
+            raise HTTPException(status_code=404, detail="Metrics disabled")
+        body, content_type = metrics_payload()
+        return Response(content=body, media_type=content_type)
 
     application.include_router(api_router)
     application.include_router(public_verify_router)

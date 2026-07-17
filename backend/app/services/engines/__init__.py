@@ -131,6 +131,18 @@ def analyze_intelligence(
     lang: str = "en",
     include_scaffolds: bool = True,
 ) -> dict[str, Any]:
+    from ...ai_store import ensure_builtin_models, get_calibration_summary, list_models
+    from ...core.config import get_settings
+    from ..ai.runtime import runtime_status
+
+    settings = get_settings()
+    calibration = None
+    registry: list[dict] = []
+    if settings.advanced_ai_enabled:
+        ensure_builtin_models()
+        calibration = get_calibration_summary()
+        registry = list_models(enabled_only=True)
+
     engines = run_engines(
         text=text,
         name=name,
@@ -144,10 +156,17 @@ def analyze_intelligence(
         lang=lang,
         include_scaffolds=include_scaffolds,
     )
-    trust = fuse(engines, lang=lang)
+    trust = fuse(engines, lang=lang, calibration=calibration)
     return {
         "engines": [item.as_dict() for item in engines],
         "trust_score": trust,
+        "calibration": calibration,
+        "advanced_ai": {
+            "enabled": settings.advanced_ai_enabled,
+            "engine_package_version": "1.2.0",
+            "models_registered": len(registry),
+            "runtimes": runtime_status() if settings.advanced_ai_enabled else {},
+        },
         "summary": {
             "active_engines": len([item for item in engines if item.status == "ok"]),
             "skipped_engines": len([item for item in engines if item.status == "skipped"]),

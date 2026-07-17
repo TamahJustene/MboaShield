@@ -1,0 +1,6 @@
+apiVersion: v2
+name: mboashield
+description: MboaShield national digital trust platform
+type: application
+version: 1.7.0
+appVersion: "1.7.0"

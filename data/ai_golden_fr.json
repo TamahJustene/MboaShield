@@ -1,0 +1,19 @@
+{
+  "dataset": "fr",
+  "cases": [
+    {
+      "id": "fr-arnaque-momo",
+      "lang": "fr",
+      "text": "URGENT envoyez de l'argent par MoMo maintenant sinon votre compte sera bloque",
+      "expect_min_risk": 35,
+      "expect_max_risk": 100
+    },
+    {
+      "id": "fr-message-courtois",
+      "lang": "fr",
+      "text": "Bonjour, merci pour votre participation a la reunion de demain a Yaounde.",
+      "expect_min_risk": 0,
+      "expect_max_risk": 55
+    }
+  ]
+}

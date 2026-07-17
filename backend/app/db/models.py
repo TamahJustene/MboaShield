@@ -554,3 +554,117 @@ class AnnouncementVersion(Base):
     published_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[str] = mapped_column(String(64), nullable=False)
 
+
+class AiModelRegistry(Base):
+    __tablename__ = "ai_model_registry"
+    __table_args__ = (UniqueConstraint("model_id", name="uq_ai_model_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    model_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    modality: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    runtime: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    checksum_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    version: Mapped[str] = mapped_column(String(32), nullable=False)
+    config_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="active")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class AiEvaluationRun(Base):
+    __tablename__ = "ai_evaluation_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    run_id: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    dataset: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    metrics_json: Mapped[str] = mapped_column(Text, nullable=False)
+    latency_ms_p50: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+
+
+class ConsentRecord(Base):
+    __tablename__ = "consent_records"
+    __table_args__ = (UniqueConstraint("subject_key", "feature", name="uq_consent_subject_feature"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    subject_key: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    feature: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    granted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    purpose: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    policy_version: Mapped[str] = mapped_column(String(32), nullable=False, default="1.0")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class RiskRegisterEntry(Base):
+    __tablename__ = "risk_register"
+    __table_args__ = (UniqueConstraint("risk_id", name="uq_risk_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    risk_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    threat_model_ref: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    likelihood: Mapped[str] = mapped_column(String(32), nullable=False, default="medium")
+    impact: Mapped[str] = mapped_column(String(32), nullable=False, default="high")
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="open", index=True)
+    owner: Mapped[str] = mapped_column(String(128), nullable=False, default="AI Governance")
+    mitigation: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    residual_risk: Mapped[str] = mapped_column(String(32), nullable=False, default="medium")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class ModelCard(Base):
+    __tablename__ = "model_cards"
+    __table_args__ = (UniqueConstraint("card_id", name="uq_model_card_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    card_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    model_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    version: Mapped[str] = mapped_column(String(32), nullable=False, default="1.0")
+    summary: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    intended_use: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    limitations: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    certainty_policy: Mapped[str] = mapped_column(String(64), nullable=False, default="none")
+    body_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class DatasetCard(Base):
+    __tablename__ = "dataset_cards"
+    __table_args__ = (UniqueConstraint("card_id", name="uq_dataset_card_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    card_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    dataset_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    version: Mapped[str] = mapped_column(String(32), nullable=False, default="1.0")
+    summary: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    provenance: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    languages: Mapped[str] = mapped_column(String(64), nullable=False, default="en")
+    body_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class GovernanceControl(Base):
+    __tablename__ = "governance_controls"
+    __table_args__ = (UniqueConstraint("control_id", name="uq_governance_control_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    control_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="implemented", index=True)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    evidence: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+

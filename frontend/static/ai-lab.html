@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MboaShield - AI Lab</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <p class="eyebrow">Phase 12</p>
+      <h1>Advanced AI lab</h1>
+      <p class="tagline">Model registry, calibration, golden-set evaluation</p>
+    </div>
+    <div class="header-actions">
+      <a href="/static/national.html" class="btn-ghost history-link">National</a>
+      <a href="/" class="btn-ghost history-link">Home</a>
+    </div>
+  </header>
+  <section class="history-panel">
+    <div id="aiHealth" class="out history-detail empty-detail">Loading...</div>
+    <button type="button" id="runEvalEn" class="btn-primary">Run EN golden evaluation</button>
+    <button type="button" id="runEvalFr" class="btn-ghost">Run FR golden evaluation</button>
+    <pre id="evalOut" class="report-copy muted"></pre>
+  </section>
+  <script src="/static/ai-lab.js"></script>
+</body>
+</html>

@@ -11,7 +11,7 @@ from typing import Any
 from .base import EngineResult, clamp, risk_band
 
 
-def fuse(engine_results: list[EngineResult], *, lang: str = "en") -> dict[str, Any]:
+def fuse(engine_results: list[EngineResult], *, lang: str = "en", calibration: dict[str, Any] | None = None) -> dict[str, Any]:
     active = [item for item in engine_results if item.status == "ok"]
     if not active:
         return {
@@ -26,6 +26,7 @@ def fuse(engine_results: list[EngineResult], *, lang: str = "en") -> dict[str, A
             "recommendations": ["Provide text, identity, or media input for analysis."],
             "engines_contributing": [],
             "certainty": "none",
+            "calibrated_score": None,
             "honesty_note": (
                 "Explainable Trust Score is a calibrated composite, not a guarantee."
             ),
@@ -61,12 +62,17 @@ def fuse(engine_results: list[EngineResult], *, lang: str = "en") -> dict[str, A
         f"et confiance {trust_score}/100. Risque moteur max: {max(scores)}."
     )
 
+    calibrated_score: int | None = None
+    if calibration and calibration.get("ready"):
+        calibrated_score = clamp(trust_score + int(calibration.get("bias_adjustment") or 0))
+
     return {
         "trust_score": trust_score,
         "trust_band": "high" if trust_score >= 70 else "medium" if trust_score >= 40 else "low",
         "fused_risk_score": fused_risk,
         "fused_risk_level": risk_band(fused_risk),
         "confidence": confidence,
+        "calibrated_score": calibrated_score,
         "threat_categories": threats,
         "evidence": sorted(evidence, key=lambda item: item.get("weight", 0), reverse=True)[:12],
         "reasoning": reasoning_fr if lang.startswith("fr") else reasoning_en,

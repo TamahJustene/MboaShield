@@ -500,3 +500,33 @@ class AnnouncementPublishIn(BaseModel):
     body: str | None = Field(default=None, min_length=10)
 
 
+class AiModelRegisterIn(BaseModel):
+    model_id: str = Field(..., min_length=3)
+    name: str = Field(..., min_length=2)
+    modality: str = Field(..., min_length=2)
+    runtime: str = Field(..., min_length=2)
+    version: str = Field(..., min_length=1)
+    checksum_sha256: str = Field(..., min_length=64, max_length=64)
+    config: dict[str, Any] | None = None
+    enabled: bool = True
+
+
+class AiEvaluationRunIn(BaseModel):
+    dataset: Literal["en", "fr"] = "en"
+
+
+class ConsentIn(BaseModel):
+    feature: str = Field(..., min_length=2, max_length=64)
+    granted: bool
+    subject_key: str | None = Field(default=None, max_length=128)
+    purpose: str | None = Field(default=None, max_length=255)
+    policy_version: str = Field(default="1.0", max_length=32)
+
+
+class RiskUpdateIn(BaseModel):
+    status: str | None = Field(default=None, max_length=32)
+    mitigation: str | None = None
+    residual_risk: str | None = Field(default=None, max_length=32)
+    owner: str | None = Field(default=None, max_length=128)
+
+

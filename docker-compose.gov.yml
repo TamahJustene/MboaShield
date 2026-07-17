@@ -1,0 +1,136 @@
+# Government / enterprise stack (Phase 13). Demo compose remains docker-compose.yml.
+# Usage: docker compose -f docker-compose.gov.yml up --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: mboashield
+      POSTGRES_USER: mboashield
+      POSTGRES_PASSWORD: mboashield
+    volumes:
+      - gov_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mboashield -d mboashield"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    ports:
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://mboashield:mboashield@db:5432/mboashield
+      JWT_SECRET: change-me-gov-mboashield
+      MBOASHIELD_ENV: gov
+      DEPLOYMENT_PROFILE: government
+      AUTH_ENFORCE: "false"
+      CORS_ORIGINS: "*"
+      METRICS_ENABLED: "true"
+      WORKERS_ENABLED: "true"
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      VAULT_STORAGE: local
+      VAULT_LOCAL_PATH: /app/storage/vault
+    volumes:
+      - gov_vault:/app/storage/vault
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    build: .
+    command: ["celery", "-A", "backend.app.workers.celery_app.celery_app", "worker", "--loglevel=info", "-Q", "celery"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://mboashield:mboashield@db:5432/mboashield
+      JWT_SECRET: change-me-gov-mboashield
+      MBOASHIELD_ENV: gov
+      DEPLOYMENT_PROFILE: government
+      WORKERS_ENABLED: "true"
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      VAULT_LOCAL_PATH: /app/storage/vault
+    volumes:
+      - gov_vault:/app/storage/vault
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  beat:
+    build: .
+    command: ["celery", "-A", "backend.app.workers.celery_app.celery_app", "beat", "--loglevel=info"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://mboashield:mboashield@db:5432/mboashield
+      WORKERS_ENABLED: "true"
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: mboashield
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:3.1.1
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    ports:
+      - "3100:3100"
+
+volumes:
+  gov_pg:
+  gov_vault:
