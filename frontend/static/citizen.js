@@ -27,6 +27,11 @@ function userHeaders(extra = {}) {
   return userId ? { ...extra, "X-MboaShield-User-Id": userId } : extra;
 }
 
+function trustScoreFromRisk(riskScore) {
+  if (riskScore == null || Number.isNaN(Number(riskScore))) return null;
+  return Math.max(0, Math.min(100, 100 - Number(riskScore)));
+}
+
 async function loadDashboard() {
   const userId = getUserId();
   const identity = document.getElementById("citizenIdentity");
@@ -40,21 +45,26 @@ async function loadDashboard() {
     return;
   }
   const data = await res.json();
-  identity.textContent = `${data.user.display_name} ∑ User #${data.user.id} ∑ role ${data.user.role}`;
+  identity.textContent = `${data.user.display_name} ù User #${data.user.id} ù role ${data.user.role}`;
 
   document.getElementById("checksLead").textContent = `${data.checks_count} recent check${data.checks_count === 1 ? "" : "s"}.`;
   document.getElementById("checksList").innerHTML = (data.checks || [])
     .map(
-      (check) => `
+      (check) => {
+        const trustScore = trustScoreFromRisk(check.risk_score);
+        const trustLabel =
+          trustScore != null ? ` ∑ trust ${trustScore}/100` : "";
+        return `
         <a class="history-item" href="/static/history.html?check=${escapeHtml(check.id)}">
           <div class="history-item-top">
             <span class="band ${check.risk_band || "low"}">${escapeHtml((check.risk_band || "n/a").toUpperCase())}</span>
             <span class="muted">#${escapeHtml(check.id)}</span>
           </div>
-          <p class="history-item-title">${escapeHtml(check.check_type)}</p>
+          <p class="history-item-title">${escapeHtml(check.check_type)}${escapeHtml(trustLabel)}</p>
           <p class="muted">${escapeHtml(formatTime(check.created_at))}</p>
         </a>
-      `
+      `;
+      }
     )
     .join("") || "<p class='muted'>No checks linked yet. Run a verification from the home app.</p>";
 
@@ -79,7 +89,7 @@ async function loadDashboard() {
       (cert) => `
         <div class="history-item">
           <p class="history-item-title">${escapeHtml(cert.lesson_title_en)}</p>
-          <p class="muted">${escapeHtml(cert.certificate_id)} ∑ ${escapeHtml(cert.issued_on)}</p>
+          <p class="muted">${escapeHtml(cert.certificate_id)} ù ${escapeHtml(cert.issued_on)}</p>
         </div>
       `
     )

@@ -133,6 +133,7 @@ See `.env.example` for the full list. Critical:
 | `WORKERS_ENABLED` | Celery async jobs (else sync fallback) |
 | `REDIS_URL` / `CELERY_BROKER_URL` / `CELERY_RESULT_BACKEND` | Worker broker + results |
 | `GOVERNANCE_ENABLED` | Consent, risk register, model cards, compliance |
+| `COUNTRY_PACK` | Country deploy template id (default `cm`) |
 
 ---
 

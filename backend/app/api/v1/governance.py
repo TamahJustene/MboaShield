@@ -23,7 +23,7 @@ from ...repositories import write_audit_log
 from ...schemas import ConsentIn, RiskUpdateIn
 from ..deps import require_permission
 
-router = APIRouter(prefix="/governance", tags=["governance"])
+router = APIRouter(prefix="/governance", tags=["pillar-governance"])
 
 
 def _ensure_gov() -> None:

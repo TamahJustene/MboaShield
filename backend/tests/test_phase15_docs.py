@@ -37,7 +37,7 @@ def test_openapi_export_schema(tmp_path):
 
     app = create_app()
     schema = app.openapi()
-    assert schema["info"]["version"] == "1.9.0"
+    assert schema["info"]["version"] == "2.4.0"
     assert len(schema["paths"]) >= 20
     assert any(p.startswith("/api/v1") for p in schema["paths"])
 
@@ -49,4 +49,4 @@ def test_openapi_export_schema(tmp_path):
 def test_health_reports_phase15(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "1.9.0"
+    assert health["version"] == "2.4.0"

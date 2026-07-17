@@ -11,7 +11,7 @@ from ...services.analytics import build_national_analytics, record_analysis_feed
 from ...repositories import write_audit_log
 from ..deps import require_permission
 
-router = APIRouter(prefix="/analytics", tags=["analytics"])
+router = APIRouter(prefix="/analytics", tags=["pillar-analytics"])
 
 
 @router.get("/national")

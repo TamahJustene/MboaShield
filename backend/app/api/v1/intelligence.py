@@ -7,7 +7,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from ...schemas import IntelligenceAnalyzeIn
 from ...services.engines import analyze_intelligence, list_engines
 
-router = APIRouter(prefix="/intelligence", tags=["intelligence"])
+router = APIRouter(prefix="/intelligence", tags=["pillar-trust"])
 
 
 @router.get("/engines")

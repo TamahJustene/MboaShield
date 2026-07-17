@@ -19,10 +19,16 @@ from .ntoc import router as ntoc_router
 from .oauth import router as oauth_router
 from .partners import router as partners_router
 from .platform import router as platform_router
+from .trust import router as trust_router
+from .trust_network import router as trust_network_router
+from .interop import router as interop_router
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth_router)
 router.include_router(platform_router)
+router.include_router(trust_router)
+router.include_router(trust_network_router)
+router.include_router(interop_router)
 router.include_router(government_router)
 router.include_router(intelligence_router)
 router.include_router(analytics_router)

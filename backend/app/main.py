@@ -21,6 +21,7 @@ from .identity_store import ensure_default_tenant
 from .repositories import list_institutions
 from .seed import seed_institutions_if_needed
 from .services.ai_analysis import ENGINE_VERSION as AI_ENGINE_VERSION
+from .core.openapi_pillars import OPENAPI_TAGS, PROGRAM_ID, TRANSFORMATION_PHASE
 from .workers.enqueue import workers_active
 
 FRONTEND = ROOT / "frontend"
@@ -29,16 +30,38 @@ FRONTEND = ROOT / "frontend"
 def create_app() -> FastAPI:
     settings = get_settings()
     application = FastAPI(
-        title="MboaShield API",
+        title="MboaShield Trust API",
         version=settings.version,
+        openapi_tags=OPENAPI_TAGS,
         description=(
-            "National Digital Trust Platform — Made in Cameroon by Justene Nkwagoh Tamah. "
-            "Detection, explanation, escalation, and civic recovery."
+            "MboaShield National Digital Trust Infrastructure (2030 program). "
+            "National platforms exposed as versioned REST APIs. "
+            "Made in Cameroon by Justene Nkwagoh Tamah. "
+            "Detection, explanation, investigation, and interoperable trust services."
         ),
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",
     )
+
+    def _custom_openapi():
+        if application.openapi_schema:
+            return application.openapi_schema
+        from fastapi.openapi.utils import get_openapi
+
+        schema = get_openapi(
+            title=application.title,
+            version=application.version,
+            description=application.description,
+            routes=application.routes,
+            tags=OPENAPI_TAGS,
+        )
+        schema.setdefault("info", {})["x-mboashield-program"] = PROGRAM_ID
+        schema["info"]["x-transformation-phase"] = TRANSFORMATION_PHASE
+        application.openapi_schema = schema
+        return application.openapi_schema
+
+    application.openapi = _custom_openapi  # type: ignore[method-assign]
 
     origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
     application.add_middleware(
@@ -73,6 +96,10 @@ def create_app() -> FastAPI:
         return {
             "status": "ok",
             "version": settings.version,
+            "program": PROGRAM_ID,
+            "transformation_phase": TRANSFORMATION_PHASE,
+            "country_pack": settings.country_pack,
+            "tenant_id": settings.tenant_id,
             "founder": "Justene Nkwagoh Tamah",
             "product": "MboaShield",
             "environment": settings.environment,

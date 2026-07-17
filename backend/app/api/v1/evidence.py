@@ -25,7 +25,7 @@ from ...vault_store import (
 )
 from ..deps import require_permission
 
-router = APIRouter(prefix="/evidence", tags=["evidence"])
+router = APIRouter(prefix="/evidence", tags=["pillar-evidence"])
 
 
 def _ensure_vault():

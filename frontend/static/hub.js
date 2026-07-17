@@ -1,12 +1,21 @@
 async function loadHealth() {
   const el = document.getElementById("hubHealth");
   try {
-    const res = await fetch("/health");
-    const d = await res.json();
+    const [healthRes, progRes] = await Promise.all([
+      fetch("/health"),
+      fetch("/api/v1/program"),
+    ]);
+    const d = await healthRes.json();
+    let progLine = "";
+    if (progRes.ok) {
+      const p = await progRes.json();
+      progLine = `<p>Program <strong>${p.program}</strong> phase ${p.transformation_phase} · pack ${p.country_pack} · ${p.pillars.length} pillars</p>`;
+    }
     el.className = "out history-detail is-ready";
     el.innerHTML = `
       <p><strong>${d.product}</strong> v${d.version} · ${d.deployment_profile}</p>
-      <p>Engines ${d.ai_engine_version} · governance ${d.governance} · advanced_ai ${d.advanced_ai} · workers ${d.workers}</p>
+      ${progLine}
+      <p>Engines ${d.ai_engine_version} · governance ${d.governance} · workers ${d.workers}</p>
     `;
   } catch (e) {
     el.textContent = "Could not load /health";

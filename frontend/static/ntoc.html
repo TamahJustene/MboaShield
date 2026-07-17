@@ -8,20 +8,13 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <p class="eyebrow">Phase 7 NTOC</p>
-      <h1>National Trust Operations Center</h1>
-      <p class="tagline">Live threat level, regional pressure, cases, and institution health</p>
-    </div>
-    <div class="header-actions">
-      <a href="/static/intel.html" class="btn-ghost history-link">Intel</a>
-      <a href="/static/investigation.html" class="btn-ghost history-link">Investigation</a>
-      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
-      <a href="/static/national.html" class="btn-ghost history-link">Analytics</a>
-      <a href="/" class="btn-ghost history-link">Home</a>
-    </div>
-  </header>
+  <div
+    id="portal-shell"
+    data-portal="ntoc"
+    data-eyebrow="MboaShield 2030 · T3"
+    data-title="National Trust Operations Center"
+    data-tagline="Live threat level, regional pressure, cases, and institution health"
+  ></div>
 
   <section class="history-panel history-certificates">
     <div class="panel-heading-row">
@@ -63,11 +56,8 @@
 
   <footer class="app-footer">
     <p>MboaShield Tech - tamahjustene45@gmail.com</p>
-    <p>
-      <a href="/static/investigation.html">Investigation workspace</a> -
-      <a href="/static/identity.html">Identity</a>
-    </p>
   </footer>
+  <script src="/static/portal-shell.js"></script>
   <script src="/static/ntoc.js"></script>
 </body>
 </html>

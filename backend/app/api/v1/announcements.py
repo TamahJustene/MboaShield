@@ -24,7 +24,7 @@ from ...repositories import write_audit_log
 from ...schemas import AnnouncementCreateIn, AnnouncementPublishIn, AnnouncementUpdateIn
 from ..deps import require_permission
 
-router = APIRouter(prefix="/announcements", tags=["announcements"])
+router = APIRouter(prefix="/announcements", tags=["pillar-comms"])
 
 
 def _ensure_comms():

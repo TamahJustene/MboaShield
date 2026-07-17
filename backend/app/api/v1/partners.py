@@ -15,7 +15,7 @@ from ...repositories import (
 from ...schemas import PartnerApiKeyIn, PartnerApiKeyOut
 from ..deps import get_optional_api_key_actor, require_permission
 
-router = APIRouter(prefix="/partners", tags=["partners"])
+router = APIRouter(prefix="/partners", tags=["pillar-partner"])
 
 
 @router.post("/keys", response_model=PartnerApiKeyOut)

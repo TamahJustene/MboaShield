@@ -8,19 +8,13 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <p class="eyebrow">Government operations</p>
-      <h1>Analyst console</h1>
-      <p class="tagline">National incident queue, workflow transitions, and timeline audit</p>
-    </div>
-    <div class="header-actions">
-      <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
-      <a href="/static/national.html" class="btn-ghost history-link">National</a>
-      <a href="/static/citizen.html" class="btn-ghost history-link">Citizen</a>
-      <a href="/" class="btn-ghost history-link">Home</a>
-    </div>
-  </header>
+  <div
+    id="portal-shell"
+    data-portal="analyst"
+    data-eyebrow="MboaShield 2030 · T3"
+    data-title="Analyst console"
+    data-tagline="National incident queue, workflow transitions, and timeline audit"
+  ></div>
 
   <section class="history-panel history-certificates">
     <h2>Queue summary</h2>
@@ -48,13 +42,8 @@
 
   <footer class="app-footer">
     <p>MboaShield Tech - tamahjustene45@gmail.com</p>
-    <p>
-      <a href="/">Home</a> -
-      <a href="/static/reports.html">Reports</a> -
-      <a href="/static/institutions.html">Institutions</a> -
-      <a href="/static/citizen.html">Citizen dashboard</a>
-    </p>
   </footer>
+  <script src="/static/portal-shell.js"></script>
   <script src="/static/analyst.js"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@ from ...services.ai.evaluation import run_evaluation
 from ...services.ai.runtime import runtime_status
 from ..deps import require_permission
 
-router = APIRouter(prefix="/ai-platform", tags=["ai-platform"])
+router = APIRouter(prefix="/ai-platform", tags=["pillar-ai"])
 
 
 def _ensure_ai():

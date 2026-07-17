@@ -247,6 +247,108 @@ class IntelligenceAnalyzeIn(BaseModel):
     include_scaffolds: bool = True
 
 
+TrustObjectType = Literal[
+    "text",
+    "impersonation",
+    "media",
+    "audio",
+    "intelligence",
+    "case",
+    "verification_check",
+]
+
+
+class TrustAssessIn(BaseModel):
+    object_type: TrustObjectType
+    lang: str = "en"
+    text: str = ""
+    name: str = ""
+    handle: str = ""
+    url: str = ""
+    filename: str = ""
+    mime_type: str = ""
+    include_scaffolds: bool = True
+    verification_check_id: int | None = None
+    persist: bool = True
+
+
+class TrustSignalOut(BaseModel):
+    type: str
+    label: str
+    weight: int | None = None
+
+
+class TrustEvidenceRefOut(BaseModel):
+    ref_type: str
+    id: str
+    label: str
+
+
+class TrustAssessmentOut(BaseModel):
+    id: int | None = None
+    object_type: str
+    object_id: str | None = None
+    score: int
+    band: str
+    certainty: str
+    signals: list[TrustSignalOut] = Field(default_factory=list)
+    evidence_refs: list[TrustEvidenceRefOut] = Field(default_factory=list)
+    verification_check_id: int | None = None
+    legacy: dict[str, Any] = Field(default_factory=dict)
+    honesty_note: str
+    risk_score: int | None = None
+    risk_band: str | None = None
+    check_id: int | None = None
+    case_check_id: int | None = None
+    trust_score: dict[str, Any] | None = None
+
+
+class TrustRelationshipIn(BaseModel):
+    source_institution_id: str
+    target_institution_id: str
+    status: Literal["pending", "active", "suspended", "revoked"] = "pending"
+    policy_note: str = ""
+
+
+class TrustRelationshipStatusIn(BaseModel):
+    status: Literal["pending", "active", "suspended", "revoked"]
+    policy_note: str | None = None
+
+
+class ExchangeChannelIn(BaseModel):
+    relationship_id: int
+    channel_type: Literal["alert_share", "ioc_exchange", "advisory"]
+    label: str = ""
+    enabled: bool = True
+
+
+class SharedAlertIn(BaseModel):
+    alert_type: Literal["impersonation", "deepfake", "fraud", "ioc", "advisory"]
+    title: str
+    summary: str = ""
+    severity: Literal["low", "medium", "high", "critical"] = "medium"
+    source_institution_id: str
+    target_institutions: list[str] = Field(default_factory=list)
+    relationship_id: int | None = None
+    verification_check_id: int | None = None
+    trust_assessment_id: int | None = None
+    payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class WebhookEndpointIn(BaseModel):
+    name: str
+    url: str
+    events: list[str] = Field(default_factory=lambda: ["interop.ping"])
+    partner_org: str = ""
+    secret: str | None = None
+    enabled: bool = True
+
+
+class WebhookEmitIn(BaseModel):
+    event_type: str = "interop.ping"
+    data: dict[str, Any] = Field(default_factory=dict)
+    sync_deliver: bool = True
+
 class AnalysisFeedbackIn(BaseModel):
     verification_check_id: int
     label: Literal["true_positive", "false_positive", "true_negative", "false_negative"]

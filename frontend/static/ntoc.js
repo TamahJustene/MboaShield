@@ -7,6 +7,7 @@ function escapeHtml(value) {
 }
 
 function authHeaders(extra = {}) {
+  if (window.MboaShieldPortal) return window.MboaShieldPortal.authHeaders(extra);
   const token = localStorage.getItem("mboashield_access_token");
   return token ? { ...extra, Authorization: `Bearer ${token}` } : extra;
 }

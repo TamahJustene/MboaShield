@@ -7,6 +7,7 @@ function escapeHtml(value) {
 }
 
 function authHeaders(extra = {}) {
+  if (window.MboaShieldPortal) return window.MboaShieldPortal.authHeaders(extra);
   const token = localStorage.getItem("mboashield_access_token");
   return token ? { ...extra, Authorization: `Bearer ${token}` } : extra;
 }
@@ -41,9 +42,9 @@ async function refreshPortal() {
   const analytics = data.analytics || {};
   box.className = "out history-detail is-ready";
   box.innerHTML = `
-    <h3>${escapeHtml(inst.short_name)} ∑ ${escapeHtml(inst.name)}</h3>
-    <p class="muted">Members ${escapeHtml(data.active_members)} ∑ Verified domains ${escapeHtml(data.verified_domains)}</p>
-    <p>Incidents open ${escapeHtml(analytics.incidents_open)} / ${escapeHtml(analytics.incidents_total)} ∑ Cases open ${escapeHtml(analytics.cases_open)} / ${escapeHtml(analytics.cases_total)}</p>
+    <h3>${escapeHtml(inst.short_name)} ù ${escapeHtml(inst.name)}</h3>
+    <p class="muted">Members ${escapeHtml(data.active_members)} ù Verified domains ${escapeHtml(data.verified_domains)}</p>
+    <p>Incidents open ${escapeHtml(analytics.incidents_open)} / ${escapeHtml(analytics.incidents_total)} ù Cases open ${escapeHtml(analytics.cases_open)} / ${escapeHtml(analytics.cases_total)}</p>
   `;
 
   const branding = (data.institution && data.institution.branding) || {};
@@ -90,7 +91,7 @@ async function refreshPortal() {
     (data.memberships || [])
       .map((item) => {
         const user = item.user || {};
-        return `<p><strong>${escapeHtml(user.display_name || user.email || item.user_id)}</strong> ∑ ${escapeHtml(item.member_role)} ∑ ${escapeHtml(item.status)}</p>`;
+        return `<p><strong>${escapeHtml(user.display_name || user.email || item.user_id)}</strong> ù ${escapeHtml(item.member_role)} ù ${escapeHtml(item.status)}</p>`;
       })
       .join("") || "<p class='muted'>No members yet.</p>";
 
@@ -101,13 +102,78 @@ async function refreshPortal() {
 
   document.getElementById("keyList").innerHTML =
     (data.api_keys || [])
-      .map((item) => `<p>${escapeHtml(item.name)} ∑ ${escapeHtml(item.key_prefix)}Ö ∑ scopes ${(item.scopes || []).join(", ")}</p>`)
+      .map((item) => `<p>${escapeHtml(item.name)} ù ${escapeHtml(item.key_prefix)}ù ù scopes ${(item.scopes || []).join(", ")}</p>`)
       .join("") || "<p class='muted'>No institution API keys yet.</p>";
 
   document.getElementById("caseList").innerHTML =
     ((await (await fetch(`/api/v1/institution-portal/${encodeURIComponent(activeInstitutionId)}/investigations`, { headers: authHeaders() })).json()).cases || [])
-      .map((item) => `<p>#${item.id} ${escapeHtml(item.title)} ∑ ${escapeHtml(item.status)} ∑ ${escapeHtml(item.priority)}</p>`)
+      .map((item) => `<p>#${item.id} ${escapeHtml(item.title)} ù ${escapeHtml(item.status)} ù ${escapeHtml(item.priority)}</p>`)
       .join("") || "<p class='muted'>No institution-scoped cases yet.</p>";
+
+  await refreshTrustNetwork();
+}
+
+async function refreshTrustNetwork() {
+  if (!activeInstitutionId) return;
+  const relRes = await fetch(
+    `/api/v1/trust-network/relationships?institution_id=${encodeURIComponent(activeInstitutionId)}`,
+    { headers: authHeaders() }
+  );
+  const relData = await relRes.json();
+  document.getElementById("partnerList").innerHTML =
+    (relData.relationships || [])
+      .map((item) => {
+        const peer =
+          item.source_institution_id === activeInstitutionId
+            ? item.target_institution_id
+            : item.source_institution_id;
+        return `
+      <article class="history-item">
+        <div class="history-item-top">
+          <strong>${escapeHtml(peer)}</strong>
+          <span class="band ${item.status === "active" ? "low" : "medium"}">${escapeHtml(item.status)}</span>
+        </div>
+        <p class="muted">#${escapeHtml(item.id)} ù ${escapeHtml(item.policy_note || "no policy note")}</p>
+        ${
+          item.status === "pending"
+            ? `<button type="button" class="btn-ghost" data-activate-rel="${item.id}">Activate</button>`
+            : ""
+        }
+      </article>`;
+      })
+      .join("") || "<p class='muted'>No trust relationships yet.</p>";
+
+  document.querySelectorAll("[data-activate-rel]").forEach((btn) => {
+    btn.onclick = async () => {
+      const id = btn.getAttribute("data-activate-rel");
+      await fetch(`/api/v1/trust-network/relationships/${id}`, {
+        method: "PATCH",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ status: "active" }),
+      });
+      refreshTrustNetwork();
+    };
+  });
+
+  const alertRes = await fetch(
+    `/api/v1/trust-network/exchange/alerts?institution_id=${encodeURIComponent(activeInstitutionId)}`,
+    { headers: authHeaders() }
+  );
+  const alertData = await alertRes.json();
+  document.getElementById("alertList").innerHTML =
+    (alertData.alerts || [])
+      .map(
+        (item) => `
+      <article class="history-item">
+        <div class="history-item-top">
+          <strong>${escapeHtml(item.alert_type)}</strong>
+          <span class="band ${item.severity === "high" || item.severity === "critical" ? "high" : "medium"}">${escapeHtml(item.severity)}</span>
+        </div>
+        <p class="history-item-title">${escapeHtml(item.title)}</p>
+        <p class="muted">from ${escapeHtml(item.source_institution_id)} ù #${escapeHtml(item.id)}</p>
+      </article>`
+      )
+      .join("") || "<p class='muted'>No shared alerts in your inbox yet.</p>";
 }
 
 document.getElementById("selectForm").addEventListener("submit", async (event) => {
@@ -151,7 +217,7 @@ document.getElementById("memberForm").addEventListener("submit", async (event) =
   });
   const data = await res.json();
   status.textContent = res.ok
-    ? `Member #${data.user_id}${data.temporary_password ? ` ∑ temp password ${data.temporary_password}` : ""}`
+    ? `Member #${data.user_id}${data.temporary_password ? ` ù temp password ${data.temporary_password}` : ""}`
     : errMessage(data);
   if (res.ok) refreshPortal();
 });
@@ -208,6 +274,59 @@ document.getElementById("keyForm").addEventListener("submit", async (event) => {
   const data = await res.json();
   status.textContent = res.ok ? `Created key (copy now): ${data.api_key}` : errMessage(data);
   if (res.ok) refreshPortal();
+});
+
+document.getElementById("partnerForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!activeInstitutionId) return;
+  const status = document.getElementById("partnerStatus");
+  const target = document.getElementById("partnerTarget").value.trim().toLowerCase();
+  const res = await fetch("/api/v1/trust-network/relationships", {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({
+      source_institution_id: activeInstitutionId,
+      target_institution_id: target,
+      status: "pending",
+      policy_note: document.getElementById("partnerNote").value.trim(),
+    }),
+  });
+  const data = await res.json();
+  status.textContent = res.ok ? `Relationship #${data.id} created (pending)` : errMessage(data);
+  if (res.ok) {
+    document.getElementById("partnerTarget").value = "";
+    refreshTrustNetwork();
+  }
+});
+
+document.getElementById("alertForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!activeInstitutionId) return;
+  const status = document.getElementById("alertStatus");
+  const targets = document
+    .getElementById("alertTargets")
+    .value.split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+  const res = await fetch("/api/v1/trust-network/exchange/alerts", {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({
+      alert_type: document.getElementById("alertType").value,
+      title: document.getElementById("alertTitle").value.trim(),
+      summary: document.getElementById("alertSummary").value.trim(),
+      severity: document.getElementById("alertSeverity").value,
+      source_institution_id: activeInstitutionId,
+      target_institutions: targets,
+    }),
+  });
+  const data = await res.json();
+  status.textContent = res.ok ? `Shared alert #${data.id}` : errMessage(data);
+  if (res.ok) {
+    document.getElementById("alertTitle").value = "";
+    document.getElementById("alertSummary").value = "";
+    refreshTrustNetwork();
+  }
 });
 
 loadInstitutionOptions();

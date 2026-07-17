@@ -874,3 +874,28 @@ button {
   .panel:not(.active) { opacity: 0.55; }
   .section-nav { display: none; }
 }
+
+/* Portal shell (T3) */
+.portal-shell-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  width: min(960px, calc(100% - 2rem));
+  margin: 0 auto 1rem;
+  padding: 0 0.25rem;
+}
+.portal-shell-tenant {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+}
+.portal-shell-auth {
+  margin-left: auto;
+  font-size: 0.85rem;
+}
+.portal-shell-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}

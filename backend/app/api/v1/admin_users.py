@@ -9,7 +9,7 @@ from ...repositories import get_user, write_audit_log
 from ...schemas import AdminUserCreateIn, AdminUserUpdateIn, UserOut
 from ..deps import get_current_user, require_permission
 
-router = APIRouter(prefix="/admin/users", tags=["admin-users"])
+router = APIRouter(prefix="/admin/users", tags=["pillar-identity"])
 
 
 def _user_out(user: dict) -> UserOut:

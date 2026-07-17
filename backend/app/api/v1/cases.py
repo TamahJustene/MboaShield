@@ -22,7 +22,7 @@ from ...services.notifications import notify_case_assignment
 from ...services.ntoc import build_investigation_workspace
 from ..deps import require_permission
 
-router = APIRouter(prefix="/cases", tags=["cases"])
+router = APIRouter(prefix="/cases", tags=["pillar-investigation"])
 
 
 @router.get("")

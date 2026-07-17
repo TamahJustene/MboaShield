@@ -15,9 +15,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "1.9.0"
+    version: str = "2.4.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
     deployment_profile: str = Field(default="demo", alias="DEPLOYMENT_PROFILE")
+    country_pack: str = Field(default="cm", alias="COUNTRY_PACK")
     tenant_id: str = Field(default="cm", alias="TENANT_ID")
     tenant_display_name: str = Field(default="Cameroon", alias="TENANT_DISPLAY_NAME")
 
@@ -40,6 +41,11 @@ class Settings(BaseSettings):
     threat_high: int = Field(default=70, alias="THREAT_LEVEL_HIGH")
     threat_critical: int = Field(default=85, alias="THREAT_LEVEL_CRITICAL")
     notification_webhook_url: str = Field(default="", alias="NOTIFICATION_WEBHOOK_URL")
+
+    # Interoperability / T4
+    interop_enabled: bool = Field(default=True, alias="INTEROP_ENABLED")
+    webhook_signing_secret: str = Field(default="", alias="WEBHOOK_SIGNING_SECRET")
+    webhook_max_retries: int = Field(default=3, alias="WEBHOOK_MAX_RETRIES")
 
     # Threat intelligence / Phase 8 (compliant sources only)
     intel_enabled: bool = Field(default=True, alias="INTEL_ENABLED")

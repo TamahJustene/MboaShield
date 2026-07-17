@@ -38,6 +38,9 @@ PYTHONPATH=. uvicorn backend.app.main:app --reload --port 8000
 | Doc | Purpose |
 |---|---|
 | [`docs/PRODUCT_STATUS.md`](docs/PRODUCT_STATUS.md) | **Current full product brief — start here for next tasks** |
+| [`docs/MBOASHIELD_2030_INDEX.md`](docs/MBOASHIELD_2030_INDEX.md) | **2030 national infrastructure program** |
+| [`docs/COMPLETE_USER_GUIDE.md`](docs/COMPLETE_USER_GUIDE.md) | **Every feature + how to test** |
+| [`docs/PRESENTER_GUIDE.md`](docs/PRESENTER_GUIDE.md) | **Jury speaking script** |
 | [`docs/manuals/README.md`](docs/manuals/README.md) | **External-audit documentation suite (Phase 15)** |
 | [`docs/E2E_WALKTHROUGH.md`](docs/E2E_WALKTHROUGH.md) | **End-to-end tour + improvement backlog** |
 | [`docs/ACCESS_AND_CONFIG.md`](docs/ACCESS_AND_CONFIG.md) | **Who can access what + how to adjust roles/env** |
@@ -46,10 +49,10 @@ PYTHONPATH=. uvicorn backend.app.main:app --reload --port 8000
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | Public demo URL (Render / tunnel) |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Sprint plan to pitch day |
 | [`docs/GOALS.md`](docs/GOALS.md) | North-star score targets |
-| [`docs/PITCH_DECK.md`](docs/PITCH_DECK.md) | 8-slide pitch script |
+| [`docs/PITCH_DECK.md`](docs/PITCH_DECK.md) | Slide text reference |
 | [`docs/JURY_QA.md`](docs/JURY_QA.md) | Q&A cheat sheet |
 | [`docs/AI_BRIEF.md`](docs/AI_BRIEF.md) | Pass to any AI agent |
-| [`frontend/static/pitch.html`](frontend/static/pitch.html) | Printable pitch deck in browser |
+| [`frontend/static/presentations.html`](frontend/static/presentations.html) | Download MboaShield_SIN2026.pptx |
 
 ## Deploy public demo (for competition form)
 
@@ -59,7 +62,7 @@ PYTHONPATH=. uvicorn backend.app.main:app --reload --port 8000
 ./scripts/public_tunnel.sh
 ```
 
-Pitch deck in browser: http://127.0.0.1:8000/static/pitch.html
+Presentation download: http://127.0.0.1:8000/static/presentations.html
 
 ## License
 

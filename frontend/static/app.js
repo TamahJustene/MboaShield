@@ -170,6 +170,50 @@ function applyLang() {
   document.getElementById("langToggle").textContent = i18n[lang].langBtn;
 }
 
+function renderTrustPanel(data) {
+  if (data.score == null && !data.trust_assessment) return "";
+  const score = data.score ?? data.trust_assessment?.score;
+  const band = data.band ?? data.trust_assessment?.band ?? "medium";
+  const certainty = data.certainty ?? data.trust_assessment?.certainty ?? "none";
+  const signals = data.signals ?? data.trust_assessment?.signals ?? [];
+  const assessmentId = data.id ?? data.trust_assessment?.id;
+  if (score == null) return "";
+  return `
+    <section class="report-section trust-panel">
+      <span class="report-label">National trust assessment</span>
+      <p class="report-copy">
+        <strong>${escapeHtml(score)}/100</strong> trust (${escapeHtml(band)}) · certainty: ${escapeHtml(certainty)}
+      </p>
+      ${
+        signals.length
+          ? `<p class="report-copy muted">${escapeHtml(signals.slice(0, 4).map((s) => s.label).join(" · "))}</p>`
+          : ""
+      }
+      ${
+        assessmentId
+          ? `<p class="report-copy muted"><a href="/docs#/pillar-trust/api_trust_assess_api_v1_trust_assess_post">API</a> assessment #${escapeHtml(assessmentId)}</p>`
+          : ""
+      }
+    </section>
+  `;
+}
+
+function mergeTrustAssessResponse(data) {
+  const legacy = data.legacy && typeof data.legacy === "object" ? data.legacy : {};
+  return {
+    ...legacy,
+    ...data,
+    check_id: data.check_id ?? data.verification_check_id ?? legacy.check_id,
+    trust_assessment: {
+      id: data.id,
+      score: data.score,
+      band: data.band,
+      certainty: data.certainty,
+      signals: data.signals,
+    },
+  };
+}
+
 function renderReport(targetId, data, extra = "") {
   const el = document.getElementById(targetId);
   const meta = panelMeta[targetId] || {};
@@ -220,6 +264,7 @@ function renderReport(targetId, data, extra = "") {
         : ""
     }
     ${verifyBlock}
+    ${renderTrustPanel(data)}
     ${
       data.ai_analysis
         ? `<section class="report-section ai-block">
@@ -298,26 +343,27 @@ document.getElementById("langToggle").onclick = async () => {
 document.getElementById("checkText").onclick = async () => {
   const text = document.getElementById("claimText").value;
   showLoading("textOut", "Analysing rumour and checking trusted sources...");
-  const res = await fetch("/api/v1/check/text", {
+  const res = await fetch("/api/v1/trust/assess", {
     method: "POST",
     headers: userHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ text, lang }),
+    body: JSON.stringify({ object_type: "text", text, lang }),
   });
-  renderReport("textOut", await res.json());
+  renderReport("textOut", mergeTrustAssessResponse(await res.json()));
 };
 
 document.getElementById("checkImp").onclick = async () => {
   showLoading("impOut", "Checking identity signals against the institution registry...");
-  const res = await fetch("/api/v1/check/impersonation", {
+  const res = await fetch("/api/v1/trust/assess", {
     method: "POST",
     headers: userHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
+      object_type: "impersonation",
       name: document.getElementById("impName").value,
       handle: document.getElementById("impHandle").value,
       lang,
     }),
   });
-  renderReport("impOut", await res.json());
+  renderReport("impOut", mergeTrustAssessResponse(await res.json()));
 };
 
 async function analyseAudioFile(file) {
@@ -329,8 +375,9 @@ async function analyseAudioFile(file) {
   const fd = new FormData();
   fd.append("file", file);
   fd.append("lang", lang);
-  const res = await fetch("/api/v1/check/audio", { method: "POST", headers: userHeaders(), body: fd });
-  renderReport("audioOut", await res.json());
+  fd.append("modality", "audio");
+  const res = await fetch("/api/v1/trust/assess/media", { method: "POST", headers: userHeaders(), body: fd });
+  renderReport("audioOut", mergeTrustAssessResponse(await res.json()));
 }
 
 document.getElementById("checkAudio").onclick = async () => {
@@ -359,8 +406,9 @@ document.getElementById("checkMedia").onclick = async () => {
   const fd = new FormData();
   fd.append("file", file);
   fd.append("lang", lang);
-  const res = await fetch("/api/v1/check/media", { method: "POST", headers: userHeaders(), body: fd });
-  renderReport("mediaOut", await res.json());
+  fd.append("modality", "image");
+  const res = await fetch("/api/v1/trust/assess/media", { method: "POST", headers: userHeaders(), body: fd });
+  renderReport("mediaOut", mergeTrustAssessResponse(await res.json()));
 };
 
 document.querySelectorAll(".sample").forEach((btn) => {

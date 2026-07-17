@@ -2,6 +2,81 @@
 
 All notable changes to MboaShield are documented here.
 
+## [2.4.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T4 (interoperability)
+
+#### Added
+- ADR-0005: Interoperability layer
+- `/api/v1/interop/*` — webhooks (HMAC + retry), STIX bundle, CAP export, CSV reports
+- Tables: `webhook_endpoints`, `webhook_deliveries` (Alembic `0017_t4_interop`)
+- Config: `INTEROP_ENABLED`, `WEBHOOK_SIGNING_SECRET`, `WEBHOOK_MAX_RETRIES`
+- Developer portal updated for live interop endpoints
+- Tests: `test_2030_t4.py`
+
+#### Changed
+- Product version 2.4.0; transformation phase **T4**
+- Incident status updates emit `incident.status_changed` webhook events
+
+## [2.3.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T3 (portal platform)
+
+#### Added
+- ADR-0004: Shared portal shell
+- `portal-shell.js` — auth awareness, nav, tenant, FR/EN toggle
+- Developer portal: `/static/developer.html`
+- Shell migration: Analyst, NTOC, Institution portal
+- Tests: `test_2030_t3.py`
+
+#### Changed
+- Product version 2.3.0; transformation phase **T3**
+
+## [2.2.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T2 (National Digital Trust Network)
+
+#### Added
+- ADR-0003: Trust Network model
+- `trust_relationships`, `exchange_channels`, `shared_alerts` (Alembic `0016_t2_trust_network`)
+- APIs: `/api/v1/trust-network/relationships`, `/exchange/channels`, `/exchange/alerts`, `/status`
+- Institution portal: trusted partners + share alert UI
+- Tests: `test_2030_t2.py`
+
+#### Changed
+- Product version 2.2.0; transformation phase **T2**
+
+## [2.1.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T1 (national trust object model)
+
+#### Added
+- ADR-0002: unified `TrustAssessment` resource
+- `POST /api/v1/trust/assess`, `POST /api/v1/trust/assess/media`, `GET /api/v1/trust/assessments/{id}`
+- `trust_assessments` table (Alembic `0015_t1_trust`)
+- Home and citizen UI: national trust panel (legacy risk fields preserved)
+- Tests: `test_2030_t1.py`
+
+#### Changed
+- Product version 2.1.0; transformation phase **T1**
+- Home verifications call the trust API; `/api/v1/check/*` unchanged for partners
+
+## [2.0.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T0 (architecture alignment)
+
+#### Added
+- National platform OpenAPI taxonomy (`pillar-*` tags)
+- `GET /api/v1/program` — 2030 program metadata and pillar catalog
+- `COUNTRY_PACK` configuration and `deploy/country-packs/cm/`
+- Health fields: `program`, `transformation_phase`, `country_pack`
+- Docs: 2030 vision, transformation plan, pillar registry, ADR-0001
+- Tests: `test_2030_t0.py`
+
+#### Changed
+- Product version 2.0.0; Trust API title and OpenAPI description
+- No breaking changes to `/api/v1` paths or request bodies
+
 ## [1.9.0] - 2026-07-16
 
 ### Phase 15 - Documentation Suite

@@ -16,7 +16,7 @@ from ...workers.enqueue import (
 )
 from ..deps import require_permission
 
-router = APIRouter(prefix="/infra", tags=["infra"])
+router = APIRouter(prefix="/infra", tags=["pillar-infrastructure"])
 
 
 def _actor_id(actor: dict | None) -> int | None:

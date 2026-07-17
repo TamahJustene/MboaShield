@@ -6,6 +6,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 
+from ...core.config import get_settings
+from ...core.openapi_pillars import (
+    PILLAR_CATALOG,
+    PILLAR_TRUST,
+    PROGRAM_ID,
+    TRANSFORMATION_PHASE,
+)
 from ...repositories import (
     create_incident_report,
     create_user,
@@ -47,7 +54,28 @@ from ...services.ai_analysis import analyze_case, enrich_result
 from ...services.model_adapters import analyze_audio_with_fallback, analyze_image_with_fallback
 from ..deps import LegacyUserId, require_permission
 
-router = APIRouter(tags=["platform"])
+router = APIRouter(tags=[PILLAR_TRUST])
+
+
+@router.get("/program")
+def api_program_status():
+    """MboaShield 2030 program metadata and national platform catalog."""
+    settings = get_settings()
+    return {
+        "program": PROGRAM_ID,
+        "transformation_phase": TRANSFORMATION_PHASE,
+        "version": settings.version,
+        "country_pack": settings.country_pack,
+        "tenant_id": settings.tenant_id,
+        "tenant_display_name": settings.tenant_display_name,
+        "deployment_profile": settings.deployment_profile,
+        "pillars": PILLAR_CATALOG,
+        "docs": {
+            "vision": "docs/MBOASHIELD_2030_VISION.md",
+            "transformation_plan": "docs/NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md",
+            "pillar_registry": "docs/pillars/PILLAR_REGISTRY.md",
+        },
+    }
 
 
 @router.post("/users", response_model=UserOut)
@@ -138,6 +166,17 @@ def api_update_incident(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if not report:
         raise HTTPException(status_code=404, detail="Incident report not found")
+
+    try:
+        from ...services.interop.webhooks import emit_event
+
+        emit_event(
+            "incident.status_changed",
+            {"incident_id": report_id, "status": body.status},
+            sync_deliver=True,
+        )
+    except Exception:
+        pass
 
     actor = getattr(request.state, "actor", None) or _actor
     write_audit_log(

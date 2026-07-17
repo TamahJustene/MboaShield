@@ -668,3 +668,107 @@ class GovernanceControl(Base):
     created_at: Mapped[str] = mapped_column(String(64), nullable=False)
     updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
 
+
+class TrustAssessment(Base):
+    __tablename__ = "trust_assessments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    object_type: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    object_id: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
+    score: Mapped[int] = mapped_column(Integer, nullable=False)
+    band: Mapped[str] = mapped_column(String(32), nullable=False)
+    certainty: Mapped[str] = mapped_column(String(32), nullable=False, default="none")
+    signals_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    evidence_refs_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    verification_check_id: Mapped[int | None] = mapped_column(
+        ForeignKey("verification_checks.id"), nullable=True, index=True
+    )
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    input_lang: Mapped[str] = mapped_column(String(16), nullable=False, default="en")
+    user_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class TrustRelationship(Base):
+    __tablename__ = "trust_relationships"
+    __table_args__ = (
+        UniqueConstraint(
+            "source_institution_id",
+            "target_institution_id",
+            name="uq_trust_relationship_pair",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    source_institution_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    target_institution_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="pending", index=True)
+    policy_note: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class ExchangeChannel(Base):
+    __tablename__ = "exchange_channels"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    relationship_id: Mapped[int] = mapped_column(
+        ForeignKey("trust_relationships.id"), nullable=False, index=True
+    )
+    channel_type: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    label: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class SharedAlert(Base):
+    __tablename__ = "shared_alerts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    alert_type: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    summary: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    severity: Mapped[str] = mapped_column(String(32), nullable=False, default="medium", index=True)
+    source_institution_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    target_institutions_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    relationship_id: Mapped[int | None] = mapped_column(
+        ForeignKey("trust_relationships.id"), nullable=True, index=True
+    )
+    verification_check_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    trust_assessment_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="shared", index=True)
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class WebhookEndpoint(Base):
+    __tablename__ = "webhook_endpoints"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    url: Mapped[str] = mapped_column(Text, nullable=False)
+    secret: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    events_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    partner_org: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    created_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class WebhookDelivery(Base):
+    __tablename__ = "webhook_deliveries"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    endpoint_id: Mapped[int] = mapped_column(ForeignKey("webhook_endpoints.id"), nullable=False, index=True)
+    event_type: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="pending", index=True)
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_status_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(64), nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(64), nullable=False)
+

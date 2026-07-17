@@ -41,5 +41,5 @@ Grant/revoke via Governance console (`/static/governance.html`) or `POST /api/v1
 
 ## Getting help
 
-- Pitch / jury walkthrough: `/static/pitch.html`
+- Pitch / jury walkthrough: download PPT at `/static/presentations.html`; script in [`../PRESENTER_GUIDE.md`](../PRESENTER_GUIDE.md)
 - Product brief: [`../PRODUCT_STATUS.md`](../PRODUCT_STATUS.md)

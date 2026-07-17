@@ -12,7 +12,7 @@ from ..announcement_store import (
 )
 from ..core.config import get_settings
 
-router = APIRouter(tags=["public-verify"])
+router = APIRouter(tags=["pillar-comms"])
 
 
 def _ensure_comms():

@@ -1,8 +1,29 @@
 # MboaShield Architecture
 
-**Version:** 1.9.0 (Phase 15 documentation suite)  
-**Access / env adjustment:** [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md)  
+**Version:** 2.0.0 (baseline) · **2030 program:** [`MBOASHIELD_2030_INDEX.md`](MBOASHIELD_2030_INDEX.md) · **T0:** [`PHASE_T0_PLAN.md`](PHASE_T0_PLAN.md)  
+**Access / env:** [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md)  
 **Product status:** [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md)
+
+---
+
+## 0. National platforms (2030 view)
+
+The same codebase is organized into **ten national platforms**. See [`pillars/PILLAR_REGISTRY.md`](pillars/PILLAR_REGISTRY.md).
+
+| Platform | Primary API areas (v1) |
+|---|---|
+| Trust | `/check/*`, `/intelligence/*` → future `/trust/*` |
+| Identity | `/auth/*`, `/admin/users`, OIDC/SAML/LDAP |
+| Threat intelligence | `/intel/*` |
+| Investigation | `/cases/*`, `/incidents/*`, government workflow |
+| Evidence | `/evidence/*` |
+| Government communications | `/announcements/*`, `/verify/a/*` |
+| Analytics | `/analytics/*` |
+| AI | `/ai-platform/*` |
+| Governance | `/governance/*` |
+| Partner | `/partners/*`, `/oauth/*` |
+
+Transformation roadmap: [`NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md`](NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md).
 
 ---
 
@@ -98,10 +119,11 @@ Also: `dismissed`; legacy `reviewing` ≡ `analyst_review`.
 
 ## 7. Data & deploy
 
-SQLite default for demo; Postgres via `DATABASE_URL` (gov compose default). Alembic 0001-0014; Render Docker demo; `docker-compose.gov.yml` for Redis/RabbitMQ/workers/observability; Helm under `deploy/helm/mboashield`; CI pytest.
+Alembic 0001-0014; Render Docker demo; `docker-compose.gov.yml`; Helm `deploy/helm/mboashield`; CI pytest.
 
 ---
 
 ## 8. Next
 
-Enterprise Phases 6-15 complete. See [`manuals/README.md`](manuals/README.md) for the audit documentation suite.
+**MboaShield 2030:** Execute transformation phase T0 per [`NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md`](NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md).  
+Operational testing today: [`COMPLETE_USER_GUIDE.md`](COMPLETE_USER_GUIDE.md).

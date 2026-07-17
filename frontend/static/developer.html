@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Developer portal</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div
+    id="portal-shell"
+    data-portal="developer"
+    data-eyebrow="MboaShield 2030 ù T3"
+    data-title="Developer portal"
+    data-tagline="Keys, OpenAPI, and integration roadmap for national systems"
+  ></div>
+
+  <section class="history-panel history-certificates">
+    <h2>Trust API</h2>
+    <p id="devProgramLead" class="summary-lead">Loading program metadata...</p>
+    <div class="chip-row">
+      <a class="btn-primary" href="/docs">OpenAPI / Swagger</a>
+      <a class="btn-ghost" href="/redoc">ReDoc</a>
+      <a class="btn-ghost" href="/api/v1/program">GET /api/v1/program</a>
+      <a class="btn-ghost" href="/health">GET /health</a>
+    </div>
+  </section>
+
+  <div class="history-layout gov-layout">
+    <section class="history-panel">
+      <h2>Partner API keys</h2>
+      <p class="summary-lead">Create keys on the Identity page (admin). Listed here when signed in.</p>
+      <div id="devKeyList" class="history-list"><p class="muted">Loading...</p></div>
+      <a class="btn-ghost" href="/static/identity.html">Manage keys on Identity</a>
+    </section>
+    <section class="history-panel">
+      <h2>Webhooks (T4 live)</h2>
+      <p class="summary-lead">Outbound signed webhooks: catalog, subscriptions, HMAC-SHA256, delivery retries.</p>
+      <ul class="report-copy" id="webhookCatalog">
+        <li><code>GET /api/v1/interop/events</code> - event catalog</li>
+        <li><code>POST /api/v1/interop/webhooks</code> - subscribe</li>
+        <li><code>POST /api/v1/interop/webhooks/emit</code> - test emit</li>
+        <li><code>GET /api/v1/interop/stix/bundle</code> - STIX 2.1 intel pilot</li>
+        <li><code>GET /api/v1/interop/cap/bundle</code> - CAP 1.2 advisories</li>
+        <li><code>GET /api/v1/interop/reports/incidents.csv</code> - national CSV</li>
+      </ul>
+      <p class="muted">Header: <code>X-MboaShield-Signature: sha256=&lt;hex&gt;</code></p>
+    </section>
+  </div>
+
+  <section class="history-panel">
+    <h2>Quick integration</h2>
+    <pre class="out history-detail is-ready" id="devSnippet">Loading snippet...</pre>
+  </section>
+
+  <footer class="app-footer">
+    <p>MboaShield Developer Portal ù manuals in <code>docs/manuals/DEVELOPER.md</code></p>
+  </footer>
+
+  <script src="/static/portal-shell.js"></script>
+  <script src="/static/developer.js"></script>
+</body>
+</html>

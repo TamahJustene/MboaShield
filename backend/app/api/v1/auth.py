@@ -77,7 +77,7 @@ from ...services.identity_federation import (
 )
 from ..deps import get_current_user
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["pillar-identity"])
 
 
 def _client_meta(request: Request) -> tuple[str | None, str | None]:

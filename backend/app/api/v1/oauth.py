@@ -10,7 +10,7 @@ from ...schemas import OAuthClientCreateIn
 from ...services.identity_federation import issue_client_credentials_token
 from ..deps import require_permission
 
-router = APIRouter(tags=["oauth"])
+router = APIRouter(tags=["pillar-partner"])
 
 
 async def _read_payload(request: Request) -> dict:

@@ -1,18 +1,37 @@
 # MboaShield - Product Brief
 
-**Version:** 1.9.0  
-**Live:** https://mboashield.onrender.com  
+**Baseline shipped:** v1.9.0  
+**Strategic program:** **MboaShield 2030** — National Digital Public Infrastructure  
+**Live demo:** https://mboashield.onrender.com  
 
-**v1.9.0** completes the **Documentation Suite**: role manuals, API/architecture/AI governance guides, and an OpenAPI export for auditors.
+---
+
+## Two lenses (both true)
+
+1. **Today (operate & test):** Working national-scale *prototype* with ten capability areas, guides, and PPT — [`COMPLETE_USER_GUIDE.md`](COMPLETE_USER_GUIDE.md).
+2. **Tomorrow (build):** Transformation from demo packaging to **government-grade DPI** — [`MBOASHIELD_2030_INDEX.md`](MBOASHIELD_2030_INDEX.md).
+
+---
+
+## 2030 start here
+
+| Document | Purpose |
+|---|---|
+| [`MBOASHIELD_2030_VISION.md`](MBOASHIELD_2030_VISION.md) | Chief Architect north star |
+| [`NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md`](NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md) | Gaps + phases T0–T7 |
+| [`pillars/PILLAR_REGISTRY.md`](pillars/PILLAR_REGISTRY.md) | Platform → code → API map |
+
+**Next engineering phase:** T1 (2.1.0) — National trust object model (see transformation plan).
+
+---
+
+## Demo & presentation (current)
 
 | Surface | Path |
 |---|---|
-| Manuals index | [`manuals/README.md`](manuals/README.md) |
-| OpenAPI export | [`manuals/openapi.json`](manuals/openapi.json) |
-| Interactive API docs | `/docs` |
+| Product hub | `/static/hub.html` |
+| Complete user guide | [`COMPLETE_USER_GUIDE.md`](COMPLETE_USER_GUIDE.md) |
+| Presenter script | [`PRESENTER_GUIDE.md`](PRESENTER_GUIDE.md) |
+| PPT download | `/static/presentations.html` |
 
-**Enterprise program:** Phases 6-15 complete.
-
-**End-to-end tour:** [`E2E_WALKTHROUGH.md`](E2E_WALKTHROUGH.md) · live hub: `/static/hub.html`
-
-See [`PHASE_15_PLAN.md`](PHASE_15_PLAN.md) and [`CHANGELOG.md`](../CHANGELOG.md).
+See [`CHANGELOG.md`](../CHANGELOG.md).

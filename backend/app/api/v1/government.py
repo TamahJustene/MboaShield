@@ -32,7 +32,7 @@ from ...schemas import (
 from ...services.incident_workflow import workflow_blueprint
 from ..deps import LegacyUserId, require_permission
 
-router = APIRouter(tags=["government"])
+router = APIRouter(tags=["pillar-investigation"])
 
 
 @router.get("/workflow/states")

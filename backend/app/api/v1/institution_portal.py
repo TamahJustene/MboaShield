@@ -39,7 +39,7 @@ from ...schemas import (
 )
 from ..deps import require_permission
 
-router = APIRouter(prefix="/institution-portal", tags=["institution-portal"])
+router = APIRouter(prefix="/institution-portal", tags=["pillar-identity"])
 
 
 def _ensure_portal():

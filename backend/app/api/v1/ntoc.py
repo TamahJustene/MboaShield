@@ -16,7 +16,7 @@ from ...services.ntoc import (
 )
 from ..deps import require_permission
 
-router = APIRouter(tags=["ntoc"])
+router = APIRouter(tags=["pillar-intel"])
 
 
 def _ensure_ntoc():

@@ -8,19 +8,13 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <p class="eyebrow">Phase 10</p>
-      <h1>Institution portal</h1>
-      <p class="tagline">Domains, members, branding, official accounts, scoped API keys, and investigations</p>
-    </div>
-    <div class="header-actions">
-      <a href="/static/institutions.html" class="btn-ghost history-link">Registry</a>
-      <a href="/static/announcements.html" class="btn-ghost history-link">Announcements</a>
-      <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
-      <a href="/" class="btn-ghost history-link">Home</a>
-    </div>
-  </header>
+  <div
+    id="portal-shell"
+    data-portal="institution"
+    data-eyebrow="MboaShield 2030 · T3"
+    data-title="Institution portal"
+    data-tagline="Domains, members, branding, trusted partners, and shared alerts"
+  ></div>
 
   <section class="history-panel history-certificates">
     <h2>Select institution</h2>
@@ -105,12 +99,53 @@
 
       <h2>Investigations</h2>
       <div id="caseList" class="history-list"></div>
+
+      <h2>Trusted partners (Trust Network)</h2>
+      <p class="summary-lead">National Digital Trust Network - establish relationships and share typed alerts.</p>
+      <form id="partnerForm" class="profile-form">
+        <label class="report-label" for="partnerTarget">Partner institution ID</label>
+        <input id="partnerTarget" type="text" list="institutionOptions" placeholder="e.g. antic" required />
+        <label class="report-label" for="partnerNote">Policy note</label>
+        <input id="partnerNote" type="text" placeholder="Bilateral alert sharing pilot" />
+        <button type="submit" class="btn-primary">Request trust relationship</button>
+        <p id="partnerStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <div id="partnerList" class="history-list"></div>
+
+      <h2>Share alert</h2>
+      <form id="alertForm" class="profile-form">
+        <label class="report-label" for="alertType">Alert type</label>
+        <select id="alertType">
+          <option value="impersonation">impersonation</option>
+          <option value="deepfake">deepfake</option>
+          <option value="fraud">fraud</option>
+          <option value="ioc">ioc</option>
+          <option value="advisory">advisory</option>
+        </select>
+        <label class="report-label" for="alertTitle">Title</label>
+        <input id="alertTitle" type="text" required placeholder="Suspected MINPOSTEL impersonation" />
+        <label class="report-label" for="alertSummary">Summary</label>
+        <textarea id="alertSummary" rows="2" placeholder="Handle @minpostel_fake active on X"></textarea>
+        <label class="report-label" for="alertSeverity">Severity</label>
+        <select id="alertSeverity">
+          <option value="low">low</option>
+          <option value="medium" selected>medium</option>
+          <option value="high">high</option>
+          <option value="critical">critical</option>
+        </select>
+        <label class="report-label" for="alertTargets">Target institutions (comma-separated)</label>
+        <input id="alertTargets" type="text" placeholder="antic, camtel" />
+        <button type="submit" class="btn-ghost">Share alert</button>
+        <p id="alertStatus" class="demo-status muted" aria-live="polite"></p>
+      </form>
+      <div id="alertList" class="history-list"></div>
     </section>
   </div>
 
   <footer class="app-footer">
     <p>Institution-scoped keys use prefix <code>msi_</code>. Partner keys remain <code>msb_</code>.</p>
   </footer>
+  <script src="/static/portal-shell.js"></script>
   <script src="/static/institution-portal.js"></script>
 </body>
 </html>

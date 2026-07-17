@@ -46,5 +46,5 @@ def test_intelligence_includes_calibrated_score_field(client):
 def test_health_reports_phase12_version(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "1.9.0"
+    assert health["version"] == "2.4.0"
     assert health["advanced_ai"] is True

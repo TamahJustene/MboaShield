@@ -26,7 +26,7 @@ from ...schemas import IntelSourceIn, IntelSourceUpdateIn
 from ...services.intel.connectors import ALLOWED_SOURCE_CLASSES
 from ..deps import require_permission
 
-router = APIRouter(prefix="/intel", tags=["intel"])
+router = APIRouter(prefix="/intel", tags=["pillar-intel"])
 
 
 def _ensure_intel():
