@@ -1,0 +1,21 @@
+{
+  "pack_id": "template",
+  "name": "Country Pack Template",
+  "iso_country": "XX",
+  "default_tenant_id": "xx",
+  "default_locale": "en",
+  "supported_locales": ["en"],
+  "currency_display": "XXX",
+  "institutions_seed": "data/institutions.json",
+  "default_sectors": ["election", "health", "finance"],
+  "legal": {
+    "data_protection_note": "Replace with local privacy law summary and counsel review.",
+    "lawful_basis": "To be defined",
+    "retention_default_days": 365
+  },
+  "idp": {
+    "preferred": ["oidc", "saml"],
+    "notes": "Point OIDC/SAML env vars at the national IdP."
+  },
+  "notes": "Copy this directory to deploy/country-packs/{iso}/ and edit pack.json."
+}

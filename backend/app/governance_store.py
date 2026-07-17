@@ -115,6 +115,41 @@ DEFAULT_CONTROLS: list[dict[str, str]] = [
     },
 ]
 
+# Assessable mappings (not certification). T7.
+CONTROL_FRAMEWORK_MAP: dict[str, dict[str, list[str]]] = {
+    "CTL-AI-CERTAINTY": {
+        "iso27001": ["A.8.28", "A.5.8"],
+        "nist_csf": ["ID.RA-01", "GV.RM-01"],
+    },
+    "CTL-AI-HUMAN": {
+        "iso27001": ["A.5.2", "A.5.36"],
+        "nist_csf": ["GV.OV-01", "DE.CM-01"],
+    },
+    "CTL-PRIV-CONSENT": {
+        "iso27001": ["A.5.34", "A.8.11"],
+        "nist_csf": ["GV.OC-03", "PR.DS-01"],
+    },
+    "CTL-COMP-AUDIT": {
+        "iso27001": ["A.8.15", "A.5.33"],
+        "nist_csf": ["ID.IM-01", "DE.AE-03"],
+    },
+}
+
+
+def framework_map() -> dict[str, Any]:
+    controls = list_controls()
+    mapped = []
+    for item in controls:
+        cid = item["control_id"]
+        frameworks = CONTROL_FRAMEWORK_MAP.get(cid, {"iso27001": [], "nist_csf": []})
+        mapped.append({**item, "frameworks": frameworks})
+    return {
+        "note": "Framework IDs are assessable mappings, not ISO/NIST certification.",
+        "controls": mapped,
+        "count": len(mapped),
+        "frameworks_supported": ["iso27001", "nist_csf"],
+    }
+
 DEFAULT_MODEL_CARDS: list[dict[str, Any]] = [
     {
         "card_id": "mc-text-nlp-v1",

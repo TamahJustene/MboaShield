@@ -52,6 +52,20 @@ POST /api/v1/ai-platform/evaluation/run
 
 Never auto-publish advisories from AI alone.
 
+## Disaster recovery (T6)
+
+See [`DR_RUNBOOK.md`](../DR_RUNBOOK.md) for RPO/RTO targets and restore drill checklist.
+See [`HA_AND_SCALE.md`](../HA_AND_SCALE.md) for Helm multi-AZ and Postgres HA patterns.
+
+Load proof:
+
+```bash
+locust -f scripts/load/locustfile.py --host http://127.0.0.1:8000 --headless -u 20 -r 5 -t 2m
+k6 run -e BASE_URL=http://127.0.0.1:8000 scripts/load/trust_assess.js
+```
+
+Resilience metadata: `GET /api/v1/infra/resilience`
+
 ## On-call notes
 
 - Free Render sleeps after idle; wake `/health` before demos.

@@ -31,3 +31,6 @@ Create `docs/adr/NNNN-title.md`:
 | [0003](0003-national-digital-trust-network.md) | National Digital Trust Network | Accepted |
 | [0004](0004-shared-portal-shell.md) | Shared portal shell | Accepted |
 | [0005](0005-interoperability-layer.md) | Interoperability layer (webhooks, STIX, CAP) | Accepted |
+| [0006](0006-zero-trust-national-identity.md) | Zero-trust national identity default | Accepted |
+| [0007](0007-resilience-and-scale-proof.md) | Resilience and scale proof posture | Accepted |
+| [0008](0008-country-packs-and-sectors.md) | Country packs and sector modules | Accepted |

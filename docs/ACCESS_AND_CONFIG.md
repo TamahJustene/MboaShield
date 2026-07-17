@@ -16,7 +16,9 @@ Related: [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) � [`ARCHITECTURE.md`](ARCHIT
 
 Code: `backend/app/api/deps.py` ? `require_permission()`.
 
-**Profiles:** `DEPLOYMENT_PROFILE=demo|government` (affects security warnings).
+**Profiles:** `DEPLOYMENT_PROFILE=demo|government|national` (affects security warnings).
+
+**National default:** copy `deploy/profiles/national.env` (`AUTH_ENFORCE=true`). See `docs/manuals/KMS_AND_SECRETS.md` and SCIM at `/scim/v2/Users`.
 
 ---
 

@@ -75,5 +75,5 @@ def test_announcement_publish_verify_public_and_revoke(client):
 def test_health_reports_phase11_version(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.4.0"
+    assert health["version"] == "2.7.0"
     assert health["verified_comms"] is True

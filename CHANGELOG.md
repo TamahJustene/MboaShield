@@ -2,6 +2,55 @@
 
 All notable changes to MboaShield are documented here.
 
+## [2.7.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T7 (country packs & sectors)
+
+#### Added
+- ADR-0008: Country packs and sector modules
+- Expanded CM + template country packs (legal, IdP, default sectors)
+- `GET /api/v1/country-pack`, `GET /api/v1/sectors`
+- Sector dashboard `/static/sectors.html`
+- Governance ISO/NIST framework map: `GET /api/v1/governance/framework-map`
+- Config: `SECTORS_ENABLED`
+- Tests: `test_2030_t7.py`
+
+#### Changed
+- Product version 2.7.0; transformation phase **T7**
+- MboaShield 2030 transformation plan phases T0-T7 complete
+
+## [2.6.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T6 (resilience & scale proof)
+
+#### Added
+- ADR-0007: Resilience and scale proof
+- Locust + k6 load scenarios under `scripts/load/`
+- `docs/HA_AND_SCALE.md`, `docs/DR_RUNBOOK.md` (RPO/RTO + drill checklist)
+- `GET /api/v1/infra/resilience`
+- Tests: `test_2030_t6.py`
+
+#### Changed
+- Product version 2.6.0; transformation phase **T6**
+- Helm chart image tag bumped; multi-AZ notes in values
+
+## [2.5.0] - 2026-07-17
+
+### MboaShield 2030 — Phase T5 (zero-trust & identity scale)
+
+#### Added
+- ADR-0006: Zero-trust national identity default
+- `deploy/profiles/national.env` (`AUTH_ENFORCE=true` national default)
+- Zero-trust checklist on `/api/v1/auth/security-status`
+- SCIM 2.0 read-only: `/scim/v2/Users`, `/scim/v2/ServiceProviderConfig`
+- Postgres RLS template: `deploy/sql/rls_tenant.sql`
+- KMS guide: `docs/manuals/KMS_AND_SECRETS.md`
+- Tests: `test_2030_t5.py`
+
+#### Changed
+- Product version 2.5.0; transformation phase **T5**
+- Demo soft-auth default unchanged for public Render
+
 ## [2.4.0] - 2026-07-17
 
 ### MboaShield 2030 — Phase T4 (interoperability)

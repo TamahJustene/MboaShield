@@ -8,8 +8,8 @@ from backend.app.services.interop.webhooks import sign_payload, verify_signature
 def test_health_reports_t4(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.4.0"
-    assert health["transformation_phase"] == "T4"
+    assert health["version"] == "2.7.0"
+    assert health["transformation_phase"] == "T7"
 
 
 def test_interop_status_and_events(client):

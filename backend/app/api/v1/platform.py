@@ -51,6 +51,7 @@ from ...schemas import (
 )
 from ...services import ambassadors, impersonation, source_verify, text_check
 from ...services.ai_analysis import analyze_case, enrich_result
+from ...services.country_pack import list_available_packs, load_country_pack, sectors_summary
 from ...services.model_adapters import analyze_audio_with_fallback, analyze_image_with_fallback
 from ..deps import LegacyUserId, require_permission
 
@@ -61,6 +62,7 @@ router = APIRouter(tags=[PILLAR_TRUST])
 def api_program_status():
     """MboaShield 2030 program metadata and national platform catalog."""
     settings = get_settings()
+    sectors = sectors_summary()
     return {
         "program": PROGRAM_ID,
         "transformation_phase": TRANSFORMATION_PHASE,
@@ -70,12 +72,27 @@ def api_program_status():
         "tenant_display_name": settings.tenant_display_name,
         "deployment_profile": settings.deployment_profile,
         "pillars": PILLAR_CATALOG,
+        "sectors_enabled": sectors["enabled_ids"],
         "docs": {
             "vision": "docs/MBOASHIELD_2030_VISION.md",
             "transformation_plan": "docs/NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md",
             "pillar_registry": "docs/pillars/PILLAR_REGISTRY.md",
         },
     }
+
+
+@router.get("/country-pack")
+def api_country_pack():
+    pack = load_country_pack()
+    return {
+        "pack": pack,
+        "available_packs": list_available_packs(),
+    }
+
+
+@router.get("/sectors")
+def api_sectors():
+    return sectors_summary()
 
 
 @router.post("/users", response_model=UserOut)

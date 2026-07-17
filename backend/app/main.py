@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .api import api_router
 from .api.public_verify import router as public_verify_router
+from .api.v1.scim import router as scim_router
 from .ai_store import ensure_builtin_models
 from .governance_store import ensure_governance_seed
 from .core.config import ROOT, VERSION, get_settings
@@ -120,6 +121,7 @@ def create_app() -> FastAPI:
             "metrics": settings.metrics_enabled,
             "workers": workers_active(),
             "governance": settings.governance_enabled,
+            "scim_read_only": True,
             "identity": {
                 "mfa_ready": True,
                 "oidc_ready": bool(
@@ -152,6 +154,7 @@ def create_app() -> FastAPI:
 
     application.include_router(api_router)
     application.include_router(public_verify_router)
+    application.include_router(scim_router)
 
     @application.get("/")
     def index():

@@ -7,5 +7,15 @@
   "supported_locales": ["fr", "en"],
   "currency_display": "XAF",
   "institutions_seed": "data/institutions.json",
-  "notes": "MboaShield 2030 country pack template for Cameroon. Copy deploy/country-packs/template for new countries."
+  "default_sectors": ["election", "health", "finance"],
+  "legal": {
+    "data_protection_note": "Align processing with applicable Cameroon data protection and sector regulations; DPIA for national scale.",
+    "lawful_basis": "Public interest / CERT mandate (configure per deployment counsel)",
+    "retention_default_days": 365
+  },
+  "idp": {
+    "preferred": ["oidc", "saml"],
+    "notes": "Configure OIDC_ISSUER / SAML IdP for MINPOSTEL or national IdP. See deploy/profiles/national.env."
+  },
+  "notes": "Reference country pack for MboaShield 2030. Copy template/ for new countries."
 }

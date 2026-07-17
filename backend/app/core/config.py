@@ -15,12 +15,16 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "MboaShield"
-    version: str = "2.4.0"
+    version: str = "2.7.0"
     environment: str = Field(default="dev", alias="MBOASHIELD_ENV")
     deployment_profile: str = Field(default="demo", alias="DEPLOYMENT_PROFILE")
     country_pack: str = Field(default="cm", alias="COUNTRY_PACK")
     tenant_id: str = Field(default="cm", alias="TENANT_ID")
     tenant_display_name: str = Field(default="Cameroon", alias="TENANT_DISPLAY_NAME")
+    sectors_enabled: str = Field(
+        default="election,health,finance",
+        alias="SECTORS_ENABLED",
+    )
 
     database_url: str = Field(default="", alias="DATABASE_URL")
     sqlite_path: str = Field(default="", alias="MBOASHIELD_DB_PATH")

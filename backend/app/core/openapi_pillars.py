@@ -76,4 +76,4 @@ PILLAR_CATALOG: list[dict[str, str]] = [
 ]
 
 PROGRAM_ID = "mboashield-2030"
-TRANSFORMATION_PHASE = "T4"
+TRANSFORMATION_PHASE = "T7"

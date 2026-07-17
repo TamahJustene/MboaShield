@@ -107,3 +107,31 @@ def api_enqueue_ai_eval(
         details={"mode": result.get("mode"), "dataset": dataset},
     )
     return result
+
+
+@router.get("/resilience")
+def api_infra_resilience():
+    """Published resilience targets and scale-proof artifacts (T6)."""
+    settings = get_settings()
+    return {
+        "version": settings.version,
+        "transformation_phase": "T6",
+        "targets": {
+            "rpo_minutes": 15,
+            "rto_hours": 4,
+            "api_min_replicas": 2,
+            "trust_assess_p95_ms_budget": 3000,
+        },
+        "load_tests": {
+            "locust": "scripts/load/locustfile.py",
+            "k6": "scripts/load/trust_assess.js",
+        },
+        "docs": {
+            "ha": "docs/HA_AND_SCALE.md",
+            "dr": "docs/DR_RUNBOOK.md",
+            "adr": "docs/adr/0007-resilience-and-scale-proof.md",
+        },
+        "helm_chart": "deploy/helm/mboashield",
+        "database": "postgresql" if settings.resolved_database_url().startswith("postgresql") else "sqlite",
+        "note": "Targets are pilot objectives; run Locust/k6 on target hardware before go-live.",
+    }

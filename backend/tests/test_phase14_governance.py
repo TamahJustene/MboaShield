@@ -49,5 +49,5 @@ def test_compliance_dashboard(client):
 def test_health_reports_phase14(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.4.0"
+    assert health["version"] == "2.7.0"
     assert health["governance"] is True

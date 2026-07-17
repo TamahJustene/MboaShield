@@ -1,8 +1,11 @@
 replicaCount: 2
 
+# Multi-AZ: set replicaCount/HPA minReplicas >= 2 and use zone topology spread
+# in a cluster overlay. See docs/HA_AND_SCALE.md (T6).
+
 image:
   repository: mboashield
-  tag: "1.7.0"
+  tag: "2.6.0"
   pullPolicy: IfNotPresent
 
 service:

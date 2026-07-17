@@ -10,6 +10,7 @@ from ...core.config import get_settings
 from ...governance_store import (
     compliance_dashboard,
     ensure_governance_seed,
+    framework_map,
     list_consents,
     list_controls,
     list_dataset_cards,
@@ -161,6 +162,16 @@ def api_controls(
     _ensure_gov()
     ensure_governance_seed()
     return {"items": list_controls()}
+
+
+@router.get("/framework-map")
+def api_framework_map(
+    _actor: Annotated[dict | None, Depends(require_permission("governance:read"))] = None,
+):
+    """ISO/NIST assessable mappings for governance controls (T7 - not certification)."""
+    _ensure_gov()
+    ensure_governance_seed()
+    return framework_map()
 
 
 @router.get("/compliance")

@@ -186,13 +186,10 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 ## 6. Immediate next step (recommended)
 
-**Execute T5** on branch `program/2030-t5`:
+**Program baseline complete:** Transformation phases **T0-T7** (releases 2.0.0-2.7.0) are delivered.
 
-1. Document `AUTH_ENFORCE=true` as national default profile.
-2. SCIM users read stub.
-3. Postgres RLS by tenant guide.
+Further work is continuous improvement (full SCIM write, TAXII server, live DR drills), not a new T-phase gate.
 
-T4 (2.4.0) is complete.
 
 ---
 

@@ -11,9 +11,9 @@
 
 | Item | Value |
 |---|---|
-| Shipped baseline | v2.4.0 (T4 complete) |
+| Shipped baseline | v2.6.0 (T6 complete) |
 | Active program | **MboaShield 2030** (T0�T7) |
-| Next transformation phase | **T5** - Zero-trust & identity scale (target 2.5.0) |
+| Next transformation phase | **T7** - Country packs & sector modules (target 2.7.0) |
 
 ---
 

@@ -6,15 +6,15 @@ from __future__ import annotations
 def test_health_reports_t1(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.4.0"
-    assert health["transformation_phase"] == "T4"
+    assert health["version"] == "2.7.0"
+    assert health["transformation_phase"] == "T7"
 
 
 def test_program_endpoint_t1(client):
     test_client, _ = client
     body = test_client.get("/api/v1/program").json()
-    assert body["transformation_phase"] == "T4"
-    assert body["version"] == "2.4.0"
+    assert body["transformation_phase"] == "T7"
+    assert body["version"] == "2.7.0"
 
 
 def test_trust_assess_text(client):

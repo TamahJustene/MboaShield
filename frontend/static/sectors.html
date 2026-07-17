@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>MboaShield - Sector dashboards</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div
+    id="portal-shell"
+    data-portal="developer"
+    data-eyebrow="MboaShield 2030 � T7"
+    data-title="Sector modules"
+    data-tagline="Election, health, and finance trust monitoring toggles"
+  ></div>
+
+  <section class="history-panel history-certificates">
+    <h2>Active country pack</h2>
+    <div id="packBox" class="out history-detail empty-detail">Loading country pack...</div>
+  </section>
+
+  <section class="history-panel">
+    <h2>Sectors</h2>
+    <p class="summary-lead">Enabled via <code>SECTORS_ENABLED</code> or the country pack defaults.</p>
+    <div id="sectorList" class="history-list"></div>
+  </section>
+
+  <footer class="app-footer">
+    <p><a href="/static/national.html">National analytics</a> � <a href="/static/governance.html">Governance</a></p>
+  </footer>
+  <script src="/static/portal-shell.js"></script>
+  <script src="/static/sectors.js"></script>
+</body>
+</html>

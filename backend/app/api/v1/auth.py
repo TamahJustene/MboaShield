@@ -22,6 +22,7 @@ from ...core.security import (
     validate_password_strength,
     verify_totp,
 )
+from ...core.zero_trust import zero_trust_checklist
 from ...identity_store import (
     create_auth_session,
     create_password_reset_token,
@@ -237,6 +238,12 @@ def security_status():
         "trusted_devices_ready": True,
         "password_recovery_ready": True,
         "admin_users_ready": True,
+        "zero_trust": zero_trust_checklist(),
+        "scim": {
+            "read_only": True,
+            "service_provider_config": "/scim/v2/ServiceProviderConfig",
+            "users": "/scim/v2/Users",
+        },
     }
 
 
