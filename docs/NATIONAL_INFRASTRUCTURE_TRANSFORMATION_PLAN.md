@@ -188,7 +188,9 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 **Program baseline complete:** Transformation phases **T0-T7** (releases 2.0.0-2.7.0) are delivered.
 
-Further work is continuous improvement (full SCIM write, TAXII server, live DR drills), not a new T-phase gate.
+**CI-1 (2.8.0)** added TAXII read pilot, SCIM user create, and additional portal-shell migrations.
+
+Further work is continuous improvement (CI-2+): SCIM PATCH/DELETE, TAXII write, live DR drills.
 
 
 ---

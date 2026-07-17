@@ -240,9 +240,15 @@ def security_status():
         "admin_users_ready": True,
         "zero_trust": zero_trust_checklist(),
         "scim": {
-            "read_only": True,
+            "read_only": False,
+            "create_supported": True,
             "service_provider_config": "/scim/v2/ServiceProviderConfig",
             "users": "/scim/v2/Users",
+        },
+        "taxii": {
+            "read_only": True,
+            "discovery": "/taxii2/",
+            "collections": "/taxii2/collections/",
         },
     }
 

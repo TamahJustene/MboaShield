@@ -11,9 +11,9 @@
 
 | Item | Value |
 |---|---|
-| Shipped baseline | v2.6.0 (T6 complete) |
+| Shipped baseline | v2.8.0 (T0-T7 + CI-1) |
 | Active program | **MboaShield 2030** (T0�T7) |
-| Next transformation phase | **T7** - Country packs & sector modules (target 2.7.0) |
+| Next transformation phase | Continuous improvement (CI-2+) |
 
 ---
 
@@ -35,6 +35,7 @@ Phases 6�15 delivered identity, NTOC, intel, vault, institution portal, verifi
 | T5 | 2.5.0 | Zero-trust, SCIM, RLS |
 | T6 | 2.6.0 | Load, HA, DR proof |
 | T7 | 2.7.0 | Country packs, sector modules |
+| CI-1 | 2.8.0 | TAXII read, SCIM create, more portal shell |
 
 ---
 

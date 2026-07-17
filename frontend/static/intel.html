@@ -8,19 +8,14 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <p class="eyebrow">Phase 8 intel</p>
-      <h1>Threat intelligence</h1>
-      <p class="tagline">Compliant sources only: RSS, official APIs, open data, partner webhooks</p>
-    </div>
-    <div class="header-actions">
-      <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
-      <a href="/" class="btn-ghost history-link">Home</a>
-    </div>
-  </header>
-
-  <section class="history-panel history-certificates">
+    <div
+    id="portal-shell"
+    data-portal="intel"
+    data-eyebrow="MboaShield 2030 · CI-1"
+    data-title="Threat intelligence"
+    data-tagline="Compliant sources only: RSS, official APIs, open data, partner webhooks"
+  ></div>
+<section class="history-panel history-certificates">
     <h2>Policy</h2>
     <div id="policyBox" class="report-copy muted">Loading allowed source classes...</div>
   </section>
@@ -63,6 +58,7 @@
   <footer class="app-footer">
     <p>Scraping that violates platform terms is forbidden by design.</p>
   </footer>
+  <script src="/static/portal-shell.js"></script>
   <script src="/static/intel.js"></script>
 </body>
 </html>

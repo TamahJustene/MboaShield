@@ -8,7 +8,7 @@ from backend.app.core.openapi_pillars import PILLAR_CATALOG, PROGRAM_ID, TRANSFO
 def test_health_reports_2030_t0(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.7.0"
+    assert health["version"] == "2.8.0"
     assert health["program"] == PROGRAM_ID
     assert health["transformation_phase"] == TRANSFORMATION_PHASE
     assert health["country_pack"] == "cm"
@@ -20,7 +20,7 @@ def test_program_endpoint(client):
     assert res.status_code == 200
     body = res.json()
     assert body["program"] == PROGRAM_ID
-    assert body["transformation_phase"] == "T7"
+    assert body["transformation_phase"] == "CI-1"
     assert len(body["pillars"]) == len(PILLAR_CATALOG)
     assert body["country_pack"] == "cm"
 

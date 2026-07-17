@@ -10,8 +10,8 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_health_reports_t3(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.7.0"
-    assert health["transformation_phase"] == "T7"
+    assert health["version"] == "2.8.0"
+    assert health["transformation_phase"] == "CI-1"
 
 
 def test_portal_shell_and_developer_static(client):

@@ -2,6 +2,20 @@
 
 All notable changes to MboaShield are documented here.
 
+## [2.8.0] - 2026-07-17
+
+### Continuous improvement CI-1 (post T7)
+
+#### Added
+- TAXII 2.1 read pilot: `/taxii2/` discovery, collections, objects
+- SCIM `POST /scim/v2/Users` (local user create)
+- Portal shell on Intel, Investigation, National dashboards
+- `docs/PHASE_CI1_PLAN.md`
+- Tests: `test_2030_ci1.py`
+
+#### Changed
+- Product version 2.8.0; transformation phase **CI-1**
+
 ## [2.7.0] - 2026-07-17
 
 ### MboaShield 2030 — Phase T7 (country packs & sectors)

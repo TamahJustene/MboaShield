@@ -8,20 +8,14 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <p class="eyebrow">National Digital Trust</p>
-      <h1>National Trust Dashboard</h1>
-      <p class="tagline">Threat trends, regional pressure, response performance, and citizen participation</p>
-    </div>
-    <div class="header-actions">
-      <a href="/static/ntoc.html" class="btn-ghost history-link">NTOC</a>
-      <a href="/static/analyst.html" class="btn-ghost history-link">Analyst</a>
-      <a href="/" class="btn-ghost history-link">Home</a>
-    </div>
-  </header>
-
-  <section class="history-panel history-certificates">
+    <div
+    id="portal-shell"
+    data-portal="national"
+    data-eyebrow="MboaShield 2030 · CI-1"
+    data-title="National Trust Dashboard"
+    data-tagline="Threat trends, regional pressure, response performance, and citizen participation"
+  ></div>
+<section class="history-panel history-certificates">
     <div class="panel-heading-row">
       <h2>Overview</h2>
       <button type="button" id="refreshNational" class="btn-ghost">Refresh</button>
@@ -94,6 +88,7 @@
       <a href="/static/reports.html">Incidents</a>
     </p>
   </footer>
+  <script src="/static/portal-shell.js"></script>
   <script src="/static/national.js"></script>
 </body>
 </html>

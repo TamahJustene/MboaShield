@@ -1,20 +1,21 @@
-"""SCIM 2.0 read-only Users stub (MboaShield 2030 T5)."""
+"""SCIM 2.0 Users - read + create (CI-1)."""
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from ...core.openapi_pillars import PILLAR_IDENTITY
-from ...identity_store import list_users
+from ...identity_store import admin_create_user, list_users
+from ...repositories import write_audit_log
 from ..deps import require_permission
 
 router = APIRouter(prefix="/scim/v2", tags=[PILLAR_IDENTITY])
 
 
-def _to_scim_user(user: dict) -> dict:
-    return {
+def _to_scim_user(user: dict, *, include_temp_password: bool = False) -> dict:
+    payload = {
         "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
         "id": str(user["id"]),
         "userName": user.get("email") or f"user-{user['id']}",
@@ -37,6 +38,11 @@ def _to_scim_user(user: dict) -> dict:
             "mfa_enabled": bool(user.get("mfa_enabled", False)),
         },
     }
+    if include_temp_password and user.get("temporary_password"):
+        payload["urn:ietf:params:scim:schemas:extension:mboashield:2.0:User"][
+            "temporary_password"
+        ] = user["temporary_password"]
+    return payload
 
 
 @router.get("/ServiceProviderConfig")
@@ -61,9 +67,9 @@ def scim_service_provider_config():
         ],
         "meta": {"resourceType": "ServiceProviderConfig", "location": "/scim/v2/ServiceProviderConfig"},
         "x_mboashield": {
-            "mode": "read_only_stub",
-            "phase": "T5",
-            "note": "User provisioning writes are not enabled in this release.",
+            "mode": "read_and_create",
+            "phase": "CI-1",
+            "note": "POST /Users creates local accounts. PATCH/DELETE not enabled.",
         },
     }
 
@@ -77,7 +83,6 @@ def scim_list_users(
 ):
     q = None
     if filter and "userName eq" in filter:
-        # minimal filter parse: userName eq "email"
         parts = filter.split('"')
         if len(parts) >= 2:
             q = parts[1]
@@ -107,9 +112,46 @@ def scim_get_user(
     return _to_scim_user(match)
 
 
-@router.post("/Users")
-def scim_create_user_not_implemented():
-    raise HTTPException(
-        status_code=501,
-        detail="SCIM write provisioning is not enabled (T5 read-only stub)",
+@router.post("/Users", status_code=201)
+def scim_create_user(
+    body: dict[str, Any],
+    request: Request,
+    actor: Annotated[dict | None, Depends(require_permission("users:manage"))] = None,
+):
+    user_name = (body.get("userName") or "").strip().lower()
+    display_name = (body.get("displayName") or user_name or "SCIM User").strip()
+    emails = body.get("emails") or []
+    if not user_name and emails:
+        user_name = str(emails[0].get("value") or "").strip().lower()
+    if not user_name or "@" not in user_name:
+        raise HTTPException(status_code=400, detail="userName (email) required")
+
+    role = "citizen"
+    roles = body.get("roles") or []
+    if roles and isinstance(roles, list) and roles[0].get("value"):
+        role = str(roles[0]["value"]).strip().lower()
+    if role not in {"citizen", "analyst", "institution_admin", "admin"}:
+        raise HTTPException(status_code=400, detail="Unsupported role for SCIM create")
+
+    try:
+        created = admin_create_user(
+            display_name=display_name,
+            email=user_name,
+            role=role,
+            password=None,
+            invited_by_user_id=actor["id"] if actor else None,
+            must_reset_password=True,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    write_audit_log(
+        action="scim.user_create",
+        actor_user_id=actor["id"] if actor else None,
+        actor_role=actor["role"] if actor else None,
+        resource_type="user",
+        resource_id=str(created["id"]),
+        details={"email": user_name, "role": role},
+        ip_address=request.client.host if request.client else None,
     )
+    return _to_scim_user(created, include_temp_password=True)

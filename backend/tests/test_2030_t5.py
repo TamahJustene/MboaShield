@@ -10,9 +10,9 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_health_reports_t5(client):
     test_client, _ = client
     health = test_client.get("/health").json()
-    assert health["version"] == "2.7.0"
-    assert health["transformation_phase"] == "T7"
-    assert health["scim_read_only"] is True
+    assert health["version"] == "2.8.0"
+    assert health["transformation_phase"] == "CI-1"
+    assert health["scim_read_only"] is False
 
 
 def test_zero_trust_checklist_on_security_status(client):
@@ -30,7 +30,7 @@ def test_scim_service_provider_and_users(client):
     test_client, _ = client
     cfg = test_client.get("/scim/v2/ServiceProviderConfig")
     assert cfg.status_code == 200
-    assert cfg.json()["x_mboashield"]["mode"] == "read_only_stub"
+    assert cfg.json()["x_mboashield"]["mode"] == "read_and_create"
 
     users = test_client.get("/scim/v2/Users")
     assert users.status_code == 200
@@ -39,7 +39,7 @@ def test_scim_service_provider_and_users(client):
     assert "Resources" in payload
 
     create = test_client.post("/scim/v2/Users", json={})
-    assert create.status_code == 501
+    assert create.status_code == 400
 
 
 def test_national_profile_and_docs_exist():
