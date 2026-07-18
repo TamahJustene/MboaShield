@@ -1,10 +1,11 @@
-# MboaShield — Complete user and testing guide (v1.9.0)
+# MboaShield - Complete user and testing guide (v2.8.0)
 
-**For:** Justene Nkwagoh Tamah and anyone demoing, testing, or auditing the platform.  
-**Live demo:** https://mboashield.onrender.com  
-**Navigation hub:** https://mboashield.onrender.com/static/hub.html  
-**Presentation (PPT):** https://mboashield.onrender.com/static/presentations.html  
+**For:** Justene Nkwagoh Tamah and anyone demoing, testing, or auditing the platform.
+**Live demo:** https://mboashield.onrender.com
+**Navigation hub:** https://mboashield.onrender.com/static/hub.html
+**Presentation (PPT):** https://mboashield.onrender.com/static/presentations.html
 **How to explain to jury:** [`PRESENTER_GUIDE.md`](PRESENTER_GUIDE.md)
+**Presentation command center:** [`PRESENTATION_MASTER_GUIDE.md`](PRESENTATION_MASTER_GUIDE.md)
 
 ---
 
@@ -12,12 +13,12 @@
 
 | Item | Value |
 |---|---|
-| Product version | Check `/health` ? `"version":"1.9.0"` |
+| Product version | Check `/health` for `"version":"2.8.0"` and `"transformation_phase":"CI-1"` |
 | Demo auth | `AUTH_ENFORCE=false` on Render (no login required for most UIs) |
 | Database | SQLite on Render (resets if ephemeral disk clears) |
 | Trust rule | All AI outputs use `certainty: "none"` unless a model card says otherwise |
 
-**Wake Render:** Open `/health` once if the site slept (30–60s first load).
+**Wake Render:** Open `/health` once if the site slept (30-60s first load).
 
 **Local:**
 
@@ -28,7 +29,7 @@ cd mboashield && ./scripts/run_demo.sh
 
 ---
 
-## 2. Master map — every screen
+## 2. Master map - every screen
 
 | # | Page | URL path | Primary role |
 |---|---|---|---|
@@ -54,10 +55,12 @@ cd mboashield && ./scripts/run_demo.sh
 | 20 | API docs | `/docs` | Developer |
 | 21 | Health | `/health` | Ops |
 | 22 | Metrics | `/metrics` | Ops (Prometheus) |
+| 23 | Developer portal | `/static/developer.html` | Developer / integration partner |
+| 24 | Sector modules | `/static/sectors.html` | Government / sector operator |
 
 ---
 
-## 3. Grand Jury demo (home) — step by step
+## 3. Grand Jury demo (home) - step by step
 
 **URL:** `/`
 
@@ -68,39 +71,39 @@ cd mboashield && ./scripts/run_demo.sh
 3. **Pass:** Each step shows a risk band (LOW/MEDIUM/HIGH), explanation, and judge summary cards at bottom.
 4. **Pass:** Finale section appears with impact stats and **Run demo again**.
 
-### 3.2 Manual — Text rumour
+### 3.2 Manual - Text rumour
 
 1. Open panel **1 Text** (or nav chip).
 2. Paste: `URGENT: Minister orders MoMo payment tonight to this number...`
 3. Click **Analyse text**.
-4. **Pass:** Score 0–100, band, reasons, advice, optional source verification block.
-5. **API:** `POST /api/v1/check/text` JSON `{"text":"...","lang":"en"}`.
+4. **Pass:** Score 0-100, band, reasons, advice, optional source verification block.
+5. **API:** `POST /api/v1/trust/assess` with `object_type: "text"`.
 
-### 3.3 Manual — Impersonation
+### 3.3 Manual - Impersonation
 
 1. Panel **2 Identity**.
 2. Name: `MINPOSTEL Official`; Handle: `@minpostel_urgent`
 3. Click **Analyse account**.
 4. **Pass:** Match or mismatch vs institution registry (17 institutions seeded).
-5. **API:** `POST /api/v1/check/impersonation` `{"name":"...","handle":"..."}`.
+5. **API:** `POST /api/v1/trust/assess` with `object_type: "impersonation"`.
 
-### 3.4 Manual — Audio
+### 3.4 Manual - Audio
 
 1. Panel **3 Audio**.
 2. Click **Sample voice** or upload `.wav`/`.mp3`.
 3. Click **Analyse audio**.
 4. **Pass:** Clone/synthetic risk signals and advice.
-5. **API:** `POST /api/v1/check/audio` multipart `file`.
+5. **API:** `POST /api/v1/trust/assess/media` multipart with `file` and `modality=audio`.
 
-### 3.5 Manual — Image
+### 3.5 Manual - Image
 
 1. Panel **4 Image**.
 2. Use **Smooth face** sample or upload image.
 3. Click **Analyse image**.
 4. **Pass:** Media risk report.
-5. **API:** `POST /api/v1/check/media` multipart `file`.
+5. **API:** `POST /api/v1/trust/assess/media` multipart with `file` and `modality=image`.
 
-### 3.6 Manual — Mboa Ambassadors
+### 3.6 Manual - Mboa Ambassadors
 
 1. Panel **5 Civic**.
 2. Select a lesson, enter learner name.
@@ -114,7 +117,7 @@ cd mboashield && ./scripts/run_demo.sh
 2. Enter suspicious text + optional name/handle.
 3. Click **Run AI case analysis**.
 4. **Pass:** Trust fusion, `certainty: "none"`, optional `calibrated_score`.
-5. **API:** `POST /api/v1/intelligence/analyze` or legacy `POST /api/v1/analyze`.
+5. **API used by the home UI:** `POST /api/v1/analyze`.
 
 ### 3.8 Language toggle
 
@@ -143,11 +146,11 @@ cd mboashield && ./scripts/run_demo.sh
 1. Fill title, description, region (optional).
 2. Submit new report.
 3. **Pass:** Report appears in list with status `open`.
-4. Open report ? view timeline.
-5. Transition status (demo allows without login): e.g. `open` ? `ai_analysis` ? `analyst_review`.
+4. Open report -> view timeline.
+5. Transition status (demo allows without login): e.g. `open` -> `ai_analysis` -> `analyst_review`.
 6. **API:** `POST /api/v1/incidents`, `GET /api/v1/incidents`, `POST /api/v1/incidents/{id}/transition`.
 
-**Important:** Public advisory requires human `decision` state first — never from AI alone.
+**Important:** Public advisory requires human `decision` state first - never from AI alone.
 
 ---
 
@@ -155,7 +158,7 @@ cd mboashield && ./scripts/run_demo.sh
 
 ### 5.1 Analyst console (`/static/analyst.html`)
 
-1. Open page — summary and queue load.
+1. Open page - summary and queue load.
 2. Pick incident from queue; transition to next workflow state.
 3. View timeline for an incident.
 4. **Pass:** Summary counts update; transitions respect workflow rules.
@@ -210,14 +213,14 @@ cd mboashield && ./scripts/run_demo.sh
 ### 6.3 Announcements (`/static/announcements.html`)
 
 1. Create draft announcement (title, body, institution).
-2. Publish ? receive announcement id and verify URL.
+2. Publish -> receive announcement id and verify URL.
 3. **Pass:** Signature and version increment on republish.
 4. **API:** `/api/v1/announcements/*`.
 
 ### 6.4 Public verify
 
-1. **UI:** `/static/verify-announcement.html` — paste announcement id.
-2. **API:** `GET /verify/a/{announcement_id}` — JSON authenticity payload.
+1. **UI:** `/static/verify-announcement.html` - paste announcement id.
+2. **API:** `GET /verify/a/{announcement_id}` - JSON authenticity payload.
 3. **Pass:** `valid: true` for published signed content.
 
 ---
@@ -228,15 +231,15 @@ Use when testing **hard auth** locally (`AUTH_ENFORCE=true`). On Render demo, ma
 
 | Action | Steps | API |
 |---|---|---|
-| Login | Email/password ? optional MFA | `POST /api/v1/auth/login`, MFA verify |
-| MFA setup | Setup ? enable with TOTP code | `/api/v1/auth/mfa/*` |
-| Sessions | List ? revoke one or all | `/api/v1/auth/sessions` |
-| Trusted devices | List ? revoke | `/api/v1/auth/devices` |
+| Login | Email/password -> optional MFA | `POST /api/v1/auth/login`, MFA verify |
+| MFA setup | Setup -> enable with TOTP code | `/api/v1/auth/mfa/*` |
+| Sessions | List -> revoke one or all | `/api/v1/auth/sessions` |
+| Trusted devices | List -> revoke | `/api/v1/auth/devices` |
 | Admin users | Create user with role | `POST /api/v1/admin/users` |
-| Partner API key | Create ? copy once | `POST /api/v1/partners/keys` |
+| Partner API key | Create -> copy once | `POST /api/v1/partners/keys` |
 | OAuth client | Create client credentials | `POST /api/v1/oauth/clients` |
-| Password reset | Forgot ? reset token flow | `/api/v1/auth/password/*` |
-| OIDC | List providers ? authorize URL | `/api/v1/auth/oidc/*` |
+| Password reset | Forgot -> reset token flow | `/api/v1/auth/password/*` |
+| OIDC | List providers -> authorize URL | `/api/v1/auth/oidc/*` |
 
 **Pass:** Security status panel shows MFA/OIDC readiness flags matching `/health` identity block.
 
@@ -255,7 +258,7 @@ curl -s -X POST https://mboashield.onrender.com/api/v1/ai-platform/evaluation/ru
   -H 'Content-Type: application/json' -d '{"dataset":"en"}'
 ```
 
-5. Checksum verify: `GET /api/v1/ai-platform/models/mboashield-text-nlp-v1/verify-checksum` ? `"valid": true`.
+5. Checksum verify: `GET /api/v1/ai-platform/models/mboashield-text-nlp-v1/verify-checksum` -> `"valid": true`.
 
 ---
 
@@ -285,12 +288,12 @@ curl -s -X POST https://mboashield.onrender.com/api/v1/ai-platform/evaluation/ru
 ## 11. Incident workflow reference
 
 ```
-open ? ai_analysis ? analyst_review ? institution_review ? decision
-  ? public_advisory ? resolved ? archived
-dismissed ? archived (from several states)
+open -> ai_analysis -> analyst_review -> institution_review -> decision
+  -> public_advisory -> resolved -> archived
+dismissed -> archived (from several states)
 ```
 
-**Test invalid transition:** `POST transition` to illegal next state ? 400 error (when enforced).
+**Test invalid transition:** `POST transition` to illegal next state -> 400 error (when enforced).
 
 ---
 
@@ -298,7 +301,7 @@ dismissed ? archived (from several states)
 
 Use before jury or after each deploy.
 
-- [ ] `/health` version 1.9.0
+- [ ] `/health` version 2.8.0, phase CI-1
 - [ ] Home 90s demo completes 5/5
 - [ ] Text / imp / audio / image manual checks
 - [ ] Ambassador certificate
@@ -312,6 +315,8 @@ Use before jury or after each deploy.
 - [ ] Publish announcement + verify URL
 - [ ] AI lab EN eval pass_rate >= 0.5
 - [ ] Governance risks >= 5
+- [ ] Developer portal + TAXII discovery
+- [ ] Country pack + sector modules
 - [ ] Hub page health strip
 - [ ] PPT downloads from `/static/presentations/MboaShield_SIN2026.pptx`
 - [ ] `pytest backend/tests -q` (local / CI)
@@ -357,4 +362,4 @@ Outputs:
 
 ---
 
-**Contact:** tamahjustene45@gmail.com · **Repo:** github.com/TamahJustene/MboaShield
+**Contact:** tamahjustene45@gmail.com  -  **Repo:** github.com/TamahJustene/MboaShield

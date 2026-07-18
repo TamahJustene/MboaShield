@@ -26,9 +26,9 @@ async function runVerify(announcementId, version) {
       <span class="band ${band}">${escapeHtml(data.authenticity || data.status)}</span>
     </div>
     <p><strong>${escapeHtml(data.title || "Announcement")}</strong></p>
-    <p class="muted">${escapeHtml(data.institution?.name || "")} · v${escapeHtml(data.version)} · ${escapeHtml(data.published_at || "")}</p>
+    <p class="muted">${escapeHtml(data.institution?.name || "")}  -  v${escapeHtml(data.version)}  -  ${escapeHtml(data.published_at || "")}</p>
     <p>${escapeHtml(data.body || data.message || "")}</p>
-    <p class="muted">Signature valid: ${escapeHtml(data.signature_valid)} · certainty: none (cryptographic check only)</p>
+    <p class="muted">Signature valid: ${escapeHtml(data.signature_valid)}  -  certainty: none (cryptographic check only)</p>
     <p><a href="/verify/a/${encodeURIComponent(announcementId)}/certificate" target="_blank" rel="noopener">Download JSON certificate</a></p>
   `;
 }

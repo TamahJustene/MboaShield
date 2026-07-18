@@ -37,7 +37,7 @@ async function loadSources() {
           <strong>#${source.id} ${escapeHtml(source.name)}</strong>
           <span class="band ${source.enabled ? "low" : "high"}">${source.enabled ? "ON" : "OFF"}</span>
         </div>
-        <p class="muted">${escapeHtml(source.source_class)} · ${escapeHtml(source.egress_host)} · ${escapeHtml(source.tos_reference)}</p>
+        <p class="muted">${escapeHtml(source.source_class)}  -  ${escapeHtml(source.egress_host)}  -  ${escapeHtml(source.tos_reference)}</p>
         <button type="button" class="btn-ghost" data-ingest="${source.id}">Ingest</button>
       </article>`
     )

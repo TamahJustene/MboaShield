@@ -79,6 +79,63 @@ function showLoading(targetId, message) {
   `;
 }
 
+function showError(targetId, error) {
+  const el = document.getElementById(targetId);
+  const message = error instanceof Error ? error.message : String(error || "Request failed");
+  el.className = "out is-ready";
+  el.innerHTML = `
+    <span class="band high">REQUEST FAILED</span>
+    <h3 class="report-title">No assessment was produced</h3>
+    <p class="report-copy">${escapeHtml(message)}</p>
+    <p class="report-copy muted">Check the connection and try again. Never treat an error response as a low-risk result.</p>
+  `;
+}
+
+async function readJsonResponse(response, label) {
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error(`${label} returned an unreadable response (${response.status}).`);
+  }
+  if (!response.ok) {
+    throw new Error(data?.detail || `${label} failed (${response.status}).`);
+  }
+  return data;
+}
+
+async function fetchJson(url, options, label) {
+  let response;
+  try {
+    response = await fetch(url, options);
+  } catch {
+    throw new Error(`${label} could not reach MboaShield.`);
+  }
+  return readJsonResponse(response, label);
+}
+
+async function fetchSample(url, expectedType) {
+  let response;
+  try {
+    response = await fetch(url);
+  } catch {
+    throw new Error("The local demo sample could not be loaded.");
+  }
+  if (!response.ok) {
+    throw new Error(`Demo sample is unavailable (${response.status}).`);
+  }
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.startsWith(expectedType)) {
+    throw new Error(`Demo sample has the wrong content type (${contentType || "unknown"}).`);
+  }
+  return response.blob();
+}
+
+function handlePanelError(targetId, error) {
+  showError(targetId, error);
+  if (demoRunning) throw error;
+}
+
 function setDemoProgress(step, total = 5) {
   const wrap = document.getElementById("demoProgress");
   const bar = document.getElementById("demoProgressBar");
@@ -217,8 +274,12 @@ function mergeTrustAssessResponse(data) {
 function renderReport(targetId, data, extra = "") {
   const el = document.getElementById(targetId);
   const meta = panelMeta[targetId] || {};
-  const band = data.risk_band || "low";
-  const score = data.risk_score ?? "-";
+  const score = data?.risk_score ?? data?.score ?? data?.trust_assessment?.score;
+  const rawBand = data?.risk_band ?? data?.band ?? data?.trust_assessment?.band;
+  const band = String(rawBand || "").toLowerCase();
+  if (score == null || !["low", "medium", "high"].includes(band)) {
+    throw new Error("Assessment response is incomplete; no risk result was displayed.");
+  }
   const reasons = data.reasons || [];
   const sources = (data.suggested_sources || []).map((s) => `${s.title}: ${s.url}`);
   const matched = data.matched_institution
@@ -315,23 +376,26 @@ function renderReport(targetId, data, extra = "") {
 }
 
 async function loadLessons() {
-  const res = await fetch("/api/v1/ambassadors/lessons");
-  const data = await res.json();
   const box = document.getElementById("lessons");
   const select = document.getElementById("lessonSelect");
   box.innerHTML = "";
   select.innerHTML = "";
-  data.lessons.forEach((lesson) => {
-    const div = document.createElement("div");
-    div.className = "lesson";
-    const title = lang === "fr" ? lesson.title_fr : lesson.title_en;
-    div.innerHTML = `<strong>${title}</strong><div class="muted">${lesson.minutes} min</div>`;
-    box.appendChild(div);
-    const opt = document.createElement("option");
-    opt.value = lesson.id;
-    opt.textContent = title;
-    select.appendChild(opt);
-  });
+  try {
+    const data = await fetchJson("/api/v1/ambassadors/lessons", undefined, "Ambassador lessons");
+    data.lessons.forEach((lesson) => {
+      const div = document.createElement("div");
+      div.className = "lesson";
+      const title = lang === "fr" ? lesson.title_fr : lesson.title_en;
+      div.innerHTML = `<strong>${escapeHtml(title)}</strong><div class="muted">${escapeHtml(lesson.minutes)} min</div>`;
+      box.appendChild(div);
+      const opt = document.createElement("option");
+      opt.value = lesson.id;
+      opt.textContent = title;
+      select.appendChild(opt);
+    });
+  } catch (error) {
+    box.innerHTML = `<p class="report-copy">Lessons unavailable: ${escapeHtml(error.message)}</p>`;
+  }
 }
 
 document.getElementById("langToggle").onclick = async () => {
@@ -343,27 +407,43 @@ document.getElementById("langToggle").onclick = async () => {
 document.getElementById("checkText").onclick = async () => {
   const text = document.getElementById("claimText").value;
   showLoading("textOut", "Analysing rumour and checking trusted sources...");
-  const res = await fetch("/api/v1/trust/assess", {
-    method: "POST",
-    headers: userHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ object_type: "text", text, lang }),
-  });
-  renderReport("textOut", mergeTrustAssessResponse(await res.json()));
+  try {
+    const data = await fetchJson(
+      "/api/v1/trust/assess",
+      {
+        method: "POST",
+        headers: userHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ object_type: "text", text, lang }),
+      },
+      "Text assessment"
+    );
+    renderReport("textOut", mergeTrustAssessResponse(data));
+  } catch (error) {
+    handlePanelError("textOut", error);
+  }
 };
 
 document.getElementById("checkImp").onclick = async () => {
   showLoading("impOut", "Checking identity signals against the institution registry...");
-  const res = await fetch("/api/v1/trust/assess", {
-    method: "POST",
-    headers: userHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({
-      object_type: "impersonation",
-      name: document.getElementById("impName").value,
-      handle: document.getElementById("impHandle").value,
-      lang,
-    }),
-  });
-  renderReport("impOut", mergeTrustAssessResponse(await res.json()));
+  try {
+    const data = await fetchJson(
+      "/api/v1/trust/assess",
+      {
+        method: "POST",
+        headers: userHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({
+          object_type: "impersonation",
+          name: document.getElementById("impName").value,
+          handle: document.getElementById("impHandle").value,
+          lang,
+        }),
+      },
+      "Identity assessment"
+    );
+    renderReport("impOut", mergeTrustAssessResponse(data));
+  } catch (error) {
+    handlePanelError("impOut", error);
+  }
 };
 
 async function analyseAudioFile(file) {
@@ -376,8 +456,16 @@ async function analyseAudioFile(file) {
   fd.append("file", file);
   fd.append("lang", lang);
   fd.append("modality", "audio");
-  const res = await fetch("/api/v1/trust/assess/media", { method: "POST", headers: userHeaders(), body: fd });
-  renderReport("audioOut", mergeTrustAssessResponse(await res.json()));
+  try {
+    const data = await fetchJson(
+      "/api/v1/trust/assess/media",
+      { method: "POST", headers: userHeaders(), body: fd },
+      "Audio assessment"
+    );
+    renderReport("audioOut", mergeTrustAssessResponse(data));
+  } catch (error) {
+    handlePanelError("audioOut", error);
+  }
 }
 
 document.getElementById("checkAudio").onclick = async () => {
@@ -387,12 +475,16 @@ document.getElementById("checkAudio").onclick = async () => {
 document.querySelectorAll(".audio-sample").forEach((btn) => {
   btn.onclick = async () => {
     const url = btn.getAttribute("data-sample");
-    const blob = await fetch(url).then((r) => r.blob());
-    const file = new File([blob], url.split("/").pop(), { type: "audio/wav" });
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    document.getElementById("audioFile").files = dt.files;
-    await analyseAudioFile(file);
+    try {
+      const blob = await fetchSample(url, "audio/");
+      const file = new File([blob], url.split("/").pop(), { type: blob.type || "audio/wav" });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById("audioFile").files = dt.files;
+      await analyseAudioFile(file);
+    } catch (error) {
+      handlePanelError("audioOut", error);
+    }
   };
 });
 
@@ -407,19 +499,31 @@ document.getElementById("checkMedia").onclick = async () => {
   fd.append("file", file);
   fd.append("lang", lang);
   fd.append("modality", "image");
-  const res = await fetch("/api/v1/trust/assess/media", { method: "POST", headers: userHeaders(), body: fd });
-  renderReport("mediaOut", mergeTrustAssessResponse(await res.json()));
+  try {
+    const data = await fetchJson(
+      "/api/v1/trust/assess/media",
+      { method: "POST", headers: userHeaders(), body: fd },
+      "Image assessment"
+    );
+    renderReport("mediaOut", mergeTrustAssessResponse(data));
+  } catch (error) {
+    handlePanelError("mediaOut", error);
+  }
 };
 
 document.querySelectorAll(".sample").forEach((btn) => {
   btn.onclick = async () => {
     const url = btn.getAttribute("data-sample");
-    const blob = await fetch(url).then((r) => r.blob());
-    const file = new File([blob], url.split("/").pop(), { type: blob.type || "image/jpeg" });
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    document.getElementById("mediaFile").files = dt.files;
-    await document.getElementById("checkMedia").onclick();
+    try {
+      const blob = await fetchSample(url, "image/");
+      const file = new File([blob], url.split("/").pop(), { type: blob.type || "image/jpeg" });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById("mediaFile").files = dt.files;
+      await document.getElementById("checkMedia").onclick();
+    } catch (error) {
+      handlePanelError("mediaOut", error);
+    }
   };
 });
 
@@ -434,59 +538,64 @@ document.getElementById("runDemo").onclick = async () => {
   document.querySelectorAll(".panel").forEach((p) => p.classList.remove("demo-focus"));
   setDemoProgress(0);
 
-  activatePanel("panel-text", true);
-  markChecklist(1, "active");
-  status.textContent = "Grand Jury mode: scenario 1/5 - stopping a WhatsApp rumour before it spreads.";
-  document.getElementById("claimText").value =
-    "URGENT!!! Le ministre annonce un couvre-feu national. Transferre plein de fois avant suppression. Envoie de l'argent au numero MoMo pour securiser ton compte.";
-  await document.getElementById("checkText").onclick();
-  setDemoProgress(1);
-  markChecklist(1, "done");
-  await sleep(700);
+  try {
+    activatePanel("panel-text", true);
+    markChecklist(1, "active");
+    status.textContent = "Grand Jury mode: scenario 1/5 - stopping a WhatsApp rumour before it spreads.";
+    document.getElementById("claimText").value =
+      "URGENT!!! Le ministre annonce un couvre-feu national. Transferre plein de fois avant suppression. Envoie de l'argent au numero MoMo pour securiser ton compte.";
+    await document.getElementById("checkText").onclick();
+    setDemoProgress(1);
+    markChecklist(1, "done");
+    await sleep(700);
 
-  activatePanel("panel-imp", true);
-  markChecklist(2, "active");
-  status.textContent = "Grand Jury mode: scenario 2/5 - exposing a fake public institution account.";
-  document.getElementById("impName").value = "MINPOSTEL Officiel Verifie";
-  document.getElementById("impHandle").value = "@minpostel_cm_info";
-  await document.getElementById("checkImp").onclick();
-  setDemoProgress(2);
-  markChecklist(2, "done");
-  await sleep(700);
+    activatePanel("panel-imp", true);
+    markChecklist(2, "active");
+    status.textContent = "Grand Jury mode: scenario 2/5 - exposing a fake public institution account.";
+    document.getElementById("impName").value = "MINPOSTEL Officiel Verifie";
+    document.getElementById("impHandle").value = "@minpostel_cm_info";
+    await document.getElementById("checkImp").onclick();
+    setDemoProgress(2);
+    markChecklist(2, "done");
+    await sleep(700);
 
-  activatePanel("panel-audio", true);
-  markChecklist(3, "active");
-  status.textContent = "Grand Jury mode: scenario 3/5 - checking a suspicious authority voice note.";
-  await document.querySelector('.audio-sample[data-sample="/static/samples/minister_voice_clone.wav"]').onclick();
-  setDemoProgress(3);
-  markChecklist(3, "done");
-  await sleep(700);
+    activatePanel("panel-audio", true);
+    markChecklist(3, "active");
+    status.textContent = "Grand Jury mode: scenario 3/5 - checking a suspicious authority voice note.";
+    await document.querySelector('.audio-sample[data-sample="/static/samples/minister_voice_clone.wav"]').onclick();
+    setDemoProgress(3);
+    markChecklist(3, "done");
+    await sleep(700);
 
-  activatePanel("panel-media", true);
-  markChecklist(4, "active");
-  status.textContent = "Grand Jury mode: scenario 4/5 - explaining synthetic signals in an image.";
-  await document.querySelector('.sample[data-sample="/static/samples/synthetic_smooth_face.jpg"]').onclick();
-  setDemoProgress(4);
-  markChecklist(4, "done");
-  await sleep(700);
+    activatePanel("panel-media", true);
+    markChecklist(4, "active");
+    status.textContent = "Grand Jury mode: scenario 4/5 - explaining synthetic signals in an image.";
+    await document.querySelector('.sample[data-sample="/static/samples/synthetic_smooth_face.jpg"]').onclick();
+    setDemoProgress(4);
+    markChecklist(4, "done");
+    await sleep(700);
 
-  activatePanel("panel-amb", true);
-  markChecklist(5, "active");
-  status.textContent = "Grand Jury mode: scenario 5/5 - turning awareness into digital patriotism.";
-  document.getElementById("learnerName").value = "Justene Nkwagoh Tamah";
-  if (document.getElementById("lessonSelect").options.length) {
-    document.getElementById("lessonSelect").selectedIndex = 0;
+    activatePanel("panel-amb", true);
+    markChecklist(5, "active");
+    status.textContent = "Grand Jury mode: scenario 5/5 - turning awareness into digital patriotism.";
+    document.getElementById("learnerName").value = "Justene Nkwagoh Tamah";
+    if (document.getElementById("lessonSelect").options.length) {
+      document.getElementById("lessonSelect").selectedIndex = 0;
+    }
+    await document.getElementById("completeLesson").onclick();
+    setDemoProgress(5);
+    markChecklist(5, "done");
+
+    status.textContent = "Demo complete: 4 trust checks and 1 civic-learning outcome completed.";
+    await sleep(400);
+    showJuryFinale();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unexpected demo error";
+    status.textContent = `Demo paused safely: ${message} Use the visible manual panels or try again.`;
+  } finally {
+    document.querySelectorAll(".panel").forEach((p) => p.classList.remove("demo-focus"));
+    setDemoRunning(false);
   }
-  await document.getElementById("completeLesson").onclick();
-  setDemoProgress(5);
-  markChecklist(5, "done");
-  document.querySelectorAll(".panel").forEach((p) => p.classList.remove("demo-focus"));
-
-  status.textContent = "Demo complete: one citizen protected across 5 AI threat scenarios.";
-  status.classList.remove("is-running");
-  setDemoRunning(false);
-  await sleep(400);
-  showJuryFinale();
 };
 
 document.getElementById("replayDemo").onclick = () => {
@@ -505,15 +614,19 @@ document.getElementById("runCaseAnalyze").onclick = async () => {
   const name = document.getElementById("caseName").value;
   const handle = document.getElementById("caseHandle").value;
   showLoading("caseOut", "Running multi-signal AI case analysis...");
-  const res = await fetch("/api/v1/analyze", {
-    method: "POST",
-    headers: userHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ text, name, handle, lang }),
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    document.getElementById("caseOut").className = "out";
-    document.getElementById("caseOut").innerHTML = `<p class="report-copy">${escapeHtml(data.detail || "Analysis failed")}</p>`;
+  let data;
+  try {
+    data = await fetchJson(
+      "/api/v1/analyze",
+      {
+        method: "POST",
+        headers: userHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ text, name, handle, lang }),
+      },
+      "AI case analysis"
+    );
+  } catch (error) {
+    showError("caseOut", error);
     return;
   }
 
@@ -561,31 +674,40 @@ document.getElementById("runCaseAnalyze").onclick = async () => {
 };
 
 document.getElementById("completeLesson").onclick = async () => {
-  const res = await fetch("/api/v1/ambassadors/complete", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      lesson_id: document.getElementById("lessonSelect").value,
-      learner_name: document.getElementById("learnerName").value,
-    }),
-  });
-  const data = await res.json();
-  const cert = data.certificate;
   const el = document.getElementById("cert");
-  el.classList.remove("hidden");
-  el.classList.add("cert-reveal");
-  el.innerHTML = `
-    <h3>Certificate ${cert.id}</h3>
-    <p>Awarded to <strong>${cert.learner_name}</strong></p>
-    <p>${cert.lesson_title_en}</p>
-    <p class="muted">${cert.issuer} - ${cert.issued_on}</p>
-  `;
-  demoSummary.push({
-    title: "Digital patriotism outcome",
-    band: "low",
-    summary: "The citizen finishes informed, certified, and less likely to spread harmful AI-generated content.",
-  });
-  renderSummary();
+  try {
+    const data = await fetchJson(
+      "/api/v1/ambassadors/complete",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lesson_id: document.getElementById("lessonSelect").value,
+          learner_name: document.getElementById("learnerName").value,
+        }),
+      },
+      "Ambassador certificate"
+    );
+    const cert = data.certificate;
+    el.classList.remove("hidden");
+    el.classList.add("cert-reveal");
+    el.innerHTML = `
+      <h3>Certificate ${escapeHtml(cert.id)}</h3>
+      <p>Awarded to <strong>${escapeHtml(cert.learner_name)}</strong></p>
+      <p>${escapeHtml(cert.lesson_title_en)}</p>
+      <p class="muted">${escapeHtml(cert.issuer)} - ${escapeHtml(cert.issued_on)}</p>
+    `;
+    demoSummary.push({
+      title: "Digital patriotism outcome",
+      band: "low",
+      summary: "The citizen finishes informed, certified, and less likely to spread harmful AI-generated content.",
+    });
+    renderSummary();
+  } catch (error) {
+    el.classList.remove("hidden");
+    el.innerHTML = `<p>Certificate unavailable: ${escapeHtml(error.message)}</p>`;
+    if (demoRunning) throw error;
+  }
 };
 
 applyLang();

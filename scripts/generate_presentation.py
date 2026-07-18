@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate MboaShield SIN 2026 PowerPoint deck (Phase 15 / competition)."""
+"""Generate the MboaShield SIN 2026 presentation deck."""
 
 from __future__ import annotations
 
@@ -12,6 +12,9 @@ FILENAME = "MboaShield_SIN2026.pptx"
 
 try:
     from pptx import Presentation
+    from pptx.dml.color import RGBColor
+    from pptx.enum.shapes import MSO_SHAPE
+    from pptx.enum.text import PP_ALIGN
     from pptx.util import Inches, Pt
 except ImportError as exc:  # pragma: no cover
     raise SystemExit("Install python-pptx: pip install python-pptx") from exc
@@ -41,7 +44,7 @@ SLIDES: list[tuple[str, list[str]]] = [
             "Detect synthetic media and scam patterns",
             "Verify rumours and flag fake official accounts",
             "Train Mboa Ambassadors in digital patriotism",
-            "WhatsApp-first narrative - FR/EN - privacy by design - sovereign stack",
+            "WhatsApp-style demo narrative - partial FR/EN UI - privacy-aware sovereign stack",
         ],
     ),
     (
@@ -56,12 +59,12 @@ SLIDES: list[tuple[str, list[str]]] = [
         ],
     ),
     (
-        "Platform depth (v1.9.0)",
+        "National platform depth (v2.8.0)",
         [
-            "National incident workflow with human gates (no auto-public advisory)",
-            "NTOC, intel, investigation, evidence vault, signed government announcements",
-            "AI platform: model registry, golden EN/FR evaluation, certainty: none",
-            "Governance: consent, risk register, model and dataset cards",
+            "TrustAssessment: one explainable object across text, identity, audio, image and intelligence",
+            "Human-review incident workflow, NTOC, evidence and signed official communications",
+            "Institution trust network plus webhooks, STIX, CAP, TAXII 2.1 and SCIM 2.0",
+            "Governance, country packs, sector modules, HA/DR and load-test patterns",
         ],
     ),
     (
@@ -105,13 +108,50 @@ SLIDES: list[tuple[str, list[str]]] = [
     ),
 ]
 
+INK = RGBColor(7, 31, 26)
+EMERALD = RGBColor(34, 197, 94)
+WHITE = RGBColor(248, 250, 252)
+MUTED = RGBColor(203, 213, 225)
 
-def _add_bullet_slide(prs: Presentation, title: str, bullets: list[str]) -> None:
+
+def _style_slide(slide, number: int) -> None:
+    background = slide.background.fill
+    background.solid()
+    background.fore_color.rgb = INK
+
+    accent = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE, Inches(0), Inches(0), Inches(0.16), Inches(7.5)
+    )
+    accent.fill.solid()
+    accent.fill.fore_color.rgb = EMERALD
+    accent.line.fill.background()
+
+    footer = slide.shapes.add_textbox(
+        Inches(0.72), Inches(7.08), Inches(11.9), Inches(0.24)
+    )
+    paragraph = footer.text_frame.paragraphs[0]
+    paragraph.text = f"MBOASHIELD · SOVEREIGN DIGITAL TRUST INFRASTRUCTURE                                      {number:02d}"
+    paragraph.font.name = "Aptos"
+    paragraph.font.size = Pt(8)
+    paragraph.font.color.rgb = MUTED
+    paragraph.alignment = PP_ALIGN.LEFT
+
+
+def _add_bullet_slide(
+    prs: Presentation, title: str, bullets: list[str], number: int
+) -> None:
     layout = prs.slide_layouts[1]
     slide = prs.slides.add_slide(layout)
+    _style_slide(slide, number)
     slide.shapes.title.text = title
+    title_run = slide.shapes.title.text_frame.paragraphs[0].runs[0]
+    title_run.font.name = "Aptos Display"
+    title_run.font.size = Pt(30)
+    title_run.font.bold = True
+    title_run.font.color.rgb = WHITE
     body = slide.placeholders[1].text_frame
     body.clear()
+    body.margin_left = Inches(0.12)
     first = True
     for line in bullets:
         if not line.strip():
@@ -123,7 +163,10 @@ def _add_bullet_slide(prs: Presentation, title: str, bullets: list[str]) -> None
             p = body.add_paragraph()
         p.text = line
         p.level = 0
-        p.font.size = Pt(20)
+        p.font.name = "Aptos"
+        p.font.size = Pt(21)
+        p.font.color.rgb = WHITE
+        p.space_after = Pt(13)
 
 
 def build() -> Path:
@@ -132,11 +175,23 @@ def build() -> Path:
     prs.slide_height = Inches(7.5)
 
     title_slide = prs.slides.add_slide(prs.slide_layouts[0])
+    _style_slide(title_slide, 1)
     title_slide.shapes.title.text = SLIDES[0][0]
     title_slide.placeholders[1].text = "\n".join(SLIDES[0][1])
+    title_paragraph = title_slide.shapes.title.text_frame.paragraphs[0]
+    title_paragraph.font.name = "Aptos Display"
+    title_paragraph.font.size = Pt(48)
+    title_paragraph.font.bold = True
+    title_paragraph.font.color.rgb = WHITE
+    subtitle = title_slide.placeholders[1].text_frame
+    for paragraph in subtitle.paragraphs:
+        paragraph.font.name = "Aptos"
+        paragraph.font.size = Pt(20)
+        paragraph.font.color.rgb = MUTED
+        paragraph.space_after = Pt(6)
 
-    for title, bullets in SLIDES[1:]:
-        _add_bullet_slide(prs, title, bullets)
+    for number, (title, bullets) in enumerate(SLIDES[1:], start=2):
+        _add_bullet_slide(prs, title, bullets, number)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     STATIC_OUT.mkdir(parents=True, exist_ok=True)

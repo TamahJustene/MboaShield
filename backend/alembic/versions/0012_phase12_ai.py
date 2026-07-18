@@ -1,7 +1,7 @@
 """Phase 12 advanced AI platform - model registry and evaluation.
 
 Revision ID: 0012_phase12
-Revises: 0011_phase11
+Revises: 0010_phase11
 Create Date: 2026-07-16
 """
 
@@ -11,7 +11,7 @@ from alembic import op
 import sqlalchemy as sa
 
 revision = "0012_phase12"
-down_revision = "0011_phase11"
+down_revision = "0010_phase11"
 branch_labels = None
 depends_on = None
 

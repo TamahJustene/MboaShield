@@ -34,8 +34,8 @@ async function loadSecurityStatus() {
   const res = await fetch("/api/v1/auth/security-status");
   const data = await res.json();
   document.getElementById("securityStatus").innerHTML = `
-    <p>Profile: <strong>${escapeHtml(data.deployment_profile)}</strong> · ENV: <strong>${escapeHtml(data.environment)}</strong> · AUTH_ENFORCE: <strong>${escapeHtml(data.auth_enforce)}</strong></p>
-    <p>MFA enforce: <strong>${escapeHtml(data.mfa_enforce)}</strong> · OIDC: <strong>${escapeHtml(data.oidc_ready)}</strong> · SAML: <strong>${escapeHtml(data.saml_ready)}</strong> · LDAP: <strong>${escapeHtml(data.ldap_ready)}</strong></p>
+    <p>Profile: <strong>${escapeHtml(data.deployment_profile)}</strong>  -  ENV: <strong>${escapeHtml(data.environment)}</strong>  -  AUTH_ENFORCE: <strong>${escapeHtml(data.auth_enforce)}</strong></p>
+    <p>MFA enforce: <strong>${escapeHtml(data.mfa_enforce)}</strong>  -  OIDC: <strong>${escapeHtml(data.oidc_ready)}</strong>  -  SAML: <strong>${escapeHtml(data.saml_ready)}</strong>  -  LDAP: <strong>${escapeHtml(data.ldap_ready)}</strong></p>
     <p>Sessions / devices / admin users / password recovery: ready</p>
     <p class="muted">Warnings: ${escapeHtml((data.warnings || []).join("; ") || "none")}</p>
   `;
@@ -57,7 +57,7 @@ async function loadApiKeys() {
             <strong>${escapeHtml(key.name)}</strong>
             <span class="band ${key.revoked ? "high" : "low"}">${key.revoked ? "REVOKED" : "ACTIVE"}</span>
           </div>
-          <p class="history-item-title">${escapeHtml(key.partner_org)} · ${escapeHtml(key.key_prefix)}...</p>
+          <p class="history-item-title">${escapeHtml(key.partner_org)}  -  ${escapeHtml(key.key_prefix)}...</p>
           <p class="muted">${escapeHtml((key.scopes || []).join(", "))}</p>
         </article>
       `
@@ -81,7 +81,7 @@ async function loadSessions() {
           <strong>${escapeHtml(item.auth_method)}</strong>
           <button type="button" class="btn-ghost" data-session="${escapeHtml(item.id)}">Revoke</button>
         </div>
-        <p class="muted">${escapeHtml(item.created_at)} · ${escapeHtml(item.ip_address || "no-ip")}</p>
+        <p class="muted">${escapeHtml(item.created_at)}  -  ${escapeHtml(item.ip_address || "no-ip")}</p>
       </article>`
     )
     .join("") || "<p class='muted'>No active sessions.</p>";
@@ -144,7 +144,7 @@ async function loadUsers() {
           <strong>${escapeHtml(user.display_name)}</strong>
           <span class="band low">${escapeHtml(user.role)}</span>
         </div>
-        <p class="muted">${escapeHtml(user.email || "")} · active=${escapeHtml(user.is_active)}</p>
+        <p class="muted">${escapeHtml(user.email || "")}  -  active=${escapeHtml(user.is_active)}</p>
       </article>`
     )
     .join("") || "<p class='muted'>No users.</p>";

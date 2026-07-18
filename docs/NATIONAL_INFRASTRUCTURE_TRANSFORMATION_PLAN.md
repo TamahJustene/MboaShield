@@ -1,9 +1,9 @@
 # National Infrastructure Transformation Plan
 
-**Program:** MboaShield 2030  
-**Baseline:** v1.9.0 (monolith Trust API + static portals)  
-**Vision:** [`MBOASHIELD_2030_VISION.md`](MBOASHIELD_2030_VISION.md)  
-**Pillar map:** [`pillars/PILLAR_REGISTRY.md`](pillars/PILLAR_REGISTRY.md)  
+**Program:** MboaShield 2030
+**Baseline:** v1.9.0 (monolith Trust API + static portals)
+**Vision:** [`MBOASHIELD_2030_VISION.md`](MBOASHIELD_2030_VISION.md)
+**Pillar map:** [`pillars/PILLAR_REGISTRY.md`](pillars/PILLAR_REGISTRY.md)
 **Rule:** Preserve `/api/v1` stability; additive evolution; no big-bang rewrite.
 
 ---
@@ -12,11 +12,11 @@
 
 The current platform is a **credible foundation** for national infrastructure: ten engine families, incident workflow, NTOC, intel, vault, signed comms, AI registry, governance, metrics, Helm/gov compose, and 80+ automated tests. It is still **packaged and experienced** too much like a demo web app (soft auth, static HTML silos, SQLite on public Render).
 
-The transformation reframes the **same codebase** into **ten national platforms** and a **National Digital Trust Network**, without discarding what works. Execution is **eight transformation phases (T0ùT7)** over multiple releases (2.0.x+), each passing the [quality gate](#7-quality-gate-checklist).
+The transformation reframes the **same codebase** into **ten national platforms** and a **National Digital Trust Network**, without discarding what works. Execution is **eight transformation phases (T0-T7)** over multiple releases (2.0.x+), each passing the [quality gate](#7-quality-gate-checklist).
 
 ---
 
-## 2. Gap analysis (current ? 2030)
+## 2. Gap analysis (current -> 2030)
 
 | Dimension | Current (v1.9) | Target (2030) | Severity |
 |---|---|---|---|
@@ -33,7 +33,7 @@ The transformation reframes the **same codebase** into **ten national platforms*
 | **Assurance** | Threat model + governance | Control mapping to ISO/NIST (assessable) | Medium |
 | **AI** | Heuristic + registry | Monitored models + human-only decisions | Ongoing |
 
-**Strengths to preserve:** workflow human gates, `certainty: none`, evidence custody, signed announcements, OpenAPI, Alembic, RBAC, partner keys, phase documentation discipline.
+**Strengths to preserve:** ordered review workflow, `certainty: none`, evidence custody, signed announcements, OpenAPI, Alembic, RBAC, partner keys, and phase documentation discipline. Human accountability depends on hard authentication plus operating controls.
 
 ---
 
@@ -63,7 +63,7 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 ## 4. Transformation phases
 
-### T0 ù Alignment & governance of architecture (2.0.0)
+### T0 - Alignment & governance of architecture (2.0.0)
 
 **Goal:** Lock north star; no user-visible breakage.
 
@@ -72,14 +72,14 @@ The transformation reframes the **same codebase** into **ten national platforms*
 | Vision + plan | This document + `MBOASHIELD_2030_VISION.md` + pillar registry |
 | Architecture | Update `ARCHITECTURE.md` with pillar view |
 | API taxonomy | OpenAPI tags grouped by national platform |
-| ADR process | `docs/adr/README.md` ù architecture decision records |
+| ADR process | `docs/adr/README.md` - architecture decision records |
 | Config | `COUNTRY_PACK=cm` tenant template (env + docs) |
 
 **Quality gate:** Docs + OpenAPI tag pass + CI green.
 
 ---
 
-### T1 ù National Trust Object Model (2.1.0)
+### T1 - National Trust Object Model (2.1.0)
 
 **Goal:** One explainable trust assessment pattern for all types.
 
@@ -94,7 +94,7 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 ---
 
-### T2 ù National Digital Trust Network (2.2.0)
+### T2 - National Digital Trust Network (2.2.0)
 
 **Goal:** Institutions collaborate with policy and audit.
 
@@ -109,21 +109,21 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 ---
 
-### T3 ù Portal platform (2.3.0)
+### T3 - Portal platform (2.3.0)
 
 **Goal:** Systems not pages; shared shell.
 
 | Deliverable | Action |
 |---|---|
-| Shell | `portal-shell.js` ù auth, nav, tenant, i18n FR/EN |
+| Shell | `portal-shell.js` - auth, nav, tenant, i18n FR/EN |
 | Migrate | Analyst + NTOC + institution first |
-| Developer portal | `/static/developer.html` ù keys, webhooks, OpenAPI link |
+| Developer portal | `/static/developer.html` - keys, webhooks, OpenAPI link |
 
-**Not:** Rewrite all 17 pages in one release ù incremental.
+**Not:** Rewrite all 17 pages in one release - incremental.
 
 ---
 
-### T4 ù Interoperability layer (2.4.0)
+### T4 - Interoperability layer (2.4.0)
 
 **Goal:** National systems consume MboaShield as a service.
 
@@ -136,22 +136,22 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 ---
 
-### T5 ù Zero-trust & identity scale (2.5.0)
+### T5 - Zero-trust & identity scale (2.5.0)
 
 **Goal:** Government-grade default.
 
 | Deliverable | Action |
 |---|---|
 | Auth | `AUTH_ENFORCE=true` profile documented as national default |
-| SCIM | Read-only SCIM users stub ? full provisioning |
+| SCIM | Read-only SCIM users stub -> full provisioning |
 | RLS | Postgres row-level security by `tenant_id` / institution |
 | Secrets | KMS integration guide; no keys in env in prod doc |
 
 ---
 
-### T6 ù Resilience & scale proof (2.6.0)
+### T6 - Resilience and scale patterns (2.6.0)
 
-**Goal:** Millions of users ù validated, not claimed.
+**Goal:** Provide repeatable load scenarios, HA patterns, and DR targets; record measured production results in a later validation phase.
 
 | Deliverable | Action |
 |---|---|
@@ -162,15 +162,15 @@ The transformation reframes the **same codebase** into **ten national platforms*
 
 ---
 
-### T7 ù Sector packs & international deploy (2.7.0)
+### T7 - Sector packs & international deploy (2.7.0)
 
 **Goal:** Another country without rewrite.
 
 | Deliverable | Action |
 |---|---|
-| Country pack | `deploy/country-packs/{cm,template}/` ù legal, institutions seed, IdP |
+| Country pack | `deploy/country-packs/{cm,template}/` - legal, institutions seed, IdP |
 | Sector config | Election / health / finance dashboard toggles |
-| Control mapping | Governance controls ? ISO/NIST framework IDs (assessable) |
+| Control mapping | Governance controls -> ISO/NIST framework IDs (assessable) |
 
 ---
 
@@ -217,15 +217,16 @@ No transformation phase closes until:
 
 | Release | Phase | Theme |
 |---|---|---|
-| 1.9.x | ù | Stable demo + guides (today) |
+| 1.9.x | - | Stable demo + guides (today) |
 | 2.0.0 | T0 | 2030 architecture alignment |
 | 2.1.0 | T1 | National trust object model |
 | 2.2.0 | T2 | Trust network |
 | 2.3.0 | T3 | Portal platform |
 | 2.4.0 | T4 | Interoperability |
 | 2.5.0 | T5 | Zero-trust identity |
-| 2.6.0 | T6 | Scale & DR proof |
+| 2.6.0 | T6 | Load, HA, and DR patterns |
 | 2.7.0 | T7 | Country packs |
+| 2.8.0 | CI-1 | TAXII read, SCIM create, portal-shell expansion |
 
 ---
 
@@ -233,5 +234,5 @@ No transformation phase closes until:
 
 Transformation execution begins when stakeholders accept T0 scope. Until then, treat this plan as the **single source of truth** for architectural decisions per the Chief Architect Directive.
 
-**Founder / architect:** Justene Nkwagoh Tamah  
-**Product:** MboaShield ù National Digital Trust Infrastructure
+**Founder / architect:** Justene Nkwagoh Tamah
+**Product:** MboaShield - National Digital Trust Infrastructure

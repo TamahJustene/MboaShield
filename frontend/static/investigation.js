@@ -35,7 +35,7 @@ async function loadCases() {
           <strong>#${item.id} ${escapeHtml(item.title)}</strong>
           <button type="button" class="btn-ghost" data-case="${item.id}">Open</button>
         </div>
-        <p class="muted">${escapeHtml(item.status)} · ${escapeHtml(item.priority)} · ${escapeHtml(item.region || "Unspecified")}</p>
+        <p class="muted">${escapeHtml(item.status)}  -  ${escapeHtml(item.priority)}  -  ${escapeHtml(item.region || "Unspecified")}</p>
       </article>`
     )
     .join("") || "<p class='muted'>No cases yet.</p>";
@@ -62,15 +62,15 @@ async function openWorkspace(caseId) {
   panel.innerHTML = `
     <h3>#${c.id} ${escapeHtml(c.title)}</h3>
     <p>${escapeHtml(c.summary || "No summary")}</p>
-    <p class="muted">Status ${escapeHtml(c.status)} · Priority ${escapeHtml(c.priority)} · Incident ${escapeHtml(c.incident_id || "none")}</p>
+    <p class="muted">Status ${escapeHtml(c.status)}  -  Priority ${escapeHtml(c.priority)}  -  Incident ${escapeHtml(c.incident_id || "none")}</p>
     <h4>Linked verification</h4>
-    ${(evidence.map((item) => `<p>#${item.id} ${escapeHtml(item.check_type)} · risk ${escapeHtml(item.risk_score)} (${escapeHtml(item.risk_band)})</p>`).join("") || "<p class='muted'>No linked verification check.</p>")}
+    ${(evidence.map((item) => `<p>#${item.id} ${escapeHtml(item.check_type)}  -  risk ${escapeHtml(item.risk_score)} (${escapeHtml(item.risk_band)})</p>`).join("") || "<p class='muted'>No linked verification check.</p>")}
     <h4>Vault evidence</h4>
-    ${(vault.map((item) => `<p><code>${escapeHtml(item.evidence_id)}</code> ${escapeHtml(item.title)} · ${escapeHtml(item.filename)} · sha256 ${escapeHtml(String(item.sha256).slice(0, 12))}…</p>`).join("") || "<p class='muted'>No vault items yet. Upload below.</p>")}
+    ${(vault.map((item) => `<p><code>${escapeHtml(item.evidence_id)}</code> ${escapeHtml(item.title)}  -  ${escapeHtml(item.filename)}  -  sha256 ${escapeHtml(String(item.sha256).slice(0, 12))}</p>`).join("") || "<p class='muted'>No vault items yet. Upload below.</p>")}
     <h4>Notes</h4>
     ${notes.map((note) => `<p><strong>${escapeHtml(note.author_role || "analyst")}</strong>: ${escapeHtml(note.body)}</p>`).join("") || "<p class='muted'>No notes yet.</p>"}
     <h4>Incident timeline</h4>
-    ${timeline.map((event) => `<p class="muted">${escapeHtml(event.created_at)} · ${escapeHtml(event.from_status || "-")} ? ${escapeHtml(event.to_status)}</p>`).join("") || "<p class='muted'>No incident timeline.</p>"}
+    ${timeline.map((event) => `<p class="muted">${escapeHtml(event.created_at)}  -  ${escapeHtml(event.from_status || "-")} -> ${escapeHtml(event.to_status)}</p>`).join("") || "<p class='muted'>No incident timeline.</p>"}
   `;
   document.getElementById("noteForm").classList.remove("hidden");
   document.getElementById("assignForm").classList.remove("hidden");

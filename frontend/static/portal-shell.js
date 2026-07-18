@@ -17,6 +17,7 @@
       intel: "Intel",
       investigation: "Investigation",
       national: "National",
+      sectors: "Sectors",
       identity: "Sign in",
       signedIn: "Signed in",
       guest: "Guest (soft auth)",
@@ -34,6 +35,7 @@
       intel: "Intel",
       investigation: "Enquete",
       national: "National",
+      sectors: "Secteurs",
       identity: "Connexion",
       signedIn: "Connecte",
       guest: "Invite (auth souple)",
@@ -49,6 +51,7 @@
     { id: "intel", href: "/static/intel.html", labelKey: "intel" },
     { id: "investigation", href: "/static/investigation.html", labelKey: "investigation" },
     { id: "national", href: "/static/national.html", labelKey: "national" },
+    { id: "sectors", href: "/static/sectors.html", labelKey: "sectors" },
     { id: "institution", href: "/static/institution-portal.html", labelKey: "institution" },
     { id: "developer", href: "/static/developer.html", labelKey: "developer" },
   ];

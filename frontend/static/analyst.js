@@ -42,7 +42,7 @@ function renderCase(report, events) {
   detail.className = "out history-detail is-ready";
   detail.innerHTML = `
     <span class="band ${bandClass(report.status)}">${escapeHtml(String(report.status).toUpperCase())}</span>
-    <h3 class="report-title">Incident #${escapeHtml(report.id)} · ${escapeHtml(report.report_type)}</h3>
+    <h3 class="report-title">Incident #${escapeHtml(report.id)} - ${escapeHtml(report.report_type)}</h3>
     <section class="report-section">
       <span class="report-label">Description</span>
       <p class="report-copy">${escapeHtml(report.description)}</p>
@@ -50,7 +50,7 @@ function renderCase(report, events) {
     <section class="report-section">
       <span class="report-label">AI summary</span>
       <p class="report-copy">${escapeHtml(ai.narrative || "No AI summary attached yet.")}</p>
-      <p class="muted">Risk ${escapeHtml(ai.risk_score ?? "-")} · Confidence ${escapeHtml(ai.confidence ?? "-")}</p>
+      <p class="muted">Risk ${escapeHtml(ai.risk_score ?? "-")} - Confidence ${escapeHtml(ai.confidence ?? "-")}</p>
     </section>
     <section class="report-section">
       <span class="report-label">Public advisory draft</span>
@@ -100,7 +100,7 @@ function renderCase(report, events) {
           (event) => `
             <li>
               <strong>${escapeHtml(event.from_status || "start")} ? ${escapeHtml(event.to_status)}</strong>
-              <p class="muted">${escapeHtml(formatTime(event.created_at))} · ${escapeHtml(event.actor_role || "system")}</p>
+              <p class="muted">${escapeHtml(formatTime(event.created_at))} - ${escapeHtml(event.actor_role || "system")}</p>
               <p class="report-copy">${escapeHtml(event.note || "")}</p>
             </li>
           `
@@ -134,7 +134,7 @@ async function loadQueue() {
             <span class="band ${bandClass(report.status)}">${escapeHtml(report.status)}</span>
             <span class="muted">#${escapeHtml(report.id)}</span>
           </div>
-          <p class="history-item-title">${escapeHtml(report.report_type)} · ${escapeHtml(report.description.slice(0, 80))}</p>
+          <p class="history-item-title">${escapeHtml(report.report_type)} - ${escapeHtml(report.description.slice(0, 80))}</p>
           <p class="muted">${escapeHtml(formatTime(report.updated_at || report.created_at))}</p>
         </button>
       `

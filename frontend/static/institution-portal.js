@@ -42,9 +42,9 @@ async function refreshPortal() {
   const analytics = data.analytics || {};
   box.className = "out history-detail is-ready";
   box.innerHTML = `
-    <h3>${escapeHtml(inst.short_name)} ù ${escapeHtml(inst.name)}</h3>
-    <p class="muted">Members ${escapeHtml(data.active_members)} ù Verified domains ${escapeHtml(data.verified_domains)}</p>
-    <p>Incidents open ${escapeHtml(analytics.incidents_open)} / ${escapeHtml(analytics.incidents_total)} ù Cases open ${escapeHtml(analytics.cases_open)} / ${escapeHtml(analytics.cases_total)}</p>
+    <h3>${escapeHtml(inst.short_name)}  -  ${escapeHtml(inst.name)}</h3>
+    <p class="muted">Members ${escapeHtml(data.active_members)}  -  Verified domains ${escapeHtml(data.verified_domains)}</p>
+    <p>Incidents open ${escapeHtml(analytics.incidents_open)} / ${escapeHtml(analytics.incidents_total)}  -  Cases open ${escapeHtml(analytics.cases_open)} / ${escapeHtml(analytics.cases_total)}</p>
   `;
 
   const branding = (data.institution && data.institution.branding) || {};
@@ -91,7 +91,7 @@ async function refreshPortal() {
     (data.memberships || [])
       .map((item) => {
         const user = item.user || {};
-        return `<p><strong>${escapeHtml(user.display_name || user.email || item.user_id)}</strong> ù ${escapeHtml(item.member_role)} ù ${escapeHtml(item.status)}</p>`;
+        return `<p><strong>${escapeHtml(user.display_name || user.email || item.user_id)}</strong>  -  ${escapeHtml(item.member_role)}  -  ${escapeHtml(item.status)}</p>`;
       })
       .join("") || "<p class='muted'>No members yet.</p>";
 
@@ -102,12 +102,12 @@ async function refreshPortal() {
 
   document.getElementById("keyList").innerHTML =
     (data.api_keys || [])
-      .map((item) => `<p>${escapeHtml(item.name)} ù ${escapeHtml(item.key_prefix)}ù ù scopes ${(item.scopes || []).join(", ")}</p>`)
+      .map((item) => `<p>${escapeHtml(item.name)}  -  ${escapeHtml(item.key_prefix)} -   -  scopes ${(item.scopes || []).join(", ")}</p>`)
       .join("") || "<p class='muted'>No institution API keys yet.</p>";
 
   document.getElementById("caseList").innerHTML =
     ((await (await fetch(`/api/v1/institution-portal/${encodeURIComponent(activeInstitutionId)}/investigations`, { headers: authHeaders() })).json()).cases || [])
-      .map((item) => `<p>#${item.id} ${escapeHtml(item.title)} ù ${escapeHtml(item.status)} ù ${escapeHtml(item.priority)}</p>`)
+      .map((item) => `<p>#${item.id} ${escapeHtml(item.title)}  -  ${escapeHtml(item.status)}  -  ${escapeHtml(item.priority)}</p>`)
       .join("") || "<p class='muted'>No institution-scoped cases yet.</p>";
 
   await refreshTrustNetwork();
@@ -133,7 +133,7 @@ async function refreshTrustNetwork() {
           <strong>${escapeHtml(peer)}</strong>
           <span class="band ${item.status === "active" ? "low" : "medium"}">${escapeHtml(item.status)}</span>
         </div>
-        <p class="muted">#${escapeHtml(item.id)} ù ${escapeHtml(item.policy_note || "no policy note")}</p>
+        <p class="muted">#${escapeHtml(item.id)}  -  ${escapeHtml(item.policy_note || "no policy note")}</p>
         ${
           item.status === "pending"
             ? `<button type="button" class="btn-ghost" data-activate-rel="${item.id}">Activate</button>`
@@ -170,7 +170,7 @@ async function refreshTrustNetwork() {
           <span class="band ${item.severity === "high" || item.severity === "critical" ? "high" : "medium"}">${escapeHtml(item.severity)}</span>
         </div>
         <p class="history-item-title">${escapeHtml(item.title)}</p>
-        <p class="muted">from ${escapeHtml(item.source_institution_id)} ù #${escapeHtml(item.id)}</p>
+        <p class="muted">from ${escapeHtml(item.source_institution_id)}  -  #${escapeHtml(item.id)}</p>
       </article>`
       )
       .join("") || "<p class='muted'>No shared alerts in your inbox yet.</p>";
@@ -217,7 +217,7 @@ document.getElementById("memberForm").addEventListener("submit", async (event) =
   });
   const data = await res.json();
   status.textContent = res.ok
-    ? `Member #${data.user_id}${data.temporary_password ? ` ù temp password ${data.temporary_password}` : ""}`
+    ? `Member #${data.user_id}${data.temporary_password ? `  -  temp password ${data.temporary_password}` : ""}`
     : errMessage(data);
   if (res.ok) refreshPortal();
 });
