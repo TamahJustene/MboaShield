@@ -56,7 +56,7 @@ async function loadNtoc() {
           <strong><a href="/static/investigation.html?case_id=${item.id}">#${item.id} ${escapeHtml(item.title)}</a></strong>
           <span class="band ${bandClass(item.priority)}">${escapeHtml(item.status)}</span>
         </div>
-        <p class="muted">${escapeHtml(item.region || "Unspecified")} ù priority ${escapeHtml(item.priority)}</p>
+        <p class="muted">${escapeHtml(item.region || "Unspecified")}  -  priority ${escapeHtml(item.priority)}</p>
       </article>`
     )
     .join("") || "<p class='muted'>No cases yet. Open Investigation workspace to create one.</p>";
@@ -69,7 +69,7 @@ async function loadNtoc() {
           <strong>${escapeHtml(item.short_name || item.name)}</strong>
           <span class="band ${item.health_score < 60 ? "high" : item.health_score < 80 ? "medium" : "low"}">${escapeHtml(item.health_score)}</span>
         </div>
-        <p class="muted">Open incidents ${escapeHtml(item.open_incidents)} ù high-risk checks ${escapeHtml(item.high_risk_checks)}</p>
+        <p class="muted">Open incidents ${escapeHtml(item.open_incidents)}  -  high-risk checks ${escapeHtml(item.high_risk_checks)}</p>
       </article>`
     )
     .join("") || "<p class='muted'>No institutions.</p>";
@@ -82,7 +82,7 @@ async function loadNotifications() {
     document.getElementById("notificationBell").textContent = "Sign in as analyst when AUTH_ENFORCE=true.";
     return;
   }
-  document.getElementById("notificationBell").innerHTML = `<strong>${escapeHtml(data.unread || 0)}</strong> unread ù ${escapeHtml(data.count || 0)} total`;
+  document.getElementById("notificationBell").innerHTML = `<strong>${escapeHtml(data.unread || 0)}</strong> unread  -  ${escapeHtml(data.count || 0)} total`;
   document.getElementById("notificationList").innerHTML = (data.notifications || [])
     .slice(0, 8)
     .map(

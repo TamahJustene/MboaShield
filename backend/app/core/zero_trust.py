@@ -23,6 +23,8 @@ def zero_trust_checklist() -> dict[str, Any]:
         "mfa_policy_present": mfa_ok,
         "scim_read_available": True,
         "rls_sql_template_shipped": True,
+        "tenant_rls_enforced": False,
+        "route_authorization_audit_complete": False,
         "kms_guide_shipped": True,
     }
     score = sum(1 for value in checks.values() if value)
@@ -34,7 +36,13 @@ def zero_trust_checklist() -> dict[str, Any]:
         "checks": checks,
         "score": score,
         "max_score": len(checks),
-        "ready_for_national": auth_ok and jwt_ok and len(warnings) == 0,
+        "ready_for_national": (
+            auth_ok
+            and jwt_ok
+            and len(warnings) == 0
+            and checks["tenant_rls_enforced"]
+            and checks["route_authorization_audit_complete"]
+        ),
         "warnings": warnings,
         "docs": {
             "kms": "docs/manuals/KMS_AND_SECRETS.md",

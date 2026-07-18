@@ -11,6 +11,27 @@ from ..core.config import ROOT, get_settings
 
 PACKS_ROOT = ROOT / "deploy" / "country-packs"
 
+DEFAULT_PACK: dict[str, Any] = {
+    "pack_id": "cm",
+    "name": "Cameroon",
+    "iso_country": "CM",
+    "default_tenant_id": "cm",
+    "default_locale": "fr",
+    "supported_locales": ["fr", "en"],
+    "currency_display": "XAF",
+    "institutions_seed": "data/institutions.json",
+    "default_sectors": ["election", "health", "finance"],
+    "legal": {
+        "data_protection_note": "Review applicable Cameroon privacy and sector rules.",
+        "lawful_basis": "Configure with deployment counsel",
+        "retention_default_days": 365,
+    },
+    "idp": {
+        "preferred": ["oidc", "saml"],
+        "notes": "Configure the national identity provider for government deployments.",
+    },
+}
+
 SECTOR_CATALOG: list[dict[str, str]] = [
     {
         "id": "election",
@@ -35,6 +56,8 @@ def _read_pack_file(pack_id: str) -> dict[str, Any]:
     path = PACKS_ROOT / pack_id / "pack.json"
     if not path.is_file():
         path = PACKS_ROOT / "template" / "pack.json"
+    if not path.is_file():
+        return dict(DEFAULT_PACK)
     return json.loads(path.read_text(encoding="utf-8"))
 
 

@@ -45,7 +45,7 @@ async function loadDashboard() {
     return;
   }
   const data = await res.json();
-  identity.textContent = `${data.user.display_name} ù User #${data.user.id} ù role ${data.user.role}`;
+  identity.textContent = `${data.user.display_name}  -  User #${data.user.id}  -  role ${data.user.role}`;
 
   document.getElementById("checksLead").textContent = `${data.checks_count} recent check${data.checks_count === 1 ? "" : "s"}.`;
   document.getElementById("checksList").innerHTML = (data.checks || [])
@@ -53,7 +53,7 @@ async function loadDashboard() {
       (check) => {
         const trustScore = trustScoreFromRisk(check.risk_score);
         const trustLabel =
-          trustScore != null ? ` ∑ trust ${trustScore}/100` : "";
+          trustScore != null ? `  -  trust ${trustScore}/100` : "";
         return `
         <a class="history-item" href="/static/history.html?check=${escapeHtml(check.id)}">
           <div class="history-item-top">
@@ -89,7 +89,7 @@ async function loadDashboard() {
       (cert) => `
         <div class="history-item">
           <p class="history-item-title">${escapeHtml(cert.lesson_title_en)}</p>
-          <p class="muted">${escapeHtml(cert.certificate_id)} ù ${escapeHtml(cert.issued_on)}</p>
+          <p class="muted">${escapeHtml(cert.certificate_id)}  -  ${escapeHtml(cert.issued_on)}</p>
         </div>
       `
     )

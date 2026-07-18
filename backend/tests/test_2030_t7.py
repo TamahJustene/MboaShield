@@ -45,3 +45,15 @@ def test_sector_ui_and_packs_on_disk():
     assert (ROOT / "deploy" / "country-packs" / "cm" / "pack.json").is_file()
     assert (ROOT / "deploy" / "country-packs" / "template" / "pack.json").is_file()
     assert (ROOT / "docs" / "adr" / "0008-country-packs-and-sectors.md").is_file()
+    assert "COPY deploy deploy" in (ROOT / "Dockerfile").read_text(encoding="utf-8")
+
+
+def test_country_pack_has_safe_builtin_fallback(monkeypatch, tmp_path):
+    from backend.app.services import country_pack
+
+    country_pack._read_pack_file.cache_clear()
+    monkeypatch.setattr(country_pack, "PACKS_ROOT", tmp_path / "missing")
+    pack = country_pack.load_country_pack("cm")
+    assert pack["iso_country"] == "CM"
+    assert pack["default_sectors"] == ["election", "health", "finance"]
+    country_pack._read_pack_file.cache_clear()

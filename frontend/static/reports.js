@@ -48,7 +48,7 @@ function renderReportDetail(report, events = []) {
   el.className = "out history-detail is-ready";
   el.innerHTML = `
     <span class="band ${bandClass(report.status)}">${escapeHtml(String(report.status).toUpperCase())}</span>
-    <h3 class="report-title">Incident #${escapeHtml(report.id)} · ${escapeHtml(report.report_type)}</h3>
+    <h3 class="report-title">Incident #${escapeHtml(report.id)}  -  ${escapeHtml(report.report_type)}</h3>
     <section class="report-section">
       <span class="report-label">Description</span>
       <p class="report-copy">${escapeHtml(report.description)}</p>
@@ -136,7 +136,7 @@ function renderReportsList(reports) {
             <span class="band ${bandClass(report.status)}">${escapeHtml(String(report.status).toUpperCase())}</span>
             <span class="muted">#${escapeHtml(report.id)}</span>
           </div>
-          <p class="history-item-title">${escapeHtml(report.report_type)} · ${escapeHtml(report.description.slice(0, 90))}</p>
+          <p class="history-item-title">${escapeHtml(report.report_type)}  -  ${escapeHtml(report.description.slice(0, 90))}</p>
           <p class="muted">${escapeHtml(formatTime(report.created_at))}</p>
         </button>
       `

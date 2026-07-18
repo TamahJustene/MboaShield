@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title">
+  <title id="title">MboaShield</title>
+  <rect width="192" height="192" rx="42" fill="#071f1a"/>
+  <path d="M96 22 154 44v42c0 42-23 69-58 84-35-15-58-42-58-84V44z" fill="#0b5d46" stroke="#34d399" stroke-width="7"/>
+  <path d="m96 50 10 21 24 3-17 17 4 24-21-11-21 11 4-24-17-17 24-3z" fill="#facc15"/>
+  <text x="96" y="145" fill="#f8fafc" font-family="Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle">MS</text>
+</svg>

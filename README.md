@@ -37,6 +37,7 @@ PYTHONPATH=. uvicorn backend.app.main:app --reload --port 8000
 
 | Doc | Purpose |
 |---|---|
+| [`docs/PRESENTATION_MASTER_GUIDE.md`](docs/PRESENTATION_MASTER_GUIDE.md) | **Presentation command center: screens, demo flow, APIs, code locations, and checks** |
 | [`docs/PRODUCT_STATUS.md`](docs/PRODUCT_STATUS.md) | **Current full product brief — start here for next tasks** |
 | [`docs/MBOASHIELD_2030_INDEX.md`](docs/MBOASHIELD_2030_INDEX.md) | **2030 national infrastructure program** |
 | [`docs/COMPLETE_USER_GUIDE.md`](docs/COMPLETE_USER_GUIDE.md) | **Every feature + how to test** |

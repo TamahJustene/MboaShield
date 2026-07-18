@@ -94,9 +94,9 @@ async function loadNational() {
     <p><strong>By day</strong></p>
     ${entriesList(data.incident_timeline?.by_day, "No timeline points yet.")}
     <p><strong>Response time</strong></p>
-    <p>Sample: ${escapeHtml(data.response_time?.sample_size ?? 0)} · Avg hours: ${escapeHtml(
+    <p>Sample: ${escapeHtml(data.response_time?.sample_size ?? 0)}  -  Avg hours: ${escapeHtml(
       data.response_time?.average_hours ?? "-"
-    )} · Median hours: ${escapeHtml(data.response_time?.median_hours ?? "-")}</p>
+    )}  -  Median hours: ${escapeHtml(data.response_time?.median_hours ?? "-")}</p>
   `;
 
   const ai = data.ai_accuracy || {};

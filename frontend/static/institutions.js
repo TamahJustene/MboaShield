@@ -24,7 +24,7 @@ async function loadInstitutions() {
             <span class="band ${inst.verified ? "low" : "medium"}">${inst.verified ? "VERIFIED" : "UNVERIFIED"}</span>
           </div>
           <p class="history-item-title">${escapeHtml(inst.name)}</p>
-          <p class="muted">${escapeHtml((inst.handles || []).slice(0, 4).join(" · ") || "No handles")}</p>
+          <p class="muted">${escapeHtml((inst.handles || []).slice(0, 4).join("  -  ") || "No handles")}</p>
           ${
             inst.url
               ? `<p><a href="${escapeHtml(inst.url)}" target="_blank" rel="noopener">Official website</a></p>`

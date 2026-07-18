@@ -15,7 +15,7 @@ async function loadPack() {
   box.className = "out history-detail is-ready";
   box.innerHTML = `
     <h3>${escapeHtml(pack.name || pack.pack_id)} (${escapeHtml(pack.iso_country || "")})</h3>
-    <p class="muted">Tenant ${escapeHtml(pack.tenant_display_name || pack.tenant_id)} � locales ${(pack.supported_locales || []).join(", ")}</p>
+    <p class="muted">Tenant ${escapeHtml(pack.tenant_display_name || pack.tenant_id)} - locales ${(pack.supported_locales || []).join(", ")}</p>
     <p>${escapeHtml(legal.data_protection_note || "")}</p>
     <p class="muted">IdP: ${escapeHtml((pack.idp && pack.idp.notes) || "")}</p>
   `;
@@ -35,10 +35,10 @@ async function loadSectors() {
           <strong>${escapeHtml(item.name)}</strong>
           <span class="band ${band}">${state}</span>
         </div>
-        <p class="muted">${escapeHtml(item.id)} � ${escapeHtml(item.description || "")}</p>
+        <p class="muted">${escapeHtml(item.id)} - ${escapeHtml(item.description || "")}</p>
         ${
           item.enabled
-            ? `<p><a href="/static/national.html">Open national analytics</a> � <a href="/static/ntoc.html">NTOC</a></p>`
+            ? `<p><a href="/static/national.html">Open national analytics</a> - <a href="/static/ntoc.html">NTOC</a></p>`
             : ""
         }
       </article>`;

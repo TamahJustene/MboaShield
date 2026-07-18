@@ -40,8 +40,8 @@ function renderCheckDetail(check) {
 
   el.className = "out history-detail is-ready";
   el.innerHTML = `
-    <span class="band ${escapeHtml(band)}">${escapeHtml(String(band).toUpperCase())} ù ${escapeHtml(check.risk_score ?? "-")}/100</span>
-    <h3 class="report-title">Check #${escapeHtml(check.id)} ù ${escapeHtml(check.check_type)}</h3>
+    <span class="band ${escapeHtml(band)}">${escapeHtml(String(band).toUpperCase())}  -  ${escapeHtml(check.risk_score ?? "-")}/100</span>
+    <h3 class="report-title">Check #${escapeHtml(check.id)}  -  ${escapeHtml(check.check_type)}</h3>
     <section class="report-section">
       <span class="report-label">When</span>
       <p class="report-copy">${escapeHtml(formatTime(check.created_at))}</p>
@@ -103,7 +103,7 @@ function renderCertificateDetail(cert) {
     </section>
     <section class="report-section">
       <span class="report-label">Issued</span>
-      <p class="report-copy">${escapeHtml(cert.issued_on)} ù ${escapeHtml(cert.issuer)}</p>
+      <p class="report-copy">${escapeHtml(cert.issued_on)}  -  ${escapeHtml(cert.issuer)}</p>
     </section>
     <section class="report-section">
       <span class="report-label">Stored</span>

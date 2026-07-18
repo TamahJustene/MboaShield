@@ -22,7 +22,10 @@ def test_zero_trust_checklist_on_security_status(client):
     zt = body["zero_trust"]
     assert zt["checks"]["scim_read_available"] is True
     assert zt["checks"]["rls_sql_template_shipped"] is True
+    assert zt["checks"]["tenant_rls_enforced"] is False
+    assert zt["checks"]["route_authorization_audit_complete"] is False
     assert zt["checks"]["kms_guide_shipped"] is True
+    assert zt["ready_for_national"] is False
     assert body["scim"]["users"] == "/scim/v2/Users"
 
 

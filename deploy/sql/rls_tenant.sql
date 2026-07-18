@@ -1,28 +1,65 @@
--- MboaShield 2030 T5 - Postgres row-level security by tenant (pilot template)
--- Apply ONLY on PostgreSQL national deployments after DATABASE_URL is Postgres.
--- SQLite demo deployments skip this file.
+-- MboaShield tenant RLS activation template.
+-- This script is fail-closed: it refuses to enable RLS until every protected
+-- table has a populated tenant_id column. It is not applied to the SQLite demo.
+--
+-- The application must set the tenant for every database transaction:
+--   SET LOCAL app.tenant_id = 'cm';
 
--- Prerequisite: set app.tenant_id per session, e.g.:
---   SET app.tenant_id = 'cm';
+BEGIN;
 
-ALTER TABLE IF EXISTS incident_reports ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS verification_checks ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS trust_assessments ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS shared_alerts ENABLE ROW LEVEL SECURITY;
+DO $$
+DECLARE
+  target_table text;
+BEGIN
+  FOREACH target_table IN ARRAY ARRAY[
+    'incident_reports',
+    'verification_checks',
+    'trust_assessments',
+    'shared_alerts'
+  ]
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM information_schema.columns AS c
+      WHERE c.table_schema = 'public'
+        AND c.table_name = target_table
+        AND c.column_name = 'tenant_id'
+    ) THEN
+      RAISE EXCEPTION
+        'RLS activation refused: %.tenant_id does not exist. Add and backfill it first.',
+        target_table;
+    END IF;
+  END LOOP;
+END
+$$;
 
--- Example policy pattern (adjust column names if tenant columns are added later).
--- Today many tables are single-tenant; policies use current_setting for future multi-tenant rows.
+ALTER TABLE incident_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE verification_checks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trust_assessments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shared_alerts ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS mboashield_tenant_incidents ON incident_reports;
 CREATE POLICY mboashield_tenant_incidents ON incident_reports
   FOR ALL
-  USING (
-    COALESCE(current_setting('app.tenant_id', true), 'cm') = 'cm'
-    OR true  -- single-tenant pilot: allow; tighten when tenant_id column exists
-  );
+  USING (tenant_id = current_setting('app.tenant_id', true))
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true));
 
--- When tenant_id columns exist, replace USING with:
---   tenant_id = current_setting('app.tenant_id', true)
+DROP POLICY IF EXISTS mboashield_tenant_checks ON verification_checks;
+CREATE POLICY mboashield_tenant_checks ON verification_checks
+  FOR ALL
+  USING (tenant_id = current_setting('app.tenant_id', true))
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true));
 
-COMMENT ON POLICY mboashield_tenant_incidents ON incident_reports IS
-  'MboaShield T5 RLS pilot - tighten when per-row tenant_id is populated';
+DROP POLICY IF EXISTS mboashield_tenant_assessments ON trust_assessments;
+CREATE POLICY mboashield_tenant_assessments ON trust_assessments
+  FOR ALL
+  USING (tenant_id = current_setting('app.tenant_id', true))
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true));
+
+DROP POLICY IF EXISTS mboashield_tenant_alerts ON shared_alerts;
+CREATE POLICY mboashield_tenant_alerts ON shared_alerts
+  FOR ALL
+  USING (tenant_id = current_setting('app.tenant_id', true))
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true));
+
+COMMIT;

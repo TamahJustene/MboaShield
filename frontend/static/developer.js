@@ -16,7 +16,7 @@ async function loadProgram() {
   const lead = document.getElementById("devProgramLead");
   try {
     const data = await fetch("/api/v1/program").then((r) => r.json());
-    lead.textContent = `${data.program} · ${data.version} · phase ${data.transformation_phase} · tenant ${data.tenant_display_name || data.tenant_id}`;
+    lead.textContent = `${data.program}  -  ${data.version}  -  phase ${data.transformation_phase}  -  tenant ${data.tenant_display_name || data.tenant_id}`;
   } catch (_) {
     lead.textContent = "Could not load /api/v1/program";
   }
@@ -41,7 +41,7 @@ async function loadKeys() {
           <strong>${escapeHtml(key.name)}</strong>
           <span class="band ${key.revoked ? "high" : "low"}">${key.revoked ? "REVOKED" : "ACTIVE"}</span>
         </div>
-        <p class="muted">${escapeHtml(key.partner_org || "")} · ${escapeHtml(key.key_prefix || "")}...</p>
+        <p class="muted">${escapeHtml(key.partner_org || "")}  -  ${escapeHtml(key.key_prefix || "")}...</p>
       </article>`
       )
       .join("") || "<p class='muted'>No partner API keys yet. Create one on Identity.</p>";

@@ -30,10 +30,10 @@ async function loadAnnouncements() {
         <strong>${escapeHtml(item.title)}</strong>
         <span class="band ${item.status === "published" ? "low" : "medium"}">${escapeHtml(item.status)}</span>
       </div>
-      <p class="muted"><code>${escapeHtml(item.announcement_id)}</code> · ${escapeHtml(item.institution_id)} · v${escapeHtml(item.current_version)}</p>
+      <p class="muted"><code>${escapeHtml(item.announcement_id)}</code>  -  ${escapeHtml(item.institution_id)}  -  v${escapeHtml(item.current_version)}</p>
       <p>
         <a href="/verify/a/${encodeURIComponent(item.announcement_id)}" target="_blank" rel="noopener">Public verify</a>
-        · <a href="/static/verify-announcement.html?a=${encodeURIComponent(item.announcement_id)}">UI verify</a>
+         -  <a href="/static/verify-announcement.html?a=${encodeURIComponent(item.announcement_id)}">UI verify</a>
       </p>
     </article>`
     )
