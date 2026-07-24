@@ -3,7 +3,7 @@
 **Version:** 1.4.0  
 **Purpose:** Know who can do what, how enforcement works, and how to change it safely.
 
-Related: [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) � [`ARCHITECTURE.md`](ARCHITECTURE.md) � [`DEPLOY.md`](DEPLOY.md) � [`PHASE_10_PLAN.md`](PHASE_10_PLAN.md)
+Related: [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) - [`ARCHITECTURE.md`](ARCHITECTURE.md) - [`DEPLOY.md`](DEPLOY.md) - [`PHASE_10_PLAN.md`](PHASE_10_PLAN.md)
 
 ---
 

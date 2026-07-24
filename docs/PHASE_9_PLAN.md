@@ -34,9 +34,9 @@
 
 ## Permissions
 
-- `evidence:read` — analyst, institution_admin, admin
-- `evidence:write` — analyst, admin
-- `evidence:manage` — admin (retention)
+- `evidence:read` - analyst, institution_admin, admin
+- `evidence:write` - analyst, admin
+- `evidence:manage` - admin (retention)
 
 ## Tests
 

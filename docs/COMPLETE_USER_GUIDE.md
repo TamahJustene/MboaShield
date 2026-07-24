@@ -1,11 +1,9 @@
 # MboaShield - Complete user and testing guide (v2.8.0)
 
-**For:** Justene Nkwagoh Tamah and anyone demoing, testing, or auditing the platform.
-**Live demo:** https://mboashield.onrender.com
-**Navigation hub:** https://mboashield.onrender.com/static/hub.html
-**Presentation (PPT):** https://mboashield.onrender.com/static/presentations.html
-**How to explain to jury:** [`PRESENTER_GUIDE.md`](PRESENTER_GUIDE.md)
-**Presentation command center:** [`PRESENTATION_MASTER_GUIDE.md`](PRESENTATION_MASTER_GUIDE.md)
+**For:** Operators, testers, and auditors.  
+**Live demo:** https://mboashield.onrender.com  
+**Product hub:** https://mboashield.onrender.com/static/hub.html  
+**Readiness status:** [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md)
 
 ---
 
@@ -33,42 +31,41 @@ cd mboashield && ./scripts/run_demo.sh
 
 | # | Page | URL path | Primary role |
 |---|---|---|---|
-| 1 | Home / Grand Jury demo | `/` | Citizen, jury |
-| 2 | Product hub | `/static/hub.html` | You (all links) |
-| 3 | Presentation download | `/static/presentations.html` | Jury (PPT) |
-| 4 | Citizen dashboard | `/static/citizen.html` | Citizen |
-| 5 | Activity history | `/static/history.html` | Citizen |
-| 6 | Incident reports | `/static/reports.html` | Citizen / analyst |
-| 7 | Analyst console | `/static/analyst.html` | Analyst |
-| 8 | National dashboard | `/static/national.html` | Government |
-| 9 | NTOC | `/static/ntoc.html` | Operations |
-| 10 | Intel | `/static/intel.html` | Analyst |
-| 11 | Investigation | `/static/investigation.html` | Analyst |
-| 12 | Institution registry | `/static/institutions.html` | Admin |
-| 13 | Institution portal | `/static/institution-portal.html` | Institution admin |
-| 14 | Announcements | `/static/announcements.html` | Publisher |
-| 15 | Verify announcement | `/static/verify-announcement.html` | Public |
-| 16 | Public verify API | `/verify/a/{id}` | Public |
-| 17 | Identity | `/static/identity.html` | Admin |
-| 18 | AI lab | `/static/ai-lab.html` | Admin / AI gov |
-| 19 | Governance | `/static/governance.html` | AI gov / compliance |
-| 20 | API docs | `/docs` | Developer |
-| 21 | Health | `/health` | Ops |
-| 22 | Metrics | `/metrics` | Ops (Prometheus) |
-| 23 | Developer portal | `/static/developer.html` | Developer / integration partner |
-| 24 | Sector modules | `/static/sectors.html` | Government / sector operator |
+| 1 | Home / guided demo | `/` | Citizen |
+| 2 | Product hub | `/static/hub.html` | Operator (all links) |
+| 3 | Citizen dashboard | `/static/citizen.html` | Citizen |
+| 4 | Activity history | `/static/history.html` | Citizen |
+| 5 | Incident reports | `/static/reports.html` | Citizen / analyst |
+| 6 | Analyst console | `/static/analyst.html` | Analyst |
+| 7 | National dashboard | `/static/national.html` | Government |
+| 8 | NTOC | `/static/ntoc.html` | Operations |
+| 9 | Intel | `/static/intel.html` | Analyst |
+| 10 | Investigation | `/static/investigation.html` | Analyst |
+| 11 | Institution registry | `/static/institutions.html` | Admin |
+| 12 | Institution portal | `/static/institution-portal.html` | Institution admin |
+| 13 | Announcements | `/static/announcements.html` | Publisher |
+| 14 | Verify announcement | `/static/verify-announcement.html` | Public |
+| 15 | Public verify API | `/verify/a/{id}` | Public |
+| 16 | Identity | `/static/identity.html` | Admin |
+| 17 | AI lab | `/static/ai-lab.html` | Admin / AI gov |
+| 18 | Governance | `/static/governance.html` | AI gov / compliance |
+| 19 | API docs | `/docs` | Developer |
+| 20 | Health | `/health` | Ops |
+| 21 | Metrics | `/metrics` | Ops (Prometheus) |
+| 22 | Developer portal | `/static/developer.html` | Developer / integration partner |
+| 23 | Sector modules | `/static/sectors.html` | Government / sector operator |
 
 ---
 
-## 3. Grand Jury demo (home) - step by step
+## 3. Guided demo (home) - step by step
 
 **URL:** `/`
 
-### 3.1 Automated 90-second demo
+### 3.1 Automated guided demo
 
-1. Click **Run Grand Jury demo (90s)**.
+1. Click **Run guided demo**.
 2. Watch progress bar and checklist (5 scenarios).
-3. **Pass:** Each step shows a risk band (LOW/MEDIUM/HIGH), explanation, and judge summary cards at bottom.
+3. **Pass:** Each step shows a risk band (LOW/MEDIUM/HIGH), explanation, and summary cards.
 4. **Pass:** Finale section appears with impact stats and **Run demo again**.
 
 ### 3.2 Manual - Text rumour
@@ -299,10 +296,10 @@ dismissed -> archived (from several states)
 
 ## 12. Full regression checklist (printable)
 
-Use before jury or after each deploy.
+Use before demo or after each deploy.
 
 - [ ] `/health` version 2.8.0, phase CI-1
-- [ ] Home 90s demo completes 5/5
+- [ ] Home guided demo completes 5/5
 - [ ] Text / imp / audio / image manual checks
 - [ ] Ambassador certificate
 - [ ] AI case analysis returns `certainty: none`
@@ -318,7 +315,6 @@ Use before jury or after each deploy.
 - [ ] Developer portal + TAXII discovery
 - [ ] Country pack + sector modules
 - [ ] Hub page health strip
-- [ ] PPT downloads from `/static/presentations/MboaShield_SIN2026.pptx`
 - [ ] `pytest backend/tests -q` (local / CI)
 
 ---
@@ -340,26 +336,12 @@ Phase-specific: `test_phase12_ai.py`, `test_phase13_infra.py`, `test_phase14_gov
 
 | Doc | Use |
 |---|---|
-| [`PRESENTER_GUIDE.md`](PRESENTER_GUIDE.md) | Jury / bootcamp speaking script |
+| [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) | Readiness baseline and backlog |
 | [`E2E_WALKTHROUGH.md`](E2E_WALKTHROUGH.md) | 25-min system tour |
+| [`ROADMAP.md`](ROADMAP.md) | Active readiness roadmap |
 | [`manuals/README.md`](manuals/README.md) | Role manuals for auditors |
 | [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md) | Env vars and RBAC |
-| [`PITCH_DECK.md`](PITCH_DECK.md) | Legacy slide text (use PPT file for stage) |
 
 ---
 
-## 15. Regenerate presentation
-
-```bash
-pip install python-pptx
-python scripts/generate_presentation.py
-```
-
-Outputs:
-
-- `docs/presentations/MboaShield_SIN2026.pptx`
-- `frontend/static/presentations/MboaShield_SIN2026.pptx` (web download)
-
----
-
-**Contact:** tamahjustene45@gmail.com  -  **Repo:** github.com/TamahJustene/MboaShield
+**Contact:** tamahjustene45@gmail.com · **Repo:** github.com/TamahJustene/MboaShield

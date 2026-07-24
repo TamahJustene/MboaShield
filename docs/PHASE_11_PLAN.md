@@ -25,8 +25,8 @@
 
 ## UI
 
-- `/static/announcements.html` — publish workflow
-- `/static/verify-announcement.html` — citizen verify
+- `/static/announcements.html` - publish workflow
+- `/static/verify-announcement.html` - citizen verify
 
 ## Rollback
 

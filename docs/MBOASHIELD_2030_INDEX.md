@@ -43,9 +43,10 @@ Phases 6-15 delivered identity, NTOC, intel, vault, institution portal, verified
 
 | Doc | Use |
 |---|---|
-| [`PRESENTATION_MASTER_GUIDE.md`](PRESENTATION_MASTER_GUIDE.md) | Presenter command center and complete product map |
-| [`COMPLETE_USER_GUIDE.md`](COMPLETE_USER_GUIDE.md) | Test every feature now |
-| [`PRESENTER_GUIDE.md`](PRESENTER_GUIDE.md) | Explain to jury/partners |
+| [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) | Current readiness baseline and backlog |
+| [`COMPLETE_USER_GUIDE.md`](COMPLETE_USER_GUIDE.md) | Test every feature |
+| [`E2E_WALKTHROUGH.md`](E2E_WALKTHROUGH.md) | End-to-end system tour |
+| [`ROADMAP.md`](ROADMAP.md) | Active readiness roadmap |
 | [`manuals/README.md`](manuals/README.md) | Role manuals |
 
 The public v2.8 demo proves the integrated product flow. National production still requires durable infrastructure, hard authentication, independent audit, legal approval, and operational readiness.

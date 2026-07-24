@@ -2,7 +2,7 @@
 
 Maps each **national platform** to current implementation, primary APIs, UI portals, and gap summary.
 
-Legend: **Mature** = production-usable in gov profile with docs/tests · **Partial** = capability exists, not yet infrastructure-grade · **Gap** = not implemented
+Legend: **Mature** = production-usable in gov profile with docs/tests - **Partial** = capability exists, not yet infrastructure-grade - **Gap** = not implemented
 
 | Pillar | Current modules | API prefix (v1) | Portals today | Status | 2030 gap (summary) |
 |---|---|---|---|---|---|

@@ -1,15 +1,15 @@
 # Security manual
 
-**Version:** 1.9.0 � **Threat model:** [`../V1_0_THREAT_MODEL.md`](../V1_0_THREAT_MODEL.md)
+**Version:** 1.9.0 - **Threat model:** [`../V1_0_THREAT_MODEL.md`](../V1_0_THREAT_MODEL.md)
 
 ## Control pillars
 
-1. **Identity** � passwords, MFA, OIDC/SAML/LDAP, sessions, partner keys (Phase 6)
-2. **Authorization** � RBAC + scopes; soft vs hard auth
-3. **Evidence integrity** � hashes, custody, retention (Phase 9)
-4. **Verified communications** � signed announcements + public verify (Phase 11)
-5. **AI honesty** � certainty none; model cards; consent (Phases 12/14)
-6. **Infrastructure** � metrics, workers, network allowlists (Phase 13)
+1. **Identity** - passwords, MFA, OIDC/SAML/LDAP, sessions, partner keys (Phase 6)
+2. **Authorization** - RBAC + scopes; soft vs hard auth
+3. **Evidence integrity** - hashes, custody, retention (Phase 9)
+4. **Verified communications** - signed announcements + public verify (Phase 11)
+5. **AI honesty** - certainty none; model cards; consent (Phases 12/14)
+6. **Infrastructure** - metrics, workers, network allowlists (Phase 13)
 
 ## Hardening before government go-live
 

@@ -1,6 +1,6 @@
-# MboaShield v1.0 Enterprise Program � Index
+# MboaShield v1.0 Enterprise Program - Index
 
-**Status:** Phase 15 (Documentation Suite) COMPLETE � v1.9.0  
+**Status:** Phase 15 (Documentation Suite) COMPLETE - v1.9.0  
 **Current product:** v1.9.0  
 
 Phases 6-15 complete. Program exit: living docs + `docs/manuals/*` for external audit.

@@ -1,16 +1,16 @@
-# MboaShield 2030 — National digital public infrastructure
+# MboaShield 2030 - National digital public infrastructure
 
 **Status:** North-star architecture (Chief Architect Directive)  
-**Baseline implementation:** v1.9.0 (Phases 6–15 complete)  
+**Baseline implementation:** v1.9.0 (Phases 6-15 complete)  
 **Transformation plan:** [`NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md`](NATIONAL_INFRASTRUCTURE_TRANSFORMATION_PLAN.md)
 
 ---
 
 ## What MboaShield is
 
-MboaShield is **not** a web application, an AI detector, or a competition demo.
+MboaShield is **not** a web application, an AI detector, or a public demo.
 
-MboaShield is **national digital public infrastructure**: the trusted digital backbone through which governments, institutions, businesses, and citizens **verify digital trust** — communications, identities, media, evidence, AI-assisted analysis, and cyber incidents — across Cameroon and, by configuration, other nations.
+MboaShield is **national digital public infrastructure**: the trusted digital backbone through which governments, institutions, businesses, and citizens **verify digital trust** - communications, identities, media, evidence, AI-assisted analysis, and cyber incidents - across Cameroon and, by configuration, other nations.
 
 ---
 
@@ -48,7 +48,7 @@ If any answer is weak, **redesign** before coding.
 | **National Evidence Platform** | Custody, integrity, retention, legal export |
 | **National Government Communications Platform** | Signed announcements, public verify, advisories |
 | **National Analytics Platform** | National situational awareness, feedback loops |
-| **National AI Platform** | Models, evaluation, calibration — human accountability |
+| **National AI Platform** | Models, evaluation, calibration - human accountability |
 | **National Governance Platform** | Risk, consent, compliance, model/dataset cards |
 | **National Partner Platform** | APIs, OAuth, webhooks, B2B/B2G integration |
 
@@ -60,7 +60,7 @@ These are **platforms**, not optional features. Current code maps to them; gaps 
 
 All portals consume the same Trust API (`/api/v1/*` today; versioned evolution under OpenAPI):
 
-Citizen · Government · Institution · Analyst · Investigator · Judiciary · Partner · Media · Emergency · Developer
+Citizen - Government - Institution - Analyst - Investigator - Judiciary - Partner - Media - Emergency - Developer
 
 Today: static HTML consoles per persona. Target: portal shell + capability modules + hard auth in government profile.
 
@@ -70,7 +70,7 @@ Today: static HTML consoles per persona. Target: portal shell + capability modul
 
 Institutions securely exchange (with policy and audit):
 
-Threat intelligence · IoCs · Verified announcements · Deepfake/fraud/impersonation alerts · Emergency advisories · Risk bulletins · Digital evidence metadata · Case updates
+Threat intelligence - IoCs - Verified announcements - Deepfake/fraud/impersonation alerts - Emergency advisories - Risk bulletins - Digital evidence metadata - Case updates
 
 **Target:** trust relationships, collaboration channels, cross-institution workflows. **Today:** intel + announcements + cases partially; network layer is a **planned transformation phase**.
 
@@ -80,7 +80,7 @@ Threat intelligence · IoCs · Verified announcements · Deepfake/fraud/impersonati
 
 Everything that can be assessed receives an **explainable** trust assessment:
 
-People · institutions · announcements · documents · media · accounts · sites · apps · reports · cases · evidence · intel items
+People - institutions - announcements - documents - media - accounts - sites - apps - reports - cases - evidence - intel items
 
 Rules (non-negotiable):
 
@@ -94,7 +94,7 @@ Rules (non-negotiable):
 
 Prefer open standards: REST, OpenAPI, webhooks, OAuth2, OIDC, SAML, SCIM, STIX/TAXII (where applicable), CAP (alerts), JSON/CSV/PDF.
 
-No proprietary formats when an open standard exists. **Do not claim ISO/NIST certification** unless independently achieved — **design for assessability**.
+No proprietary formats when an open standard exists. **Do not claim ISO/NIST certification** unless independently achieved - **design for assessability**.
 
 ---
 
@@ -108,7 +108,7 @@ AI **assists**; humans **decide**. Every model: model card, dataset card, versio
 
 Zero trust direction: authenticate, authorize, audit, encrypt, least privilege, secret management, API monitoring.
 
-HA, horizontal scale, DR, backups, geo-redundancy, observability, graceful degradation — phased via infrastructure program (Phase 13 foundation; 2030 phases extend).
+HA, horizontal scale, DR, backups, geo-redundancy, observability, graceful degradation - phased via infrastructure program (Phase 13 foundation; 2030 phases extend).
 
 ---
 

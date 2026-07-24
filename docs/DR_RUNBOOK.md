@@ -1,7 +1,7 @@
 # Disaster recovery runbook (MboaShield 2030 T6)
 
 **Owner:** Platform / CERT ops  
-**Related:** [`HA_AND_SCALE.md`](HA_AND_SCALE.md) � [`manuals/OPERATIONS.md`](manuals/OPERATIONS.md) � [`manuals/KMS_AND_SECRETS.md`](manuals/KMS_AND_SECRETS.md)
+**Related:** [`HA_AND_SCALE.md`](HA_AND_SCALE.md) - [`manuals/OPERATIONS.md`](manuals/OPERATIONS.md) - [`manuals/KMS_AND_SECRETS.md`](manuals/KMS_AND_SECRETS.md)
 
 ---
 
@@ -57,7 +57,7 @@ If signing keys are lost, rotate via KMS and re-issue announcements; historical 
 | RPO/RTO measured vs target | | |
 | Findings filed | | |
 
-**Last drill:** _not yet recorded � schedule before national go-live._
+**Last drill:** _not yet recorded - schedule before national go-live._
 
 ---
 

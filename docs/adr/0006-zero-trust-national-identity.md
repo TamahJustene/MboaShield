@@ -7,7 +7,7 @@
 
 ## Context
 
-Demo deployments use soft auth (`AUTH_ENFORCE=false`) for jury continuity. National government deployments require enforced authentication, IdP federation readiness, and a path to SCIM provisioning and Postgres row-level security.
+Demo deployments use soft auth (`AUTH_ENFORCE=false`) for demo continuity. National government deployments require enforced authentication, IdP federation readiness, and a path to SCIM provisioning and Postgres row-level security.
 
 ## Decision
 
@@ -25,5 +25,5 @@ Demo deployments use soft auth (`AUTH_ENFORCE=false`) for jury continuity. Natio
 
 ## Alternatives considered
 
-- **Flip AUTH_ENFORCE default to true:** Rejected - breaks Render public demo and competition soft-auth.
+- **Flip AUTH_ENFORCE default to true:** Rejected - breaks Render public demo and demo soft-auth.
 - **Full SCIM write:** Deferred until IdP pilot requires it.

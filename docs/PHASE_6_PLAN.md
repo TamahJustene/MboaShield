@@ -1,4 +1,4 @@
-# Phase 6 — Enterprise Identity Platform
+# Phase 6 - Enterprise Identity Platform
 
 **Version:** 1.0.0  
 **Status:** COMPLETE  
@@ -34,7 +34,7 @@
 
 ## Tests
 
-`pytest backend/tests` — 55 passed at Phase 6 close.
+`pytest backend/tests` - 55 passed at Phase 6 close.
 
 ## Rollback
 

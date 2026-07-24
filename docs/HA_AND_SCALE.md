@@ -67,4 +67,4 @@ Record p95 for `/api/v1/trust/assess` and attach to go-live evidence pack.
 
 ## 5. Resilience metadata API
 
-`GET /api/v1/infra/resilience` � published targets and script paths.
+`GET /api/v1/infra/resilience` - published targets and script paths.

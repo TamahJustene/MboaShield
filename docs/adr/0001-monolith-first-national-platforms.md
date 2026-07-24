@@ -23,5 +23,5 @@ MboaShield 2030 targets national-scale infrastructure with ten permanent platfor
 
 ## Alternatives considered
 
-- **Immediate microservices:** Rejected — operational cost and network complexity without proven scale.
-- **Rewrite in another stack:** Rejected — destroys working `/api/v1` and competition/demo stability.
+- **Immediate microservices:** Rejected - operational cost and network complexity without proven scale.
+- **Rewrite in another stack:** Rejected - destroys working `/api/v1` and demo stability.

@@ -1,9 +1,9 @@
-# MboaShield v1.0 — System Design
+# MboaShield v1.0 - System Design
 
-**Baseline:** v0.9.0 · **Program index:** [`V1_0_ENTERPRISE_INDEX.md`](V1_0_ENTERPRISE_INDEX.md)  
+**Baseline:** v0.9.0 - **Program index:** [`V1_0_ENTERPRISE_INDEX.md`](V1_0_ENTERPRISE_INDEX.md)  
 **Review:** [`V1_0_ARCHITECTURE_REVIEW.md`](V1_0_ARCHITECTURE_REVIEW.md)
 
-This document is the target architecture for Phases 6–15. Implementation must **extend** the current FastAPI monolith modularly; extraction to microservices is optional and only after Phase 13 proves scale need.
+This document is the target architecture for Phases 6-15. Implementation must **extend** the current FastAPI monolith modularly; extraction to microservices is optional and only after Phase 13 proves scale need.
 
 ---
 
@@ -11,7 +11,7 @@ This document is the target architecture for Phases 6–15. Implementation must **
 
 ```mermaid
 C4Context
-title MboaShield National Digital Trust Platform — System Context
+title MboaShield National Digital Trust Platform - System Context
 Person(citizen, "Citizen", "Reports threats, verifies claims, learns")
 Person(analyst, "CERT / Analyst", "Investigates incidents and cases")
 Person(instAdmin, "Institution Admin", "Manages org identity and announcements")
@@ -43,7 +43,7 @@ Single platform boundary keeps deployment simple for ministries while exposing c
 
 ```mermaid
 C4Container
-title MboaShield — Containers (target after Phase 13; today = single API container)
+title MboaShield - Containers (target after Phase 13; today = single API container)
 Person(user, "Users", "All personas")
 Container(web, "Web Consoles", "Static HTML/JS", "Citizen, Analyst NTOC, Institution, Admin")
 Container(api, "Trust API", "FastAPI", "Auth, workflow, AI, analytics, vault APIs")
@@ -72,7 +72,7 @@ Rel(worker, obs, "Expose metrics")
 
 ---
 
-## 3. Component Diagram (C4 Level 3) — Trust API
+## 3. Component Diagram (C4 Level 3) - Trust API
 
 ```mermaid
 flowchart TB
@@ -118,7 +118,7 @@ flowchart TB
 
 ---
 
-## 4. C4 Level 4 — Identity component (Phase 6 focus)
+## 4. C4 Level 4 - Identity component (Phase 6 focus)
 
 ```mermaid
 flowchart LR
@@ -362,7 +362,7 @@ flowchart TB
 - Auth zone: IdP callbacks restricted by path  
 - Operations zone: NTOC / admin (IP allowlists or VPN optional via config)  
 - Partner zone: API keys + mTLS optional later  
-- Data zone: Postgres, Redis, object store — private subnets  
+- Data zone: Postgres, Redis, object store - private subnets  
 - Egress allowlist for intel connectors (Phase 8)
 
 ---
@@ -433,7 +433,7 @@ Obtain key ? `GET /partners/me` ? create checks / submit incidents per scopes ? 
 ## 18. Multi-country configuration model
 
 ```yaml
-# Conceptual — implemented Phase 6+ as env + DB tenant profile
+# Conceptual - implemented Phase 6+ as env + DB tenant profile
 tenant:
   id: cm
   display_name: Cameroon
@@ -456,7 +456,7 @@ Code paths read tenant context; no country forks.
 ## 19. UX principles (Principal UX)
 
 - One job per console section; NTOC is operational, not marketing  
-- Preserve Grand Jury demo as a **demo profile skin**, not the ops default  
+- Preserve guided citizen demo as a **demo profile skin**, not the ops default  
 - Progressive enhancement on existing HTML; optional later SPA only if needed  
 - Accessibility: keyboard paths, contrast, language toggle EN/FR  
 - Never show fake certainty badges on AI output  
@@ -470,9 +470,9 @@ Code paths read tenant context; no country forks.
 | Evolve monolith first | Yes | Avoid rewrite; seams already exist |
 | Keep `/api/v1` | Yes | Non-breaking mandate |
 | Soft auth demo profile | Retain | Competition + civic access |
-| Cases vs incidents | Parallel models | Don’t break workflow machine |
+| Cases vs incidents | Parallel models | Don-t break workflow machine |
 | Intel compliance | Official APIs/RSS only | Legal & adoption fitness |
-| Evidence additive | New tables | Don’t overload verification_checks |
+| Evidence additive | New tables | Don-t overload verification_checks |
 | AI certainty | Remain none by default | Governance honesty |
 
 **Next:** [`V1_0_THREAT_MODEL.md`](V1_0_THREAT_MODEL.md)

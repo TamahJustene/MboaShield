@@ -83,7 +83,7 @@ def check_image_bytes(data: bytes, filename: str = "", lang: str = "en") -> Medi
             risk_band="medium",
             reasons=[f"Could not fully decode image: {exc}"],
             meta=meta,
-            advice="Try another PNG/JPG. For the pitch, use prepared demo samples.",
+            advice="Try another PNG/JPG. Use the prepared demo samples if you need a known-good file.",
         )
 
     score = max(0, min(100, score))

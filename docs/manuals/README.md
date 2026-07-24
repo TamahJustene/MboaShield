@@ -27,8 +27,8 @@ python scripts/export_openapi.py
 
 Writes:
 
-- `docs/manuals/openapi.json` � machine-readable OpenAPI 3 export
-- `docs/manuals/openapi.summary.md` � path inventory for quick review
+- `docs/manuals/openapi.json` - machine-readable OpenAPI 3 export
+- `docs/manuals/openapi.summary.md` - path inventory for quick review
 
 Live interactive docs: `/docs` and `/redoc` on a running instance.
 
