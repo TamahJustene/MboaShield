@@ -16,4 +16,4 @@ Phases 6-14 already maintained living docs; Phase 15 consolidates them for exter
 
 ## Next
 
-Enterprise program complete through Phase 15. Further work is maintenance, hardening, and competition delivery.
+Enterprise program complete through Phase 15. Further work is maintenance, hardening, and product readiness.

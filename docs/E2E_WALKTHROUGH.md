@@ -28,10 +28,10 @@ curl -s https://mboashield.onrender.com/health | python3 -m json.tool
 ```mermaid
 flowchart TB
   subgraph public [Public / citizen]
-    Home["/ - Grand Jury demo"]
+    Home["/ - guided demo"]
     Citizen["/static/citizen.html"]
     Verify["/verify/a/{id}"]
-    Pitch["/static/pitch.html"]
+    Hub["/static/hub.html"]
   end
 
   subgraph ops [Operations]
@@ -76,10 +76,10 @@ flowchart TB
 
 ## 3. Guided tour (~25 minutes)
 
-### A. Citizen story (competition demo) - 10 min
+### A. Citizen story (guided demo) - 10 min
 
 1. Open **https://mboashield.onrender.com/**
-2. Click **Run Grand Jury demo (90s)** - walks 5 scenarios automatically.
+2. Click **Run guided demo** - walks 5 scenarios automatically.
 3. Or manually:
    - **Text** -> `POST /api/v1/trust/assess` with `object_type=text`
    - **Identity** -> `POST /api/v1/trust/assess` with `object_type=impersonation`
@@ -207,8 +207,8 @@ cd mboashield
 
 ## 9. Related docs
 
-- [`PRESENTATION_MASTER_GUIDE.md`](PRESENTATION_MASTER_GUIDE.md) - definitive presentation map
-- [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) - version and surfaces
+- [`PRODUCT_STATUS.md`](PRODUCT_STATUS.md) - readiness baseline and backlog
+- [`COMPLETE_USER_GUIDE.md`](COMPLETE_USER_GUIDE.md) - feature testing map
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - technical layers
 - [`ACCESS_AND_CONFIG.md`](ACCESS_AND_CONFIG.md) - roles and env
 - [`manuals/USER.md`](manuals/USER.md) - citizen-facing

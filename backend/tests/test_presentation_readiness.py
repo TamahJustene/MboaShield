@@ -1,4 +1,4 @@
-"""Presentation and deployment artifact regression checks."""
+"""Product readiness and deployment artifact regression checks."""
 
 from __future__ import annotations
 
@@ -10,12 +10,11 @@ from alembic.script import ScriptDirectory
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_presentation_assets_are_present_and_nonempty():
+def test_demo_assets_are_present_and_nonempty():
     expected = [
         ROOT / "frontend/static/samples/minister_voice_clone.wav",
         ROOT / "frontend/static/samples/synthetic_smooth_face.jpg",
         ROOT / "frontend/static/samples/tiny_sticker.jpg",
-        ROOT / "frontend/static/presentations/MboaShield_SIN2026.pptx",
         ROOT / "frontend/static/icon.svg",
     ]
     for path in expected:
@@ -23,7 +22,7 @@ def test_presentation_assets_are_present_and_nonempty():
         assert path.stat().st_size > 100, path
 
 
-def test_grand_jury_demo_fails_visibly_and_recovers():
+def test_guided_demo_fails_visibly_and_recovers():
     script = (ROOT / "frontend/static/app.js").read_text(encoding="utf-8")
     assert "if (!response.ok)" in script
     assert "No assessment was produced" in script
@@ -31,6 +30,24 @@ def test_grand_jury_demo_fails_visibly_and_recovers():
     assert "Demo sample is unavailable" in script
     assert "finally {" in script
     assert "setDemoRunning(false)" in script
+    assert "Grand Jury" not in script
+    assert "demoFinale" in (ROOT / "frontend/index.html").read_text(encoding="utf-8")
+
+
+def test_competition_artifacts_removed():
+    removed = [
+        ROOT / "docs/PRESENTER_GUIDE.md",
+        ROOT / "docs/PRESENTATION_MASTER_GUIDE.md",
+        ROOT / "docs/JURY_QA.md",
+        ROOT / "docs/PITCH_DECK.md",
+        ROOT / "scripts/generate_presentation.py",
+        ROOT / "frontend/static/presentations.html",
+        ROOT / "frontend/static/pitch.html",
+        ROOT / "frontend/static/presentations/MboaShield_SIN2026.pptx",
+        ROOT / "docs/presentations/MboaShield_SIN2026.pptx",
+    ]
+    for path in removed:
+        assert not path.exists(), path
 
 
 def test_alembic_revision_chain_has_one_resolvable_head():

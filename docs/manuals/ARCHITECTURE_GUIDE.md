@@ -1,6 +1,6 @@
 # Architecture guide
 
-**Version:** 1.9.0 � **Living doc:** [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
+**Version:** 1.9.0 - **Living doc:** [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 
 ## One-line view
 

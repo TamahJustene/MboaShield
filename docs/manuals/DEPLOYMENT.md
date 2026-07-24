@@ -1,6 +1,6 @@
 # Deployment manual
 
-**Version:** 1.9.0 � **Detail:** [`../DEPLOY.md`](../DEPLOY.md)
+**Version:** 1.9.0 - **Detail:** [`../DEPLOY.md`](../DEPLOY.md)
 
 ## Options
 
@@ -10,7 +10,7 @@
 | Docker demo | `docker compose up --build` |
 | Government stack | `docker compose -f docker-compose.gov.yml up --build` |
 | Kubernetes | `helm upgrade --install mboashield deploy/helm/mboashield` |
-| Public competition URL | Render Blueprint (`render.yaml`) |
+| Public demo URL | Render Blueprint (`render.yaml`) |
 
 ## Required env (minimum)
 
@@ -35,12 +35,12 @@ App also runs `create_all` on boot for demo friction reduction; Alembic remains 
 ## Health verification
 
 1. `GET /health` ? `"status":"ok"`, expected `version`
-2. Open `/` and run pitch demo
+2. Open `/` and run guided demo
 3. `GET /metrics` if metrics enabled
 4. Gov: Prometheus scrapes `api:8000/metrics`
 
 ## Rollback
 
 - Demo: keep using `docker-compose.yml` (unchanged by Phase 13)
-- Feature flags: set phase flags false (`GOVERNANCE_ENABLED`, `WORKERS_ENABLED`, �)
+- Feature flags: set phase flags false (`GOVERNANCE_ENABLED`, `WORKERS_ENABLED`, -)
 - Helm: `helm rollback mboashield`

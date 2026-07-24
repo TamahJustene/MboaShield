@@ -1,8 +1,8 @@
-# MboaShield v1.0 — Architecture Review
+# MboaShield v1.0 - Architecture Review
 
 **Date:** 16 July 2026  
-**Baseline:** Product v0.9.0 (Phases 1–5 complete, live at https://mboashield.onrender.com)  
-**Authors (roles):** CTO · Chief Software Architect · Principal AI · Cybersecurity · DevSecOps · Cloud · Database · UX · Gov Digital Transformation · Digital Identity · AI Governance · Enterprise Solutions · Technical Writing  
+**Baseline:** Product v0.9.0 (Phases 1-5 complete, live at https://mboashield.onrender.com)  
+**Authors (roles):** CTO - Chief Software Architect - Principal AI - Cybersecurity - DevSecOps - Cloud - Database - UX - Gov Digital Transformation - Digital Identity - AI Governance - Enterprise Solutions - Technical Writing  
 
 **Code freeze:** No application code changes until [`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md) Phase 6 is explicitly started.
 
@@ -14,14 +14,14 @@ MboaShield becomes a **configuration-driven National Digital Trust Platform**: a
 
 ### Design thesis
 
-1. **Preserve the working core** — FastAPI `create_app()`, `/api/v1/*`, SQLite/Postgres dual path, modular engines, incident workflow, soft/hard auth — are assets, not prototypes to discard.  
-2. **Extend by modules** — New capabilities arrive as additive routers, services, tables, and UIs behind feature flags / env config.  
-3. **Multi-country by configuration** — Country name, languages, IdP endpoints, region taxonomies, retention policies, threat-level thresholds, and branding live in config/tenant profiles — not forks.  
-4. **Honest AI** — Heuristics and models never claim certainty; trust scores remain explainable and calibrated.  
-5. **Government-grade identity** — Complete federation (OIDC/OAuth2/SAML/LDAP/AD), admin user lifecycle, sessions, devices, and enforced RBAC.  
-6. **Compliant intelligence** — OSINT only through official APIs, RSS, and authorized feeds.  
-7. **Evidence-grade operations** — Chain of custody, vault, signatures, and auditability for law enforcement and CERTs.  
-8. **Operate as a national service** — NTOC dashboards, casework, notifications, institution health, observability, HA.
+1. **Preserve the working core** - FastAPI `create_app()`, `/api/v1/*`, SQLite/Postgres dual path, modular engines, incident workflow, soft/hard auth - are assets, not prototypes to discard.  
+2. **Extend by modules** - New capabilities arrive as additive routers, services, tables, and UIs behind feature flags / env config.  
+3. **Multi-country by configuration** - Country name, languages, IdP endpoints, region taxonomies, retention policies, threat-level thresholds, and branding live in config/tenant profiles - not forks.  
+4. **Honest AI** - Heuristics and models never claim certainty; trust scores remain explainable and calibrated.  
+5. **Government-grade identity** - Complete federation (OIDC/OAuth2/SAML/LDAP/AD), admin user lifecycle, sessions, devices, and enforced RBAC.  
+6. **Compliant intelligence** - OSINT only through official APIs, RSS, and authorized feeds.  
+7. **Evidence-grade operations** - Chain of custody, vault, signatures, and auditability for law enforcement and CERTs.  
+8. **Operate as a national service** - NTOC dashboards, casework, notifications, institution health, observability, HA.
 
 ### Target stakeholders
 
@@ -36,7 +36,7 @@ National governments, ministries, CERTs, law enforcement, election commissions, 
 | Layer | Status | Evidence |
 |---|---|---|
 | App factory + middleware | Production-usable | CORS, rate limit, security headers, `/health` |
-| Dual DB | Ready | SQLite default; Postgres via `DATABASE_URL`; Alembic 0001–0004 |
+| Dual DB | Ready | SQLite default; Postgres via `DATABASE_URL`; Alembic 0001-0004 |
 | RBAC model | Partial enforce | Roles/permissions defined; soft mode for demo |
 | JWT + MFA TOTP | Working | Register/login/refresh; MFA challenge path |
 | Partner API keys | Working | Hashed `msb_` keys, scopes, `X-API-Key` |
@@ -53,14 +53,14 @@ Monolithic modular FastAPI service with repository layer, service packages, and 
 
 ### Strengths
 
-- Backward-compatible API evolution across Phases 1–5  
-- Soft/hard auth switch preserves pitch demo while allowing lock-down  
+- Backward-compatible API evolution across Phases 1-5  
+- Soft/hard auth switch preserves guided demo while allowing lock-down  
 - Explainable trust fusion with explicit `certainty: "none"`  
 - Thin HTML UIs over real APIs (low coupling to a SPA framework)  
 
 ### Weaknesses (structural, not fatal)
 
-- Large `repositories.py` / fat routers — cohesion pressure  
+- Large `repositories.py` / fat routers - cohesion pressure  
 - Permissions defined but many routes ungated even when `AUTH_ENFORCE=true`  
 - No tenant/country config object yet  
 - OIDC callback incomplete (501 path)  
@@ -93,7 +93,7 @@ Monolithic modular FastAPI service with repository layer, service packages, and 
 
 | Debt item | Risk if ignored | Disposition |
 |---|---|---|
-| Soft auth default on “production” Render | Public abuse of gated ops APIs | Keep for demo flag; **gov profile** must enforce true |
+| Soft auth default on -production- Render | Public abuse of gated ops APIs | Keep for demo flag; **gov profile** must enforce true |
 | Ungated check/analyze under hard mode | Abuse / DoS / data pollution | Phase 6: selective gates + rate classes |
 | No role management API | Ops error-prone (SQL) | Phase 6 deliverable |
 | Fat repository module | Merge conflicts, test cost | Gradual split by domain (no big-bang) |
@@ -118,7 +118,7 @@ Monolithic modular FastAPI service with repository layer, service packages, and 
 | Multi-tenant countries | None | Config + data isolation | Tenant_id + RLS or schema strategy |
 | Horizontal scale | Stateless app almost | Local uploads/SQLite | Object store + external DB |
 
-**Verdict:** Adequate for national **pilot** and competition demo. Inadequate for multi-ministry production without Phases 9 + 13.
+**Verdict:** Adequate for national **pilot** and public demo. Inadequate for multi-ministry production without Phases 9 + 13.
 
 ---
 
@@ -202,7 +202,7 @@ This review + design + threat model + roadmap close the **enterprise planning** 
 
 ## Disposition lists (binding for all future phases)
 
-### Already exists — reuse
+### Already exists - reuse
 
 - `create_app()`, `/api/v1` router composition, `deps.require_permission`  
 - RBAC enums/permissions, JWT/MFA/partner key primitives  
@@ -210,7 +210,7 @@ This review + design + threat model + roadmap close the **enterprise planning** 
 - Engine registry + trust fusion  
 - Analytics services and national UI patterns  
 - Alembic chain, Docker, CI, Render blueprint  
-- All citizen pitch demo behaviors  
+- All citizen guided demo behaviors  
 
 ### Refactor (incremental, phase-scoped)
 
@@ -222,22 +222,22 @@ This review + design + threat model + roadmap close the **enterprise planning** 
 
 ### Remain untouched (unless bugfix)
 
-- Grand Jury demo scenario script and public home UX for competition  
+- guided citizen demo scenario script and public home UX for the public demo  
 - Soft-auth default for demo profile  
 - Existing response shapes for `/check/*`, `/analyze`, ambassador flows  
 - `certainty: "none"` policy on heuristic fusion  
 
 ### Deprecate (after replacement exists; never hard-delete without alias)
 
-- OIDC “501 incomplete” behavior ? real callback or feature-flag disabled  
+- OIDC -501 incomplete- behavior ? real callback or feature-flag disabled  
 - Legacy `X-MboaShield-User-Id` as primary identity (keep as optional compat header)  
 - Relying on SQL for role changes (after Phase 6 admin API)  
-- Local-only evidence files once vault is live (migrate, don’t orphan)  
+- Local-only evidence files once vault is live (migrate, don-t orphan)  
 
 ---
 
 ## Review conclusion
 
-MboaShield v0.9.0 is a **credible national pilot chassis**, not yet an enterprise national platform. The correct path is **evolutionary modularization** through Phases 6–15, preserving all working capabilities, completing identity first, then operations, intelligence, evidence, and infrastructure.
+MboaShield v0.9.0 is a **credible national pilot chassis**, not yet an enterprise national platform. The correct path is **evolutionary modularization** through Phases 6-15, preserving all working capabilities, completing identity first, then operations, intelligence, evidence, and infrastructure.
 
 **Next artifact:** [`V1_0_SYSTEM_DESIGN.md`](V1_0_SYSTEM_DESIGN.md)

@@ -1,14 +1,14 @@
 # AI Governance guide
 
-**Version:** 1.9.0 � **Console:** `/static/governance.html` � **APIs:** `/api/v1/governance/*`
+**Version:** 1.9.0 - **Console:** `/static/governance.html` - **APIs:** `/api/v1/governance/*`
 
 ## Principles
 
-1. **Honesty first** � never default to claiming certainty.
-2. **Human in the loop** � public advisories require workflow decision states.
-3. **Consent for optional use** � analytics/feedback/partner notify are opt-in.
-4. **Document models and data** � model cards and dataset cards before enablement.
-5. **Track residual risk** � risk register linked to threat-model refs (`TM-*`).
+1. **Honesty first** - never default to claiming certainty.
+2. **Human in the loop** - public advisories require workflow decision states.
+3. **Consent for optional use** - analytics/feedback/partner notify are opt-in.
+4. **Document models and data** - model cards and dataset cards before enablement.
+5. **Track residual risk** - risk register linked to threat-model refs (`TM-*`).
 
 ## Artifacts
 

@@ -2,6 +2,18 @@
 
 All notable changes to MboaShield are documented here.
 
+## [Unreleased]
+
+### Product focus (post-competition)
+
+#### Removed
+- Competition-only guides, PPT generator, pitch/jury pages, and SIN 2026 presentation assets
+
+#### Changed
+- Home and hub reframed as product guided demo (no Grand Jury / prize language)
+- README, goals, roadmap, deploy, and AI brief oriented to product readiness
+- Active backlog points at authorization, tenancy, secrets, E2E, bilingual UX, and measured resilience
+
 ## [2.8.0] - 2026-07-17
 
 ### Continuous improvement CI-1 (post T7)

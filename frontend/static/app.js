@@ -157,13 +157,13 @@ function markChecklist(step, state) {
   });
 }
 
-function hideJuryFinale() {
-  const el = document.getElementById("juryFinale");
+function hideDemoFinale() {
+  const el = document.getElementById("demoFinale");
   el.classList.add("hidden");
 }
 
-function showJuryFinale() {
-  const el = document.getElementById("juryFinale");
+function showDemoFinale() {
+  const el = document.getElementById("demoFinale");
   el.classList.remove("hidden");
   el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -200,7 +200,7 @@ function renderSummary() {
   const lead = document.getElementById("summaryLead");
   const cards = document.getElementById("summaryCards");
   if (!demoSummary.length) {
-    lead.textContent = "Run the 90s demo to generate a final protection summary for the judges.";
+    lead.textContent = "Run the guided demo to generate a protection summary.";
     cards.innerHTML = "";
     return;
   }
@@ -531,7 +531,7 @@ document.getElementById("runDemo").onclick = async () => {
   if (demoRunning) return;
   const status = document.getElementById("demoStatus");
   setDemoRunning(true);
-  hideJuryFinale();
+  hideDemoFinale();
   demoSummary.length = 0;
   renderSummary();
   document.getElementById("cert").classList.add("hidden");
@@ -541,7 +541,7 @@ document.getElementById("runDemo").onclick = async () => {
   try {
     activatePanel("panel-text", true);
     markChecklist(1, "active");
-    status.textContent = "Grand Jury mode: scenario 1/5 - stopping a WhatsApp rumour before it spreads.";
+    status.textContent = "Guided demo: scenario 1/5 - stopping a WhatsApp rumour before it spreads.";
     document.getElementById("claimText").value =
       "URGENT!!! Le ministre annonce un couvre-feu national. Transferre plein de fois avant suppression. Envoie de l'argent au numero MoMo pour securiser ton compte.";
     await document.getElementById("checkText").onclick();
@@ -551,7 +551,7 @@ document.getElementById("runDemo").onclick = async () => {
 
     activatePanel("panel-imp", true);
     markChecklist(2, "active");
-    status.textContent = "Grand Jury mode: scenario 2/5 - exposing a fake public institution account.";
+    status.textContent = "Guided demo: scenario 2/5 - exposing a fake public institution account.";
     document.getElementById("impName").value = "MINPOSTEL Officiel Verifie";
     document.getElementById("impHandle").value = "@minpostel_cm_info";
     await document.getElementById("checkImp").onclick();
@@ -561,7 +561,7 @@ document.getElementById("runDemo").onclick = async () => {
 
     activatePanel("panel-audio", true);
     markChecklist(3, "active");
-    status.textContent = "Grand Jury mode: scenario 3/5 - checking a suspicious authority voice note.";
+    status.textContent = "Guided demo: scenario 3/5 - checking a suspicious authority voice note.";
     await document.querySelector('.audio-sample[data-sample="/static/samples/minister_voice_clone.wav"]').onclick();
     setDemoProgress(3);
     markChecklist(3, "done");
@@ -569,7 +569,7 @@ document.getElementById("runDemo").onclick = async () => {
 
     activatePanel("panel-media", true);
     markChecklist(4, "active");
-    status.textContent = "Grand Jury mode: scenario 4/5 - explaining synthetic signals in an image.";
+    status.textContent = "Guided demo: scenario 4/5 - explaining synthetic signals in an image.";
     await document.querySelector('.sample[data-sample="/static/samples/synthetic_smooth_face.jpg"]').onclick();
     setDemoProgress(4);
     markChecklist(4, "done");
@@ -577,7 +577,7 @@ document.getElementById("runDemo").onclick = async () => {
 
     activatePanel("panel-amb", true);
     markChecklist(5, "active");
-    status.textContent = "Grand Jury mode: scenario 5/5 - turning awareness into digital patriotism.";
+    status.textContent = "Guided demo: scenario 5/5 - turning awareness into digital patriotism.";
     document.getElementById("learnerName").value = "Justene Nkwagoh Tamah";
     if (document.getElementById("lessonSelect").options.length) {
       document.getElementById("lessonSelect").selectedIndex = 0;
@@ -588,7 +588,7 @@ document.getElementById("runDemo").onclick = async () => {
 
     status.textContent = "Demo complete: 4 trust checks and 1 civic-learning outcome completed.";
     await sleep(400);
-    showJuryFinale();
+    showDemoFinale();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unexpected demo error";
     status.textContent = `Demo paused safely: ${message} Use the visible manual panels or try again.`;

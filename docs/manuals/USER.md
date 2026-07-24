@@ -1,6 +1,6 @@
 # User manual
 
-**Version:** 1.9.0 � **UI:** http://127.0.0.1:8000 (or live Render URL)
+**Version:** 1.9.0 - **UI:** http://127.0.0.1:8000 (or live Render URL)
 
 ## What MboaShield is
 
@@ -41,5 +41,6 @@ Grant/revoke via Governance console (`/static/governance.html`) or `POST /api/v1
 
 ## Getting help
 
-- Pitch / jury walkthrough: download PPT at `/static/presentations.html`; script in [`../PRESENTER_GUIDE.md`](../PRESENTER_GUIDE.md)
-- Product brief: [`../PRODUCT_STATUS.md`](../PRODUCT_STATUS.md)
+- Product hub: `/static/hub.html`
+- Readiness and backlog: [`../PRODUCT_STATUS.md`](../PRODUCT_STATUS.md)
+- Full testing guide: [`../COMPLETE_USER_GUIDE.md`](../COMPLETE_USER_GUIDE.md)

@@ -1,4 +1,4 @@
-# Phase 2 Plan ù Government Workflows
+# Phase 2 Plan - Government Workflows
 
 **Version target:** 0.6.0  
 **Depends on:** Phase 1 (v0.5.0) security + SQLAlchemy foundation  

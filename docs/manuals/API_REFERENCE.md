@@ -1,6 +1,6 @@
 # API reference (narrative)
 
-**Version:** 1.9.0 � **Machine OpenAPI:** [`openapi.json`](openapi.json) � **Interactive:** `/docs`
+**Version:** 1.9.0 - **Machine OpenAPI:** [`openapi.json`](openapi.json) - **Interactive:** `/docs`
 
 Base path for product APIs: `/api/v1`.
 

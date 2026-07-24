@@ -1,5 +1,4 @@
 [
-  {"id": "src-sin", "title": "Digital Innovation Week - official portal", "url": "https://www.ictinnovationweek.cm", "topics": ["innovation", "tic", "minpostel", "concours", "ia", "ai"]},
   {"id": "src-minpostel", "title": "MINPOSTEL - official site", "url": "https://www.minpostel.gov.cm", "topics": ["telecom", "cybersecurity", "digital", "minpostel", "patriotisme"]},
   {"id": "src-prc", "title": "Presidency of the Republic of Cameroon", "url": "https://www.prc.cm", "topics": ["government", "official", "announcement", "ministre", "president"]},
   {"id": "src-snia", "title": "Cameroon National AI Strategy (SNIA)", "url": "https://www.minpostel.gov.cm", "topics": ["ai", "strategy", "sovereignty", "intelligence artificielle"]},

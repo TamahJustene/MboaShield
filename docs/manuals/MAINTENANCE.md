@@ -9,7 +9,7 @@
 | Daily | Check `/health`, disk for vault path, error rates in metrics |
 | Weekly | Review open risks; dry-run vault retention |
 | Monthly | Rotate signing keys (kid versioning); review partner keys |
-| Per release | `pytest`; Alembic upgrade; CHANGELOG; smoke pitch demo |
+| Per release | `pytest`; Alembic upgrade; CHANGELOG; smoke guided demo |
 
 ## Database
 
@@ -25,7 +25,7 @@
 
 ## AI assets
 
-- Weights under `data/` � verify checksums via `/api/v1/ai-platform/models/{id}/verify-checksum`
+- Weights under `data/` - verify checksums via `/api/v1/ai-platform/models/{id}/verify-checksum`
 - Golden sets: `data/ai_golden_en.json`, `data/ai_golden_fr.json`
 - Re-run evaluation after engine changes
 

@@ -1,7 +1,7 @@
-# MboaShield v1.0 — Threat Model
+# MboaShield v1.0 - Threat Model
 
-**Baseline:** v0.9.0 · **Design:** [`V1_0_SYSTEM_DESIGN.md`](V1_0_SYSTEM_DESIGN.md)  
-**Method:** STRIDE + abuse/misuse + AI-specific risks · **Owner roles:** Principal Cybersecurity · AI Governance · DevSecOps · Digital Identity  
+**Baseline:** v0.9.0 - **Design:** [`V1_0_SYSTEM_DESIGN.md`](V1_0_SYSTEM_DESIGN.md)  
+**Method:** STRIDE + abuse/misuse + AI-specific risks - **Owner roles:** Principal Cybersecurity - AI Governance - DevSecOps - Digital Identity  
 
 ---
 
@@ -93,17 +93,17 @@
 | API key scope creep | Med | High | Default minimal scopes; review UI |
 | MFA bypass | Med | High | Challenge required when enabled; block tokens without amr |
 | IDOR on incidents | Med | High | Ownership checks for citizens; role for analysts |
-| Soft-mode “auth bypass” treated as feature in gov | High | Critical | Deployment profiles; startup refuse if prod+soft without override acknowledge |
+| Soft-mode -auth bypass- treated as feature in gov | High | Critical | Deployment profiles; startup refuse if prod+soft without override acknowledge |
 
 ---
 
 ## 4. Abuse cases (malicious intentional)
 
-1. **Disinformation laundering:** Attacker mass-submits “clean” checks to skew analytics ? quotas, anomaly detection, analyst verification flags.  
+1. **Disinformation laundering:** Attacker mass-submits -clean- checks to skew analytics ? quotas, anomaly detection, analyst verification flags.  
 2. **Registry poisoning:** Insert fake official accounts ? dual approval for institution changes.  
 3. **Case flooding:** Open thousands of incidents ? rate limits + triage priorities.  
 4. **Evidence planting:** Upload unrelated media into a case ? custody + hash + reviewer attestation.  
-5. **Announcement forgery:** Fake “ministry” message ? cryptographic signatures + public verify URL (Phase 11).  
+5. **Announcement forgery:** Fake -ministry- message ? cryptographic signatures + public verify URL (Phase 11).  
 6. **Partner key theft:** Exfiltrate `msb_` key ? rotation, anomaly alerts, short-lived keys optional.  
 7. **SSO account takeover:** Compromised IdP user ? MFA step-up for privileged actions.  
 
@@ -114,7 +114,7 @@
 1. Analyst shares screen with PII in public pitch ? demo dataset mode.  
 2. Admin leaves AUTH_ENFORCE=false on ministry network ? config lint + health exposes `auth_enforce`.  
 3. Over-retention of citizen media ? retention jobs (Phase 9).  
-4. Using heuristic “high risk” as legal proof ? UI + docs forbid certainty; governance training.  
+4. Using heuristic -high risk- as legal proof ? UI + docs forbid certainty; governance training.  
 5. Connecting scrapers that violate platform ToS ? **forbidden by policy**; Phase 8 connectors must declare license/ToS class.  
 
 ---
@@ -153,12 +153,12 @@ OIDC linked account
 
 | Risk | Mitigation phase |
 |---|---|
-| Incomplete OIDC callback | 6 — complete or disable |
+| Incomplete OIDC callback | 6 - complete or disable |
 | No password recovery | 6 |
 | No session inventory | 6 |
-| MFA only optional for admins | 6 — enforce for MFA_REQUIRED_ROLES |
-| LDAP credential stuffing | 6 — lockout + IdP rate |
-| SAML XML attacks | 6 — hardened library, entity allowlist |
+| MFA only optional for admins | 6 - enforce for MFA_REQUIRED_ROLES |
+| LDAP credential stuffing | 6 - lockout + IdP rate |
+| SAML XML attacks | 6 - hardened library, entity allowlist |
 
 ---
 
@@ -237,7 +237,7 @@ Demo profile: best-effort; no national RPO claim.
 
 ## 16. Mitigation plan (prioritized)
 
-### P0 — Before any ministry hard launch
+### P0 - Before any ministry hard launch
 
 1. `AUTH_ENFORCE=true` + Postgres + strong `JWT_SECRET` + narrow CORS  
 2. Complete or disable OIDC stub  
@@ -245,14 +245,14 @@ Demo profile: best-effort; no national RPO claim.
 4. Gate remaining sensitive routes; keep public check endpoints deliberately public only if product policy says so  
 5. Backup/restore drill documented  
 
-### P1 — Phase 7–9
+### P1 - Phase 7-9
 
 6. Case/evidence custody  
 7. Notification integrity  
 8. Retention & export controls  
 9. Network allowlists for NTOC  
 
-### P2 — Phase 12–14
+### P2 - Phase 12-14
 
 10. Model registry integrity  
 11. Prompt-injection hardened LLM assists (if introduced)  
@@ -284,6 +284,6 @@ Each connector carries metadata: `source_class`, `tos_reference`, `license`, `eg
 
 ## 18. Residual risk statement
 
-After Phases 6–9 and P0 mitigations, residual risk remains in AI false positives/negatives and nation-state adversaries. Residual risk is accepted only with human-in-the-loop decisions, honest uncertainty, and continuous evaluation — never with automated legal determinations.
+After Phases 6-9 and P0 mitigations, residual risk remains in AI false positives/negatives and nation-state adversaries. Residual risk is accepted only with human-in-the-loop decisions, honest uncertainty, and continuous evaluation - never with automated legal determinations.
 
 **Next:** [`V1_0_IMPLEMENTATION_ROADMAP.md`](V1_0_IMPLEMENTATION_ROADMAP.md)

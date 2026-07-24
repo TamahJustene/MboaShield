@@ -1,10 +1,10 @@
-# MboaShield v1.0 — Implementation Roadmap (Phases 6–15)
+# MboaShield v1.0 - Implementation Roadmap (Phases 6-15)
 
-**Status:** APPROVED FOR PLANNING — application code gated  
-**Baseline:** v0.9.0 · **Index:** [`V1_0_ENTERPRISE_INDEX.md`](V1_0_ENTERPRISE_INDEX.md)  
-**Rules:** One phase at a time · no breaking `/api/v1` · no mocks/TODOs · tests + docs every phase · compliant intel only  
+**Status:** APPROVED FOR PLANNING - application code gated  
+**Baseline:** v0.9.0 - **Index:** [`V1_0_ENTERPRISE_INDEX.md`](V1_0_ENTERPRISE_INDEX.md)  
+**Rules:** One phase at a time - no breaking `/api/v1` - no mocks/TODOs - tests + docs every phase - compliant intel only  
 
-**Quality gate (every phase):** all pytest green · static checks · security review of touched auth surfaces · docs updated · backward compatibility verified · demo profile still boots with `./scripts/run_demo.sh`
+**Quality gate (every phase):** all pytest green - static checks - security review of touched auth surfaces - docs updated - backward compatibility verified - demo profile still boots with `./scripts/run_demo.sh`
 
 ---
 
@@ -20,14 +20,14 @@
 
 ---
 
-## Phase 6 — Enterprise Identity Platform
+## Phase 6 - Enterprise Identity Platform
 
 **Planned version:** 1.0.0  
 **Estimated complexity:** Very High  
 
 ### Objectives
 
-Complete production identity: OIDC/OAuth2 callback, SAML 2.0, LDAP/AD, SSO session management, trusted devices, password policies/recovery, administrative user management, device management, expanded audit logging — without removing local JWT/MFA/partner keys.
+Complete production identity: OIDC/OAuth2 callback, SAML 2.0, LDAP/AD, SSO session management, trusted devices, password policies/recovery, administrative user management, device management, expanded audit logging - without removing local JWT/MFA/partner keys.
 
 ### Deliverables
 
@@ -59,7 +59,7 @@ Complete production identity: OIDC/OAuth2 callback, SAML 2.0, LDAP/AD, SSO sessi
 ### Database changes
 
 - `sessions`, `trusted_devices`, `password_reset_tokens`, `auth_events`  
-- User fields: lock policy counters already present — extend as needed  
+- User fields: lock policy counters already present - extend as needed  
 - `tenants` / `deployment_profiles` (minimal)  
 - Alembic `0005_phase6_identity`  
 
@@ -76,7 +76,7 @@ Complete production identity: OIDC/OAuth2 callback, SAML 2.0, LDAP/AD, SSO sessi
 ### Frontend changes
 
 - Identity console: SSO buttons, sessions, devices, user admin  
-- No change to Grand Jury home beyond optional login link  
+- No change to guided citizen home beyond optional login link  
 
 ### Testing plan
 
@@ -106,13 +106,13 @@ Complete production identity: OIDC/OAuth2 callback, SAML 2.0, LDAP/AD, SSO sessi
 
 ---
 
-## Phase 7 — National Trust Operations Center
+## Phase 7 - National Trust Operations Center
 
-**Planned version:** 1.1.0 · **Complexity:** Very High · **Depends on:** Phase 6 (auth for analysts)
+**Planned version:** 1.1.0 - **Complexity:** Very High - **Depends on:** Phase 6 (auth for analysts)
 
 ### Objectives
 
-Live threat dashboard, national threat level, regional map, investigation workspace, case assignment/notes/search, evidence viewer (read path), timeline, notifications, institution health — extending analyst/national UIs.
+Live threat dashboard, national threat level, regional map, investigation workspace, case assignment/notes/search, evidence viewer (read path), timeline, notifications, institution health - extending analyst/national UIs.
 
 ### Deliverables
 
@@ -168,9 +168,9 @@ Live threat dashboard, national threat level, regional map, investigation worksp
 
 ---
 
-## Phase 8 — Threat Intelligence Platform (compliant sources)
+## Phase 8 - Threat Intelligence Platform (compliant sources)
 
-**Planned version:** 1.2.0 · **Complexity:** High · **Depends on:** Phase 7 optional; Phase 6 required for admin of sources
+**Planned version:** 1.2.0 - **Complexity:** High - **Depends on:** Phase 7 optional; Phase 6 required for admin of sources
 
 ### Objectives
 
@@ -218,7 +218,7 @@ Ingest intelligence from **authorized** sources only; correlate to incidents; de
 
 ### Documentation updates
 
-- Intel connector ToS register; THREAT_MODEL §17 affirmation  
+- Intel connector ToS register; THREAT_MODEL -17 affirmation  
 
 ### Risks
 
@@ -227,9 +227,9 @@ Ingest intelligence from **authorized** sources only; correlate to incidents; de
 
 ---
 
-## Phase 9 — Digital Evidence Vault
+## Phase 9 - Digital Evidence Vault
 
-**Planned version:** 1.3.0 · **Complexity:** Very High · **Depends on:** Phase 7 cases
+**Planned version:** 1.3.0 - **Complexity:** Very High - **Depends on:** Phase 7 cases
 
 ### Objectives
 
@@ -273,9 +273,9 @@ Evidence IDs, hashing, chain of custody, digital signatures, search, export, ret
 
 ---
 
-## Phase 10 — Institution Administration Platform
+## Phase 10 - Institution Administration Platform
 
-**Planned version:** 1.4.0 · **Complexity:** High · **Depends on:** Phase 6
+**Planned version:** 1.4.0 - **Complexity:** High - **Depends on:** Phase 6
 
 ### Objectives
 
@@ -299,9 +299,9 @@ Institution users, domains, official accounts, branding, API keys, investigation
 
 ---
 
-## Phase 11 — Verified Government Communications
+## Phase 11 - Verified Government Communications
 
-**Planned version:** 1.5.0 · **Complexity:** High · **Depends on:** Phase 10 + Phase 9 (optional sign keys in vault/KMS)
+**Planned version:** 1.5.0 - **Complexity:** High - **Depends on:** Phase 10 + Phase 9 (optional sign keys in vault/KMS)
 
 ### Objectives
 
@@ -316,17 +316,17 @@ Digitally signed announcements, QR verification, permanent verify URL, version h
 
 ### Risks
 
-- Key management — use KMS/env keys; rotate with versioned kid  
+- Key management - use KMS/env keys; rotate with versioned kid  
 
 ---
 
-## Phase 12 — Advanced AI Platform
+## Phase 12 - Advanced AI Platform
 
-**Planned version:** 1.6.0 · **Complexity:** Very High · **Depends on:** Engines package
+**Planned version:** 1.6.0 - **Complexity:** Very High - **Depends on:** Engines package
 
 ### Objectives
 
-ONNX Runtime, transformers, ViT, Whisper, sentence-transformers, model registry, monitoring, confidence calibration, continuous evaluation, human feedback learning, XAI — **without** claiming certainty by default.
+ONNX Runtime, transformers, ViT, Whisper, sentence-transformers, model registry, monitoring, confidence calibration, continuous evaluation, human feedback learning, XAI - **without** claiming certainty by default.
 
 ### Deliverables
 
@@ -346,9 +346,9 @@ ONNX Runtime, transformers, ViT, Whisper, sentence-transformers, model registry,
 
 ---
 
-## Phase 13 — Enterprise Infrastructure
+## Phase 13 - Enterprise Infrastructure
 
-**Planned version:** 1.7.0 · **Complexity:** Very High  
+**Planned version:** 1.7.0 - **Complexity:** Very High  
 
 ### Objectives
 
@@ -368,13 +368,13 @@ PostgreSQL default for gov, Redis, RabbitMQ, Celery, object storage, Prometheus,
 
 ### Risks
 
-- Over-infra before traffic — keep compose.gov as intermediate  
+- Over-infra before traffic - keep compose.gov as intermediate  
 
 ---
 
-## Phase 14 — Governance
+## Phase 14 - Governance
 
-**Planned version:** 1.8.0 · **Complexity:** Medium-High  
+**Planned version:** 1.8.0 - **Complexity:** Medium-High  
 
 ### Objectives
 
@@ -388,9 +388,9 @@ Responsible AI controls, privacy/consent, risk register, model cards, dataset ca
 
 ---
 
-## Phase 15 — Documentation Suite
+## Phase 15 - Documentation Suite
 
-**Planned version:** 1.9.0 · **Complexity:** Medium  
+**Planned version:** 1.9.0 - **Complexity:** Medium  
 
 ### Objectives
 
@@ -401,7 +401,7 @@ Administrator, Developer, User, Operations, Security, Deployment, Maintenance ma
 - `docs/manuals/*` generated from living source docs + OpenAPI export  
 - Link from README and PRODUCT_STATUS  
 
-**Note:** Phases 6–14 already update docs; Phase 15 consolidates and polishes for external audit.
+**Note:** Phases 6-14 already update docs; Phase 15 consolidates and polishes for external audit.
 
 ---
 
